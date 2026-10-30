@@ -8,20 +8,20 @@ struct EarIslandTests {
         let content = EarContent.peek(.bluetooth(symbol: "airpodspro", connected: true, battery: 78, name: "AirPods Pro"))
         let island = try #require(EarIsland.make(for: content, devices: devices))
         #expect(island.title == "AirPods Pro")
-        #expect(island.chips.map(\.value) == ["80%", "78%", "100%"])
-        #expect(island.trailing == .success)
+        #expect(island.gauges.map(\.value) == [80, 78, 100])
     }
 
     @Test func aDeviceWithoutLevelsStillShows() throws {
         let content = EarContent.peek(.bluetooth(symbol: "headphones", connected: true, battery: nil, name: "Headset"))
         let island = try #require(EarIsland.make(for: content, devices: []))
-        #expect(island.chips.isEmpty)
+        #expect(island.gauges.isEmpty)
         #expect(island.detail != nil)
     }
 
-    @Test func aDisconnectIsNotASuccess() throws {
+    @Test func aDisconnectShowsNoLevels() throws {
+        let devices = [DeviceBattery(name: "Headset", symbol: "headphones", levels: [.single: 50])]
         let content = EarContent.peek(.bluetooth(symbol: "headphones", connected: false, battery: nil, name: "Headset"))
-        #expect(try #require(EarIsland.make(for: content, devices: [])).trailing == .failure)
+        #expect(try #require(EarIsland.make(for: content, devices: devices)).gauges.isEmpty)
     }
 
     @Test func levelsAndMusicStayBesideTheNotch() {

@@ -11,6 +11,8 @@ enum Peek: Equatable, Sendable {
     case bluetooth(symbol: String, connected: Bool, battery: Int?, name: String = "")
     /// A Focus was turned on or off.
     case focus(on: Bool)
+    /// Keep Awake was turned on or off.
+    case keepAwake(on: Bool)
     /// A new screenshot or download; drag the thumbnail out of the notch.
     case newFile(URL, isScreenshot: Bool)
 }
@@ -53,8 +55,8 @@ enum EarLayout {
     static let previewDrop: CGFloat = 38
 
     /// A short event opens downward as a card under the notch.
-    static let islandDrop: CGFloat = 58
-    static let islandWidth: CGFloat = 112
+    static let islandDrop: CGFloat = 50
+    static let islandWidth: CGFloat = 104
 
     static func drop(for content: EarContent?, previewing: Bool = false) -> CGFloat {
         if case .live(let item) = content, item.source == .notification { return notificationDrop }

@@ -111,7 +111,7 @@ private struct TrackPreview: View {
     }
 }
 
-/// A short event as a card under the closed notch.
+/// A short event under the closed notch, in the same rings the System tab's language uses.
 private struct EarIslandView: View {
     let island: EarIsland
 
@@ -125,62 +125,44 @@ private struct EarIslandView: View {
     }
 
     var body: some View {
-        HStack(spacing: Space.m) {
+        HStack(spacing: Space.s + 2) {
             Image(systemName: island.symbol)
-                .font(.system(size: 16, weight: .medium))
+                .font(.system(size: 20, weight: .medium))
+                .symbolRenderingMode(.hierarchical)
                 .foregroundStyle(tint)
-                .frame(width: 40, height: 40)
-                .background(tint.opacity(0.16), in: Circle())
-                .overlay(Circle().strokeBorder(tint.opacity(0.35), lineWidth: 1))
-            VStack(alignment: .leading, spacing: 4) {
+                .frame(width: 26)
+            VStack(alignment: .leading, spacing: 1) {
                 Text(island.title)
-                    .font(Typo.title)
+                    .font(Typo.body)
                     .lineLimit(1)
-                if !island.chips.isEmpty {
-                    HStack(spacing: Space.xs) {
-                        ForEach(island.chips) { chip in
-                            HStack(spacing: 3) {
-                                Text(chip.label).foregroundStyle(.secondary)
-                                Text(chip.value)
-                            }
-                            .font(Typo.number(10, weight: .semibold))
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 2)
-                            .background(Color.white.opacity(0.12), in: Capsule())
-                        }
-                    }
-                    .lineLimit(1)
-                } else if let detail = island.detail {
+                if let detail = island.detail {
                     Text(detail)
-                        .font(Typo.caption)
+                        .font(Typo.micro)
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
                 }
             }
-            Spacer(minLength: 0)
-            trailing
+            Spacer(minLength: Space.s)
+            ForEach(island.gauges) { gauge in
+                VStack(spacing: 2) {
+                    ZStack {
+                        ProgressRing(fraction: Double(gauge.value) / 100, tint: gaugeTint(gauge), lineWidth: 2)
+                        Text("\(gauge.value)")
+                            .font(Typo.number(9, weight: .semibold))
+                    }
+                    .frame(width: 26, height: 26)
+                    Text(gauge.label)
+                        .font(.system(size: 8, weight: .medium))
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                }
+            }
         }
-        .padding(.horizontal, Space.m)
+        .padding(.horizontal, Space.m + 2)
         .frame(maxWidth: .infinity, maxHeight: EarLayout.islandDrop)
     }
 
-    @ViewBuilder
-    private var trailing: some View {
-        switch island.trailing {
-        case .none:
-            EmptyView()
-        case .success:
-            Image(systemName: "checkmark.circle.fill")
-                .font(.system(size: 20))
-                .foregroundStyle(.white, .green)
-        case .failure:
-            Image(systemName: "xmark.circle.fill")
-                .font(.system(size: 20))
-                .foregroundStyle(.white, Color(white: 0.35))
-        case .text(let text):
-            Text(text)
-                .font(Typo.number(15))
-                .foregroundStyle(island.tint == .neutral ? .white : tint)
-        }
+    private func gaugeTint(_ gauge: EarIsland.Gauge) -> Color {
+        gauge.value <= DeviceBatteryLogic.lowLevel ? .red : .white
     }
 }
