@@ -62,69 +62,69 @@ enum HomeCard: String, CaseIterable, Identifiable, Sendable {
     }
 }
 
-/// A card and how many of a row's columns it takes.
-struct HomeSlot: Identifiable, Equatable, Sendable {
-    let card: HomeCard
-    var span: Int
-    var id: HomeCard { card }
+/// A layout for Home: rows of boxes. Widths are in sixths of a row.
+enum HomeTemplate: String, CaseIterable, Identifiable, Sendable {
+    case feature, even, pairs, hero
+
+    var id: String { rawValue }
+
+    var rows: [[Int]] {
+        switch self {
+        case .feature: [[4, 2], [2, 2, 2]]
+        case .even: [[2, 2, 2], [2, 2, 2]]
+        case .pairs: [[3, 3], [3, 3]]
+        case .hero: [[6], [3, 3]]
+        }
+    }
+
+    var slotCount: Int { rows.joined().count }
+
+    var title: String {
+        switch self {
+        case .feature: String(localized: "One big box")
+        case .even: String(localized: "Six boxes")
+        case .pairs: String(localized: "Four boxes")
+        case .hero: String(localized: "Full-width box")
+        }
+    }
 }
 
 enum HomeLogic {
-    /// Two rows of three fit every size.
-    static let maxCards = 6
-    static let maxRows = 2
-    static let columns = 3
+    /// As many boxes as the largest template has; a smaller one uses the first few.
+    static let maxSlots = 6
+    static let rowUnits = 6
+    static let defaultSlots: [HomeCard?] = [.nowPlaying, .weather, .battery, .notes, .clipboard, .shelf]
 
-    /// Width of one column of a row `width` wide.
-    static func columnWidth(in width: CGFloat, spacing: CGFloat) -> CGFloat {
-        max(0, (width - spacing * CGFloat(columns - 1)) / CGFloat(columns))
+    /// The saved boxes, always `maxSlots` long; an empty name is an empty box.
+    static func slots(_ saved: String) -> [HomeCard?] {
+        guard !saved.isEmpty else { return defaultSlots }
+        let names = saved.split(separator: ",", omittingEmptySubsequences: false)
+        return (0..<maxSlots).map { index in
+            index < names.count ? HomeCard(rawValue: String(names[index])) : nil
+        }
     }
 
-    /// All cards in the saved order; cards missing from it go last, so new ones show up.
-    static func ordered(_ order: String) -> [HomeCard] {
-        var result: [HomeCard] = []
-        for name in order.split(separator: ",") {
-            if let card = HomeCard(rawValue: String(name)), !result.contains(card) { result.append(card) }
-        }
-        return result + HomeCard.allCases.filter { !result.contains($0) }
+    static func encode(_ slots: [HomeCard?]) -> String {
+        slots.map { $0?.rawValue ?? "" }.joined(separator: ",")
     }
 
-    static func encode(_ cards: [HomeCard]) -> String {
-        cards.map(\.rawValue).joined(separator: ",")
+    /// Puts `card` in a box. If it was already in another box the two swap, so a card is
+    /// never shown twice.
+    static func assign(_ card: HomeCard?, to index: Int, in slots: [HomeCard?]) -> [HomeCard?] {
+        guard slots.indices.contains(index) else { return slots }
+        var copy = slots
+        if let card, let other = slots.firstIndex(of: card) { copy[other] = slots[index] }
+        copy[index] = card
+        return copy
     }
 
-    /// Cards to show, in the saved order: turned on, with something to show, and whose
-    /// tab (if any) isn't hidden.
-    static func cards(hasContent: Set<HomeCard>, hidden: String, visibleTabs: [NotchTab], order: String = "") -> [HomeCard] {
-        let hiddenSet = Set(hidden.split(separator: ",").compactMap { HomeCard(rawValue: String($0)) })
-        let cards = ordered(order).filter { card in
-            hasContent.contains(card) && !hiddenSet.contains(card) && (card.tab.map(visibleTabs.contains) ?? true)
-        }
-        return Array(cards.prefix(maxCards))
+    /// Width of a box `span` sixths wide, in a row of `count` boxes.
+    static func width(span: Int, count: Int, in width: CGFloat, spacing: CGFloat) -> CGFloat {
+        max(0, (width - spacing * CGFloat(count - 1)) * CGFloat(span) / CGFloat(rowUnits))
     }
 
-    /// Cards laid out on rows of three columns; a wide card takes two. The last card in a
-    /// row takes what's left, and cards past the last row don't show.
-    static func rows(_ cards: [HomeCard], wide: String = "") -> [[HomeSlot]] {
-        var rows: [[HomeSlot]] = []
-        var row: [HomeSlot] = []
-        var used = 0
-
-        func finish() {
-            guard !row.isEmpty else { return }
-            row[row.count - 1].span += columns - used
-            rows.append(row)
-            row = []
-            used = 0
-        }
-
-        for card in cards {
-            let span = LayoutLogic.contains(card.rawValue, in: wide) ? 2 : 1
-            if used + span > columns { finish() }
-            row.append(HomeSlot(card: card, span: span))
-            used += span
-        }
-        finish()
-        return Array(rows.prefix(maxRows))
+    /// The first box of each row, so a row can find its cards.
+    static func firstSlot(ofRow row: Int, in template: HomeTemplate) -> Int {
+        template.rows.prefix(row).joined().count
     }
 }

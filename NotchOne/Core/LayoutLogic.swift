@@ -49,48 +49,6 @@ enum EarPriority: String, CaseIterable, Identifiable, Sendable {
     private static let musicFirstThreshold = 60
 }
 
-/// A ready-made Home layout.
-enum HomePreset: String, CaseIterable, Identifiable, Sendable {
-    case balanced, music, productivity, minimal
-
-    var id: String { rawValue }
-
-    var title: String {
-        switch self {
-        case .balanced: String(localized: "Balanced")
-        case .music: String(localized: "Music")
-        case .productivity: String(localized: "Productivity")
-        case .minimal: String(localized: "Minimal")
-        }
-    }
-
-    var order: [HomeCard] {
-        switch self {
-        case .balanced: HomeCard.allCases
-        case .music: [.nowPlaying, .devices, .weather, .activity, .battery, .system, .notes, .clipboard, .shelf]
-        case .productivity: [.notes, .clipboard, .shelf, .activity, .system, .nowPlaying, .weather, .battery, .devices]
-        case .minimal: [.nowPlaying, .weather, .battery, .activity, .devices, .system, .notes, .clipboard, .shelf]
-        }
-    }
-
-    var wide: [HomeCard] {
-        switch self {
-        case .balanced: [.nowPlaying]
-        case .music: [.nowPlaying]
-        case .productivity: [.notes]
-        case .minimal: [.nowPlaying, .weather]
-        }
-    }
-
-    var hidden: [HomeCard] {
-        switch self {
-        case .balanced, .music: [.system]
-        case .productivity: [.devices]
-        case .minimal: HomeCard.allCases.filter { ![.nowPlaying, .weather, .battery].contains($0) }
-        }
-    }
-}
-
 /// Pure helpers for the comma-separated lists the layout is saved in.
 enum LayoutLogic {
     static func contains(_ name: String, in list: String) -> Bool {

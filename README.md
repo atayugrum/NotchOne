@@ -68,7 +68,7 @@ Trackpad: swipe sideways on the tab bar to switch tabs, on Now Playing to skip t
 swipe down on the closed notch to open it.
 
 **Tabs**
-- **Home:** a card for each thing going on: music, weather, battery, notifications, clipboard, shelf. Compact mode (Settings → Appearance) shows one short row instead.
+- **Home:** choose a template, then what goes in each box: music, weather, battery, notifications, clipboard, shelf and more. Compact mode (Settings → Appearance) shows one short row instead.
 - **Weather:** now, hourly and 5 days, from Open-Meteo. Your area is rounded to about 1 km, or type a city.
 - **Search** (⌃⌥K): clipboard history, shelf files and tabs.
 - **Translate** (⌃⌥T translates the selection in any app): on-device with Apple's Translation, between any languages macOS supports.

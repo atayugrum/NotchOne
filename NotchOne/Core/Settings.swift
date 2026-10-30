@@ -41,9 +41,8 @@ enum SettingsKey {
     /// Last forecast (JSON), shown right away after a restart.
     static let weatherCache = "weatherCache"
     static let notchMode = "notchMode"
-    static let hiddenHomeCards = "hiddenHomeCards"
-    static let homeCardOrder = "homeCardOrder"
-    static let wideHomeCards = "wideHomeCards"
+    static let homeTemplate = "homeTemplate"
+    static let homeSlots = "homeSlots"
     static let hiddenHeaderItems = "hiddenHeaderItems"
     static let hiddenCompactItems = "hiddenCompactItems"
     static let earPriority = "earPriority"
@@ -96,10 +95,9 @@ enum SettingsDefault {
     static let weatherLocationSource = WeatherLocationSource.current
     static let weatherUnit = WeatherUnit.system
     static let notchMode = NotchMode.full
+    static let homeTemplate = HomeTemplate.feature
     /// System is opt-in on Home (it measures while it shows).
-    static let hiddenHomeCards = "system"
-    static let homeCardOrder = HomeLogic.encode(HomeCard.allCases)
-    static let wideHomeCards = HomeCard.nowPlaying.rawValue
+    static let homeSlots = HomeLogic.encode(HomeLogic.defaultSlots)
     static let earPriority = EarPriority.balanced
     static let translateFrom = TranslateLogic.auto
     static let translateTo = TranslateLogic.defaultTarget()

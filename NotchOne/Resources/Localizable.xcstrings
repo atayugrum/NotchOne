@@ -272,16 +272,6 @@
         }
       }
     },
-    "A card shows only when it has something to show. Two rows fit; drag cards on Home with the edit button.": {
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kart yalnızca gösterecek bir şey varsa görünür. İki satır sığar; kartları Home'daki düzenleme düğmesiyle sürükle."
-          }
-        }
-      }
-    },
     "A Focus is on": {
       "localizations": {
         "tr": {
@@ -368,16 +358,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Erişilebilirlik"
-          }
-        }
-      }
-    },
-    "Add a card": {
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kart ekle"
           }
         }
       }
@@ -608,12 +588,12 @@
     "CC BY 4.0": {
       "shouldTranslate": false
     },
-    "Choose": {
+    "Choose them on Home itself.": {
       "localizations": {
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Seç"
+            "value": "Bunları doğrudan Home'da seç."
           }
         }
       }
@@ -624,6 +604,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bağlantıyı temizleyip kopyala"
+          }
+        }
+      }
+    },
+    "Click a box to choose what goes in it": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İçeriğini seçmek için kutuya tıkla"
           }
         }
       }
@@ -1338,6 +1328,16 @@
         }
       }
     },
+    "Empty": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Boş"
+          }
+        }
+      }
+    },
     "Everything has a tab": {
       "localizations": {
         "tr": {
@@ -1448,6 +1448,16 @@
         }
       }
     },
+    "Four boxes": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dört kutu"
+          }
+        }
+      }
+    },
     "Free to use. A coffee helps keep it going.": {
       "localizations": {
         "tr": {
@@ -1514,6 +1524,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tam"
+          }
+        }
+      }
+    },
+    "Full-width box": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tam genişlik kutu"
           }
         }
       }
@@ -1590,16 +1610,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Gizli sekmeler sekme çubuğunda görünmez. Ondan fazla sekme olursa kalanlar … menüsüne gider."
-          }
-        }
-      }
-    },
-    "Hide card": {
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kartı gizle"
           }
         }
       }
@@ -1710,16 +1720,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tek bir PDF'e"
-          }
-        }
-      }
-    },
-    "Its tab is hidden": {
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sekmesi gizli"
           }
         }
       }
@@ -2043,16 +2043,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Küçültüp kopyala"
-          }
-        }
-      }
-    },
-    "Minimal": {
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Minimal"
           }
         }
       }
@@ -2540,6 +2530,16 @@
         }
       }
     },
+    "One big box": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bir büyük kutu"
+          }
+        }
+      }
+    },
     "Only for the Mirror tab; nothing is recorded": {
       "localizations": {
         "tr": {
@@ -2880,16 +2880,6 @@
         }
       }
     },
-    "Productivity": {
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Üretkenlik"
-          }
-        }
-      }
-    },
     "Quit": {
       "localizations": {
         "tr": {
@@ -2966,16 +2956,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hazır"
-          }
-        }
-      }
-    },
-    "Ready-made layout": {
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hazır düzen"
           }
         }
       }
@@ -3300,16 +3280,6 @@
         }
       }
     },
-    "Show card": {
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kartı göster"
-          }
-        }
-      }
-    },
     "Show everything": {
       "localizations": {
         "tr": {
@@ -3416,6 +3386,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sekmelerde yana kaydırmak sekme değiştirir, Şimdi Çalıyor'da parça atlar; kapalı çentikte aşağı kaydırmak onu açar."
+          }
+        }
+      }
+    },
+    "Six boxes": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Altı kutu"
           }
         }
       }
@@ -3615,6 +3595,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sıcaklık"
+          }
+        }
+      }
+    },
+    "Template and boxes": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Şablon ve kutular"
           }
         }
       }
@@ -4197,16 +4187,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Müzik çalarken"
-          }
-        }
-      }
-    },
-    "Wide card": {
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Geniş kart"
           }
         }
       }

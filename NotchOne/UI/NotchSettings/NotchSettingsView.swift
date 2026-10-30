@@ -126,7 +126,11 @@ struct NotchSettingsView: View {
         switch page {
         case .general: GeneralPage()
         case .appearance: AppearancePage()
-        case .layout: LayoutPage()
+        case .layout: LayoutPage {
+            model.closeSettings()
+            model.show(.home)
+            model.isEditingHome = true
+        }
         case .nowPlaying: NowPlayingPage()
         case .weather: WeatherPage(weather: model.activity.weather)
         case .translate: TranslatePage(store: model.activity.translate)

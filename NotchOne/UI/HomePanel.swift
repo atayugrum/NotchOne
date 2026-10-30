@@ -1,121 +1,131 @@
 import SwiftUI
 
-/// Home tab: one small card per thing going on. Each card opens its tab.
+/// Home tab: boxes laid out by a template, each holding the card chosen for it.
 struct HomePanel: View {
     let model: NotchViewModel
-    @AppStorage(SettingsKey.hiddenHomeCards) private var hiddenCards = SettingsDefault.hiddenHomeCards
-    @AppStorage(SettingsKey.homeCardOrder) private var cardOrder = SettingsDefault.homeCardOrder
-    @AppStorage(SettingsKey.wideHomeCards) private var wideCards = SettingsDefault.wideHomeCards
-
-    private var activity: ActivityState { model.activity }
+    @AppStorage(SettingsKey.homeTemplate) private var template = SettingsDefault.homeTemplate
+    @AppStorage(SettingsKey.homeSlots) private var savedSlots = SettingsDefault.homeSlots
 
     var body: some View {
-        Group {
+        VStack(spacing: Space.s) {
             if model.isEditingHome {
-                editor
-            } else {
-                cards
+                TemplatePicker(selection: $template)
             }
+            boxes
         }
         .onDisappear { model.isEditingHome = false }
     }
 
-    @ViewBuilder
-    private var cards: some View {
-        let cards = HomeLogic.cards(hasContent: available, hidden: hiddenCards, visibleTabs: model.tabs, order: cardOrder)
-        if cards.isEmpty {
-            Label("Nothing to show yet. Play music, copy something or drop a file on the notch.", systemImage: "square.grid.2x2")
-                .font(Typo.body)
-                .foregroundStyle(.secondary)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .glassCard()
-        } else {
-            GeometryReader { proxy in
-                let column = HomeLogic.columnWidth(in: proxy.size.width, spacing: Space.s)
-                VStack(spacing: Space.s) {
-                    ForEach(Array(HomeLogic.rows(cards, wide: wideCards).enumerated()), id: \.offset) { _, row in
-                        HStack(spacing: Space.s) {
-                            ForEach(row) { slot in
-                                HomeCardView(card: slot.card, isWide: slot.span > 1, model: model)
-                                    .frame(width: column * CGFloat(slot.span) + Space.s * CGFloat(slot.span - 1))
-                            }
+    private var boxes: some View {
+        let slots = HomeLogic.slots(savedSlots)
+        return GeometryReader { proxy in
+            VStack(spacing: Space.s) {
+                ForEach(Array(template.rows.enumerated()), id: \.offset) { rowIndex, spans in
+                    let first = HomeLogic.firstSlot(ofRow: rowIndex, in: template)
+                    HStack(spacing: Space.s) {
+                        ForEach(Array(spans.enumerated()), id: \.offset) { offset, span in
+                            box(first + offset, span: span, card: slots[first + offset])
+                                .frame(width: HomeLogic.width(span: span, count: spans.count, in: proxy.size.width, spacing: Space.s))
                         }
-                        .frame(maxHeight: .infinity)
                     }
+                    .frame(maxHeight: .infinity)
                 }
             }
         }
     }
 
-    /// Every card, shown or not, so each one can be reached however many there are.
-    private var editor: some View {
-        ScrollView(.vertical, showsIndicators: false) {
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: Space.xs + 2), count: HomeLogic.columns), spacing: Space.xs + 2) {
-                ForEach(HomeLogic.ordered(cardOrder)) { card in
-                    let isHidden = LayoutLogic.contains(card.rawValue, in: hiddenCards)
-                    let isWide = LayoutLogic.contains(card.rawValue, in: wideCards)
-                    HomeEditCard(card: card, isHidden: isHidden, isWide: isWide) {
-                        wideCards = LayoutLogic.setting(card.rawValue, in: wideCards, to: !isWide)
-                    } toggleHidden: {
-                        hiddenCards = LayoutLogic.setting(card.rawValue, in: hiddenCards, to: !isHidden)
-                    } drop: { moved in
-                        cardOrder = HomeLogic.encode(LayoutLogic.move(moved, before: card, in: HomeLogic.ordered(cardOrder)))
-                    }
-                }
+    @ViewBuilder
+    private func box(_ index: Int, span: Int, card: HomeCard?) -> some View {
+        if model.isEditingHome {
+            HomeBoxPicker(card: card) { chosen in
+                savedSlots = HomeLogic.encode(HomeLogic.assign(chosen, to: index, in: HomeLogic.slots(savedSlots)))
             }
+        } else if let card {
+            HomeCardView(card: card, isWide: span >= 3, model: model)
+        } else {
+            Color.clear
         }
-    }
-
-    /// Cards with something to show right now.
-    private var available: Set<HomeCard> {
-        var cards: Set<HomeCard> = []
-        if activity.nowPlaying != nil { cards.insert(.nowPlaying) }
-        if activity.weather.badgeSnapshot() != nil { cards.insert(.weather) }
-        if activity.battery != nil { cards.insert(.battery) }
-        if !activity.live.items.isEmpty { cards.insert(.activity) }
-        if !activity.devices.devices.isEmpty { cards.insert(.devices) }
-        cards.insert(.system)
-        if !activity.notes.isEmpty { cards.insert(.notes) }
-        if !activity.clipboard.items.isEmpty { cards.insert(.clipboard) }
-        if !activity.shelf.items.isEmpty { cards.insert(.shelf) }
-        return cards
     }
 }
 
-/// A card while Home is being edited: drag it onto another to move it.
-private struct HomeEditCard: View {
-    let card: HomeCard
-    let isHidden: Bool
-    let isWide: Bool
-    let toggleWide: () -> Void
-    let toggleHidden: () -> Void
-    let drop: (HomeCard) -> Void
-    @State private var isTargeted = false
+/// Small drawings of the templates.
+private struct TemplatePicker: View {
+    @Binding var selection: HomeTemplate
 
     var body: some View {
-        HStack(spacing: Space.xs) {
-            Image(systemName: card.symbol).font(.system(size: 12)).foregroundStyle(.secondary).frame(width: 18)
-            Text(card.title).font(Typo.captionStrong).lineLimit(1).minimumScaleFactor(0.8)
+        HStack(spacing: Space.s) {
+            ForEach(HomeTemplate.allCases) { template in
+                Button {
+                    withAnimation(Motion.tab) { selection = template }
+                } label: {
+                    VStack(spacing: 2) {
+                        ForEach(Array(template.rows.enumerated()), id: \.offset) { _, spans in
+                            HStack(spacing: 2) {
+                                ForEach(Array(spans.enumerated()), id: \.offset) { _, span in
+                                    RoundedRectangle(cornerRadius: 1.5)
+                                        .fill(.white.opacity(selection == template ? 0.9 : 0.4))
+                                        .frame(width: CGFloat(span) * 5.5 + CGFloat(span / 2 - 1) * 2, height: 7)
+                                }
+                            }
+                        }
+                    }
+                    .padding(.horizontal, Space.s)
+                    .frame(height: 26)
+                    .background(.white.opacity(selection == template ? 0.16 : 0.06), in: RoundedRectangle(cornerRadius: 7, style: .continuous))
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .help(template.title)
+                .accessibilityLabel(template.title)
+            }
             Spacer(minLength: 0)
-            IconButton(symbol: isWide ? "rectangle.fill" : "rectangle", size: 10, frame: 20, label: "Wide card", action: toggleWide)
-                .help("Wide card")
-                .disabled(isHidden)
-                .opacity(isHidden ? 0.3 : 1)
-            IconButton(symbol: isHidden ? "eye.slash" : "eye", size: 10, frame: 20, label: isHidden ? "Show card" : "Hide card", action: toggleHidden)
-                .help(isHidden ? "Show card" : "Hide card")
+            Text("Click a box to choose what goes in it")
+                .font(Typo.micro)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
         }
-        .padding(.leading, Space.s)
-        .padding(.trailing, Space.xs)
-        .frame(height: 34)
-        .glassCard(highlighted: isTargeted, radius: Radius.s + 2)
-        .opacity(isHidden ? 0.55 : 1)
-        .contentShape(Rectangle())
-        .draggable(card.rawValue)
-        .dropDestination(for: String.self) { names, _ in
-            guard let moved = names.first.flatMap(HomeCard.init(rawValue:)) else { return false }
-            drop(moved)
-            return true
-        } isTargeted: { isTargeted = $0 }
+    }
+}
+
+/// A box while Home is being edited: a menu of what can go in it.
+private struct HomeBoxPicker: View {
+    let card: HomeCard?
+    let choose: (HomeCard?) -> Void
+
+    var body: some View {
+        Menu {
+            ForEach(HomeCard.allCases) { option in
+                Button {
+                    choose(option)
+                } label: {
+                    Label(option.title, systemImage: option.symbol)
+                }
+            }
+            Divider()
+            Button("Empty") { choose(nil) }
+        } label: {
+            HStack(spacing: Space.xs) {
+                Image(systemName: card?.symbol ?? "plus")
+                    .font(.system(size: 13))
+                    .foregroundStyle(.secondary)
+                Text(card?.title ?? String(localized: "Empty"))
+                    .font(Typo.captionStrong)
+                    .foregroundStyle(card == nil ? .secondary : .primary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+                Spacer(minLength: 0)
+                Image(systemName: "chevron.down")
+                    .font(.system(size: 8, weight: .bold))
+                    .foregroundStyle(.secondary)
+            }
+            .padding(.horizontal, Space.m)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .glassCard()
+            .contentShape(Rectangle())
+        }
+        .menuStyle(.button)
+        .buttonStyle(.plain)
+        .menuIndicator(.hidden)
     }
 }
 
@@ -127,8 +137,36 @@ private struct HomeCardView: View {
 
     private var activity: ActivityState { model.activity }
 
+    /// False when there's nothing to show right now; the box keeps its place.
+    private var hasContent: Bool {
+        switch card {
+        case .nowPlaying: activity.nowPlaying != nil
+        case .weather: activity.weather.badgeSnapshot() != nil
+        case .battery: activity.battery != nil
+        case .activity: !activity.live.items.isEmpty
+        case .devices: !activity.devices.devices.isEmpty
+        case .system: true
+        case .notes: !activity.notes.isEmpty
+        case .clipboard: !activity.clipboard.items.isEmpty
+        case .shelf: !activity.shelf.items.isEmpty
+        }
+    }
+
+    @ViewBuilder
+    private var boxContent: some View {
+        if hasContent {
+            content
+        } else {
+            HStack(spacing: Space.s) {
+                Image(systemName: card.symbol).font(.system(size: 16))
+                Text(card.title).font(Typo.body).lineLimit(1)
+            }
+            .foregroundStyle(.tertiary)
+        }
+    }
+
     var body: some View {
-        content
+        boxContent
             .padding(.horizontal, Space.m)
             .padding(.vertical, Space.s)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)

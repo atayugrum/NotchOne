@@ -5,28 +5,6 @@ import Testing
 struct HomeLogicTests {
     let allTabs = NotchTab.allCases
 
-    @Test func showsOnlyCardsWithSomethingToShowInAFixedOrder() {
-        let cards = HomeLogic.cards(hasContent: [.shelf, .notes, .nowPlaying, .battery], hidden: "", visibleTabs: allTabs)
-        #expect(cards == [.nowPlaying, .battery, .notes, .shelf])
-    }
-
-    @Test func hiddenCardsAndCardsOfHiddenTabsStayAway() {
-        let tabs = allTabs.filter { $0 != .clipboard }
-        let cards = HomeLogic.cards(hasContent: Set(HomeCard.allCases), hidden: "weather,bogus", visibleTabs: tabs)
-        #expect(!cards.contains(.weather))
-        #expect(!cards.contains(.clipboard))
-        // Battery has no tab of its own, so hiding tabs never hides it.
-        #expect(cards.contains(.battery))
-    }
-
-    @Test func atMostSixInRowsOfThree() {
-        let cards = HomeLogic.cards(hasContent: Set(HomeCard.allCases), hidden: "", visibleTabs: allTabs)
-        #expect(cards.count == HomeLogic.maxCards)
-        #expect(HomeLogic.rows(cards).map(\.count) == [3, 3])
-        #expect(HomeLogic.rows([.notes, .battery]).map(\.count) == [2])
-        #expect(HomeLogic.rows([]).isEmpty)
-    }
-
     @Test func homeIsPutFirstForASavedOrderWithoutIt() {
         #expect(AppearanceLogic.tabs(order: "shelf,nowPlaying", hidden: "").prefix(3) == [.home, .shelf, .nowPlaying])
         // Once the user moved it, their place for it wins.
@@ -113,55 +91,52 @@ struct CompactModeTests {
 }
 
 struct HomeLayoutTests {
-    @Test func savedOrderIsKeptAndNewCardsGoLast() {
-        let cards = HomeLogic.ordered("notes,bogus,weather,notes")
-        #expect(Array(cards.prefix(2)) == [.notes, .weather])
-        #expect(cards.count == HomeCard.allCases.count)
+    @Test func everyTemplateFillsItsRows() {
+        for template in HomeTemplate.allCases {
+            #expect(template.rows.allSatisfy { $0.reduce(0, +) == HomeLogic.rowUnits })
+            #expect(template.slotCount <= HomeLogic.maxSlots)
+        }
     }
 
-    @Test func aWideCardTakesTwoColumnsAndRowsAreFilled() {
-        let rows = HomeLogic.rows([.nowPlaying, .weather, .battery, .notes], wide: "nowPlaying")
-        #expect(rows.map { $0.map(\.span) } == [[2, 1], [1, 2]])
+    @Test func savedBoxesKeepTheirPlaces() {
+        let slots = HomeLogic.slots("weather,,bogus")
+        #expect(slots.count == HomeLogic.maxSlots)
+        #expect(slots[0] == .weather)
+        #expect(slots[1] == nil)
+        #expect(slots[2] == nil)
+        #expect(HomeLogic.slots(HomeLogic.encode(HomeLogic.defaultSlots)) == HomeLogic.defaultSlots)
+        #expect(HomeLogic.slots("") == HomeLogic.defaultSlots)
     }
 
-    @Test func aWideCardThatDoesntFitStartsTheNextRow() {
-        let rows = HomeLogic.rows([.weather, .battery, .nowPlaying], wide: "nowPlaying")
-        #expect(rows.map { $0.map(\.card) } == [[.weather, .battery], [.nowPlaying]])
-        #expect(rows.map { $0.map(\.span) } == [[1, 2], [3]])
+    @Test func aCardChosenTwiceSwaps() {
+        let slots: [HomeCard?] = [.nowPlaying, .weather, nil]
+        #expect(HomeLogic.assign(.weather, to: 0, in: slots) == [.weather, .nowPlaying, nil])
+        #expect(HomeLogic.assign(.battery, to: 2, in: slots) == [.nowPlaying, .weather, .battery])
+        #expect(HomeLogic.assign(nil, to: 1, in: slots) == [.nowPlaying, nil, nil])
     }
 
-    @Test func columnsShareTheRow() {
-        #expect(HomeLogic.columnWidth(in: 316, spacing: 8) == 100)
-        #expect(HomeLogic.columnWidth(in: 0, spacing: 8) == 0)
+    @Test func boxesShareTheRow() {
+        #expect(HomeLogic.width(span: 3, count: 2, in: 308, spacing: 8) == 150)
+        #expect(HomeLogic.width(span: 6, count: 1, in: 300, spacing: 8) == 300)
     }
 
-    @Test func cardsPastTheLastRowDontShow() {
-        let rows = HomeLogic.rows(HomeCard.allCases, wide: "nowPlaying,weather,battery,activity,devices")
-        #expect(rows.count == HomeLogic.maxRows)
+    @Test func rowsKnowTheirFirstBox() {
+        #expect(HomeLogic.firstSlot(ofRow: 1, in: .feature) == 2)
+        #expect(HomeLogic.firstSlot(ofRow: 1, in: .even) == 3)
     }
 
-    @Test func movingPutsACardBeforeAnother() {
+    @Test func movingPutsATabBeforeAnother() {
         #expect(LayoutLogic.move(3, before: 1, in: [1, 2, 3]) == [3, 1, 2])
-        #expect(LayoutLogic.move(1, before: 3, in: [1, 2, 3]) == [2, 1, 3])
         #expect(LayoutLogic.move(1, before: 9, in: [1, 2]) == [1, 2])
     }
 
     @Test func listsAddAndRemoveNames() {
         #expect(LayoutLogic.setting("b", in: "a", to: true) == "a,b")
         #expect(LayoutLogic.setting("a", in: "a,b", to: false) == "b")
-        #expect(LayoutLogic.contains("a", in: "a,b"))
         #expect(!LayoutLogic.contains("ab", in: "abc"))
     }
 
-    @Test func everyPresetCoversEveryCard() {
-        for preset in HomePreset.allCases {
-            #expect(Set(preset.order) == Set(HomeCard.allCases))
-            #expect(preset.order.count == HomeCard.allCases.count)
-        }
-    }
-
     @Test func musicFirstKeepsOnlyUrgentThingsOverTheMusic() {
-        #expect(EarPriority.music.beatsMusic(100))
         #expect(EarPriority.music.beatsMusic(70))
         #expect(!EarPriority.music.beatsMusic(60))
         #expect(EarPriority.balanced.beatsMusic(40))

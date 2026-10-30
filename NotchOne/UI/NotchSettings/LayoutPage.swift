@@ -2,11 +2,9 @@ import SwiftUI
 
 /// Settings → Layout: what goes where, in every state of the notch.
 struct LayoutPage: View {
+    let editHome: () -> Void
     @AppStorage(SettingsKey.tabOrder) private var tabOrder = SettingsDefault.tabOrder
     @AppStorage(SettingsKey.hiddenTabs) private var hiddenTabs = SettingsDefault.hiddenTabs
-    @AppStorage(SettingsKey.homeCardOrder) private var cardOrder = SettingsDefault.homeCardOrder
-    @AppStorage(SettingsKey.wideHomeCards) private var wideCards = SettingsDefault.wideHomeCards
-    @AppStorage(SettingsKey.hiddenHomeCards) private var hiddenCards = SettingsDefault.hiddenHomeCards
     @AppStorage(SettingsKey.hiddenHeaderItems) private var hiddenHeader = ""
     @AppStorage(SettingsKey.hiddenCompactItems) private var hiddenCompact = ""
     @AppStorage(SettingsKey.earPriority) private var earPriority = SettingsDefault.earPriority
@@ -15,7 +13,11 @@ struct LayoutPage: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Space.l) {
-            homeGroup
+            SettingsGroup(title: "Home") {
+                SettingsRow(title: "Template and boxes", detail: "Choose them on Home itself.") {
+                    PillButton(title: "Edit Home", symbol: "slider.horizontal.3") { editHome() }
+                }
+            }
             tabsGroup
 
             SettingsGroup(title: "Top bar") {
@@ -40,61 +42,6 @@ struct LayoutPage: View {
                 }
             }
         }
-    }
-
-    // MARK: - Home
-
-    private var homeGroup: some View {
-        SettingsGroup(title: "Home", footer: "A card shows only when it has something to show. Two rows fit; drag cards on Home with the edit button.") {
-            SettingsRow(title: "Ready-made layout") {
-                PillMenu(value: String(localized: "Choose"), options: HomePreset.allCases.map { ($0.rawValue, $0.title) }) { name in
-                    if let preset = HomePreset(rawValue: name) { apply(preset) }
-                }
-            }
-            ForEach(Array(HomeLogic.ordered(cardOrder).enumerated()), id: \.element) { index, card in
-                RowDivider()
-                homeRow(card, index: index)
-            }
-        }
-    }
-
-    private func homeRow(_ card: HomeCard, index: Int) -> some View {
-        let cards = HomeLogic.ordered(cardOrder)
-        let tabIsHidden = card.tab.map { LayoutLogic.contains($0.rawValue, in: hiddenTabs) } ?? false
-        let isWide = LayoutLogic.contains(card.rawValue, in: wideCards)
-        return HStack(spacing: Space.s) {
-            Image(systemName: card.symbol).frame(width: 18).foregroundStyle(.secondary)
-            VStack(alignment: .leading, spacing: 1) {
-                Text(card.title).font(Typo.body)
-                if tabIsHidden {
-                    Text("Its tab is hidden").font(Typo.micro).foregroundStyle(.secondary)
-                }
-            }
-            Spacer()
-            IconButton(symbol: isWide ? "rectangle.fill" : "rectangle", size: 11, frame: 22, label: "Wide card") {
-                wideCards = LayoutLogic.setting(card.rawValue, in: wideCards, to: !isWide)
-            }
-            .help("Wide card")
-            reorderButtons(index: index, count: cards.count, title: card.title) { offset in
-                let target = cards[index + offset]
-                let moved = offset < 0
-                    ? LayoutLogic.move(card, before: target, in: cards)
-                    : LayoutLogic.move(target, before: card, in: cards)
-                cardOrder = HomeLogic.encode(moved)
-            }
-            Toggle(card.title, isOn: shown(card.rawValue, hiddenIn: $hiddenCards))
-                .toggleStyle(GlassSwitchStyle())
-                .labelsHidden()
-                .disabled(tabIsHidden)
-                .opacity(tabIsHidden ? 0.4 : 1)
-        }
-        .frame(minHeight: 32)
-    }
-
-    private func apply(_ preset: HomePreset) {
-        cardOrder = HomeLogic.encode(preset.order)
-        wideCards = HomeLogic.encode(preset.wide)
-        hiddenCards = HomeLogic.encode(preset.hidden)
     }
 
     // MARK: - Tabs

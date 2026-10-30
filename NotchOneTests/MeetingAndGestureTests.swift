@@ -103,6 +103,6 @@ struct KeyboardLightTests {
         let tabs = AppearanceLogic.tabs(order: SettingsDefault.tabOrder, hidden: SettingsDefault.hiddenTabs)
         #expect(!tabs.contains(.mirror))
         #expect(tabs.contains(.home))
-        #expect(HomeLogic.cards(hasContent: Set(HomeCard.allCases), hidden: SettingsDefault.hiddenHomeCards, visibleTabs: NotchTab.allCases).contains(.system) == false)
+        #expect(!HomeLogic.defaultSlots.contains(.system))
     }
 }
