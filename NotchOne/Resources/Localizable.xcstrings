@@ -2067,6 +2067,16 @@
         }
       }
     },
+    "Lock this Mac": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mac'i kilitle"
+          }
+        }
+      }
+    },
     "Look": {
       "localizations": {
         "tr": {

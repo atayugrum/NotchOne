@@ -2,11 +2,12 @@ import Foundation
 
 /// Something the palette can do.
 enum PaletteCommand: String, CaseIterable, Sendable {
-    case keepAwake, playPause, nextTrack, clearClipboard, editHome, settings
+    case keepAwake, lock, playPause, nextTrack, clearClipboard, editHome, settings
 
     func title(keepAwakeIsOn: Bool) -> String {
         switch self {
         case .keepAwake: keepAwakeIsOn ? String(localized: "Turn off Keep Awake") : String(localized: "Keep your Mac awake")
+        case .lock: String(localized: "Lock this Mac")
         case .playPause: String(localized: "Play or pause")
         case .nextTrack: String(localized: "Next track")
         case .clearClipboard: String(localized: "Clear clipboard history")
@@ -18,6 +19,7 @@ enum PaletteCommand: String, CaseIterable, Sendable {
     var symbol: String {
         switch self {
         case .keepAwake: "cup.and.saucer"
+        case .lock: "lock"
         case .playPause: "playpause"
         case .nextTrack: "forward"
         case .clearClipboard: "trash"

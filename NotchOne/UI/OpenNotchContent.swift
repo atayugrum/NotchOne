@@ -106,6 +106,11 @@ private struct HeaderActions: View {
             .foregroundStyle(model.activity.keepAwake.isOn ? Color.green : .secondary)
             .help("Keep Awake")
             OutputPicker(activity: model.activity)
+            IconButton(symbol: "lock", size: 12, frame: 24, label: "Lock this Mac") {
+                model.close()
+                MacLock.lock()
+            }
+            .help("Lock this Mac")
             if model.selectedTab == .home {
                 IconButton(symbol: "slider.horizontal.3", size: 12, frame: 24, label: "Edit Home") {
                     withAnimation(Motion.tab) { model.isEditingHome.toggle() }

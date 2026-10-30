@@ -62,6 +62,13 @@ struct EmailTextTests {
     }
 }
 
+struct MacLockTests {
+    // Only finds the system call; calling it would lock the Mac running the tests.
+    @Test func theSystemCallIsFound() {
+        #expect(MacLock.isAvailable)
+    }
+}
+
 struct PaletteCommandTests {
     @Test func commandsAreFoundByName() {
         let results = PaletteLogic.results(query: PaletteCommand.settings.title(keepAwakeIsOn: false), clipboard: [], shelf: [], tabs: [])

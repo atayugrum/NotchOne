@@ -73,6 +73,9 @@ struct SearchPanel: View {
         let activity = model.activity
         switch command {
         case .keepAwake: activity.toggleKeepAwake()
+        case .lock:
+            model.close()
+            MacLock.lock()
         case .playPause: activity.player?.perform(.playPause)
         case .nextTrack: activity.player?.perform(.next)
         case .clearClipboard: activity.clipboard.clear()
