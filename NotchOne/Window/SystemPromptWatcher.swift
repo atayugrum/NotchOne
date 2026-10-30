@@ -2,10 +2,12 @@ import AppKit
 import CoreGraphics
 import Synchronization
 
-/// macOS draws permission prompts at the modal-panel level, below the notch. After an Allow
-/// button is pressed, this watches for such a prompt for a while and lowers the notch below it
-/// while it's on screen, so the prompt is never hidden behind the open notch. System Settings is
-/// an ordinary window, so while it's in front the open notch drops below it too.
+/// macOS draws permission prompts below the notch, most at the modal-panel level and the
+/// Accessibility one as an ordinary window. After an Allow button is pressed, this watches for
+/// such a prompt for a while and lowers the notch below it while it's on screen, so the prompt is
+/// never hidden behind the open notch. No level sits above that prompt without covering other
+/// apps, so the open notch steps aside until it's answered, and the same while the System
+/// Settings it sends you to is in front.
 @MainActor
 final class SystemPromptWatcher {
     /// Posted when a button is about to make macOS ask for a permission.
@@ -31,11 +33,16 @@ final class SystemPromptWatcher {
     /// Where permissions are switched on after a prompt sends you there.
     nonisolated static let settingsBundleID = "com.apple.systempreferences"
 
-    /// Above everything normally; below prompts while one shows; below System Settings while
-    /// the open notch would cover it.
-    static func level(promptShowing: Bool, settingsInFront: Bool, notchOpen: Bool) -> NSWindow.Level {
-        if settingsInFront && notchOpen { return .normal }
-        return promptShowing ? belowPrompts : normalLevel
+    /// Above everything normally; below a prompt while one shows.
+    static func level(promptLevel: Int?) -> NSWindow.Level {
+        promptLevel.map { $0 > NSWindow.Level.normal.rawValue } == true ? belowPrompts : normalLevel
+    }
+
+    /// The open notch would cover an ordinary window it can't drop behind without also going
+    /// behind every other app.
+    static func stepsAside(promptLevel: Int?, settingsInFront: Bool, inPermissionFlow: Bool, notchOpen: Bool) -> Bool {
+        let ordinaryPrompt = promptLevel.map { $0 <= NSWindow.Level.normal.rawValue } ?? false
+        return notchOpen && (ordinaryPrompt || (settingsInFront && inPermissionFlow))
     }
 
     private let windows: () -> [NSWindow]
@@ -43,7 +50,11 @@ final class SystemPromptWatcher {
     private var observer: NSObjectProtocol?
     private var activationObserver: NSObjectProtocol?
     private var task: Task<Void, Never>?
-    private var promptShowing = false
+    private var waiting = false
+    private var promptLevel: Int?
+    /// From an Allow button until the prompt and the Settings it opened are gone.
+    private var inPermissionFlow = false
+    private var steppedAside = false
 
     init(windows: @escaping () -> [NSWindow], notchOpen: @escaping () -> Bool) {
         self.windows = windows
@@ -61,7 +72,7 @@ final class SystemPromptWatcher {
         }
         let expected = Self.lastExpected.withLock({ $0 }).map { Date().timeIntervalSince($0) < Self.watchFor } ?? false
         // A prompt can already be waiting from before this launch.
-        if expected || Self.isPromptShowing() { watch(expected: expected) }
+        if expected || Self.currentPromptLevel() != nil { watch(expected: expected) }
         refresh()
     }
 
@@ -73,11 +84,23 @@ final class SystemPromptWatcher {
 
     /// Call when the notch opens or closes, or the front app changes.
     func refresh() {
-        let settingsInFront = NSWorkspace.shared.frontmostApplication?.bundleIdentifier == Self.settingsBundleID
-        let level = Self.level(promptShowing: promptShowing, settingsInFront: settingsInFront, notchOpen: notchOpen())
-        for window in windows() where window.level != level {
-            window.level = level
+        let awaited = waiting ? NSWindow.Level.modalPanel.rawValue : nil
+        let level = Self.level(promptLevel: promptLevel ?? awaited)
+        let stepAside = Self.stepsAside(
+            promptLevel: promptLevel, settingsInFront: Self.settingsInFront(),
+            inPermissionFlow: inPermissionFlow, notchOpen: notchOpen()
+        )
+        for window in windows() {
+            if window.level != level { window.level = level }
+            if stepAside != steppedAside {
+                if stepAside { window.orderOut(nil) } else { window.orderFrontRegardless() }
+            }
         }
+        steppedAside = stepAside
+    }
+
+    private static func settingsInFront() -> Bool {
+        NSWorkspace.shared.frontmostApplication?.bundleIdentifier == settingsBundleID
     }
 
     func stop() {
@@ -87,52 +110,62 @@ final class SystemPromptWatcher {
         activationObserver = nil
         task?.cancel()
         task = nil
-        setLowered(false)
+        inPermissionFlow = false
+        update(waiting: false, promptLevel: nil)
     }
 
     private func watch(expected: Bool) {
         task?.cancel()
+        if expected { inPermissionFlow = true }
         // Lowered at once: a prompt takes a moment to appear and mustn't start behind the notch.
-        if expected { setLowered(true) }
+        if expected { update(waiting: true, promptLevel: Self.currentPromptLevel()) }
         task = Task { [weak self] in
             let start = Date()
             let end = start.addingTimeInterval(Self.watchFor)
-            var showing = false
+            var promptLevel: Int?
             // A prompt stays until it's answered, however long that takes.
-            while !Task.isCancelled, Date() < end || showing {
+            while !Task.isCancelled, Date() < end || promptLevel != nil || self?.settingsOpenInFlow() == true {
                 let waiting = expected && Date().timeIntervalSince(start) < Self.promptDelay
-                showing = Self.isPromptShowing()
-                self?.setLowered(waiting || showing)
+                promptLevel = Self.currentPromptLevel()
+                self?.update(waiting: waiting, promptLevel: promptLevel)
                 try? await Task.sleep(for: .milliseconds(waiting ? 50 : 250))
             }
-            self?.setLowered(false)
+            guard !Task.isCancelled else { return }
+            self?.inPermissionFlow = false
+            self?.update(waiting: false, promptLevel: nil)
             self?.task = nil
         }
     }
 
-    private func setLowered(_ lowered: Bool) {
-        promptShowing = lowered
+    private func settingsOpenInFlow() -> Bool {
+        inPermissionFlow && Self.settingsInFront()
+    }
+
+    private func update(waiting: Bool, promptLevel: Int?) {
+        self.waiting = waiting
+        self.promptLevel = promptLevel
         refresh()
     }
 
-    /// A window from another process above normal windows but below the Dock: where macOS
-    /// shows its permission prompts (UserNotificationCenter draws them at the modal-panel
-    /// level). Reading levels and owners needs no permission.
-    static func isPromptShowing() -> Bool {
+    /// A window from the processes that draw permission prompts, anywhere below the notch.
+    /// Reading levels and owners needs no permission.
+    static func currentPromptLevel() -> Int? {
         guard let list = CGWindowListCopyWindowInfo([.optionOnScreenOnly, .excludeDesktopElements], kCGNullWindowID) as? [[String: Any]]
-        else { return false }
+        else { return nil }
         let me = ProcessInfo.processInfo.processIdentifier
-        // Up to the notch's own level: the location prompt sits at 25, others at 8.
-        let levels = Int(CGWindowLevelForKey(.floatingWindow))..<normalLevel.rawValue
-        return list.contains { window in
+        // Measured on macOS 27: Accessibility at 0, location at 25, others at 8.
+        let levels = Int(NSWindow.Level.normal.rawValue)..<normalLevel.rawValue
+        for window in list {
             guard let layer = window[kCGWindowLayer as String] as? Int, levels.contains(layer),
-                  (window[kCGWindowOwnerPID as String] as? Int32) != me
-            else { return false }
-            return isPrompt(owner: window[kCGWindowOwnerName as String] as? String)
+                  (window[kCGWindowOwnerPID as String] as? Int32) != me,
+                  isPrompt(owner: window[kCGWindowOwnerName as String] as? String)
+            else { continue }
+            return layer
         }
+        return nil
     }
 
-    /// Other apps' floating windows (a mini player, a colour picker) don't count.
+    /// Other apps' windows (a mini player, a colour picker) don't count.
     nonisolated static func isPrompt(owner: String?) -> Bool {
         guard let owner else { return false }
         return promptOwners.contains(owner)

@@ -128,7 +128,7 @@ final class NotchViewModel {
     @ObservationIgnored var heldWasHovered = false
     /// Kept open regardless of hover while held, typing or in a menu. A menu only keeps an
     /// open notch open: the menu bar's own menu mustn't open it.
-    var isPinnedOpen: Bool { isHeld || isKeyFocused || (isMenuOpen && isOpen) || tourStep != nil }
+    var isPinnedOpen: Bool { isHeld || isKeyFocused || (isMenuOpen && isOpen) }
     /// Files being dragged over the notch (empty when there's no drag).
     private(set) var dragURLs: [URL] = []
     var isDropTargeted: Bool { !dragURLs.isEmpty }
@@ -214,7 +214,8 @@ final class NotchViewModel {
         withAnimation(Motion.open) { settingsPage = nil }
     }
 
-    /// Shows the tour in the notch, kept open until it's finished or skipped.
+    /// Shows the tour in the notch. Like anything held it closes once the cursor has visited and
+    /// left, and hovering brings the tour back at the same step.
     func startTour(_ steps: [OnboardingStep] = OnboardingStep.allCases) {
         guard !steps.isEmpty else { return }
         withAnimation(Motion.open) {
@@ -284,7 +285,6 @@ final class NotchViewModel {
 
     func close() {
         guard state != .closed else { return }
-        endTour()
         isHeld = false
         withAnimation(Motion.close) {
             state = .closed

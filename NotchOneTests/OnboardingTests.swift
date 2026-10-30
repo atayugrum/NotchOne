@@ -45,7 +45,7 @@ struct TourInNotchTests {
         return (model, defaults, name)
     }
 
-    @Test func tourOpensAndStaysOpen() {
+    @Test func tourOpensButCanBeClosed() {
         let (model, defaults, name) = makeModel()
         defer { defaults.removePersistentDomain(forName: name) }
         model.startTour()
@@ -53,7 +53,9 @@ struct TourInNotchTests {
         #expect(model.tourStep == .welcome)
         #expect(model.isPinnedOpen)
         model.release()
-        #expect(model.isPinnedOpen)
+        #expect(!model.isPinnedOpen)
+        model.close()
+        #expect(model.tourStep == .welcome)
     }
 
     @Test func tourUsesTheFullNotchInCompactMode() {
@@ -80,13 +82,16 @@ struct TourInNotchTests {
         #expect(defaults.integer(forKey: SettingsKey.onboardingVersion) == OnboardingLogic.currentVersion)
     }
 
-    @Test func closingSkipsTheTour() {
+    @Test func closingKeepsTheTourForNextTime() {
         let (model, defaults, name) = makeModel()
         defer { defaults.removePersistentDomain(forName: name) }
         model.startTour()
+        model.nextTourStep()
+        let step = model.tourStep
         model.close()
-        #expect(model.tourStep == nil)
-        #expect(defaults.integer(forKey: SettingsKey.onboardingVersion) == OnboardingLogic.currentVersion)
+        model.open()
+        #expect(model.tourStep == step)
+        #expect(defaults.integer(forKey: SettingsKey.onboardingVersion) == 0)
     }
 
     @Test func tourReplacesSettings() {
@@ -128,18 +133,27 @@ struct PermissionGateTests {
 
 @MainActor
 struct NotchLevelTests {
-    @Test func theOpenNotchStaysBehindSystemSettings() {
-        #expect(SystemPromptWatcher.level(promptShowing: false, settingsInFront: true, notchOpen: true) == .normal)
-        #expect(SystemPromptWatcher.level(promptShowing: true, settingsInFront: true, notchOpen: true) == .normal)
+    private func stepsAside(prompt: Int? = nil, settings: Bool = false, flow: Bool = false, open: Bool = true) -> Bool {
+        SystemPromptWatcher.stepsAside(promptLevel: prompt, settingsInFront: settings, inPermissionFlow: flow, notchOpen: open)
     }
 
-    @Test func theClosedNotchKeepsItsPlaceAboveSystemSettings() {
-        #expect(SystemPromptWatcher.level(promptShowing: false, settingsInFront: true, notchOpen: false) == SystemPromptWatcher.normalLevel)
+    @Test func theNotchStaysAboveAppsAtEveryPromptLevel() {
+        #expect(SystemPromptWatcher.level(promptLevel: nil) == SystemPromptWatcher.normalLevel)
+        #expect(SystemPromptWatcher.level(promptLevel: 0) == SystemPromptWatcher.normalLevel)
+        #expect(SystemPromptWatcher.level(promptLevel: 8) == SystemPromptWatcher.belowPrompts)
+        #expect(SystemPromptWatcher.level(promptLevel: 25) == SystemPromptWatcher.belowPrompts)
     }
 
-    @Test func promptsStillComeFirstEverywhereElse() {
-        #expect(SystemPromptWatcher.level(promptShowing: true, settingsInFront: false, notchOpen: true) == SystemPromptWatcher.belowPrompts)
-        #expect(SystemPromptWatcher.level(promptShowing: false, settingsInFront: false, notchOpen: true) == SystemPromptWatcher.normalLevel)
+    @Test func theOpenNotchStepsAsideForTheAccessibilityPrompt() {
+        #expect(stepsAside(prompt: 0))
+        #expect(!stepsAside(prompt: 0, open: false))
+        #expect(!stepsAside(prompt: 8))
+    }
+
+    @Test func settingsOnlyMoveTheNotchDuringAPermissionFlow() {
+        #expect(stepsAside(settings: true, flow: true))
+        #expect(!stepsAside(settings: true))
+        #expect(!stepsAside(settings: true, flow: true, open: false))
     }
 }
 
@@ -152,7 +166,7 @@ struct PromptDetectionTests {
     }
 
     @Test func promptsBeatTheLoweredNotch() {
-        // Levels measured on macOS 26: 8 for most prompts, 25 for location.
+        // Levels measured on macOS 27: 8 for most prompts, 25 for location.
         #expect(SystemPromptWatcher.belowPrompts.rawValue < 8)
         #expect(SystemPromptWatcher.normalLevel.rawValue > 25)
     }
