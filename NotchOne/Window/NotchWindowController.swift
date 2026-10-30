@@ -243,6 +243,14 @@ final class NotchWindowController {
         if let name = UserDefaults.standard.string(forKey: "debugTour"), let step = OnboardingStep(rawValue: name) {
             model.startTour(Array(OnboardingStep.allCases.drop { $0 != step }))
         }
+        // `-debugPeek <name>` shows a short event under the closed notch.
+        switch UserDefaults.standard.string(forKey: "debugPeek") {
+        case "airpods": activity.debugShowAirPods()
+        case "charging": activity.showPeek(.power(pluggedIn: true, percent: 87), seconds: 30)
+        case "low": activity.showPeek(.lowBattery(percent: 9), seconds: 30)
+        case "focus": activity.showPeek(.focus(on: true), seconds: 30)
+        default: break
+        }
         // `-debugEditHome YES` shows Home in edit mode.
         if UserDefaults.standard.bool(forKey: "debugEditHome") { model.isEditingHome = true }
         // `-debugTranslate "<text>"` translates it in the Translate tab.

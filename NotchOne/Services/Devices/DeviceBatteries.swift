@@ -198,6 +198,10 @@ final class DeviceBatteryStore {
 
     static let minimumInterval: TimeInterval = 60
 
+    #if DEBUG
+    func debugSet(_ devices: [DeviceBattery]) { self.devices = devices }
+    #endif
+
     func refreshIfNeeded(now: Date = Date()) {
         if let lastRead, now.timeIntervalSince(lastRead) < Self.minimumInterval { return }
         refresh()

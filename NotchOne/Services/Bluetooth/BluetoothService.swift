@@ -104,7 +104,8 @@ final class BluetoothService: NSObject, @unchecked Sendable {
         let peek = Peek.bluetooth(
             symbol: symbol,
             connected: connected,
-            battery: connected ? Self.batteryPercent(of: device) : nil
+            battery: connected ? Self.batteryPercent(of: device) : nil,
+            name: device.name ?? ""
         )
         let activity = activity
         Task { @MainActor in

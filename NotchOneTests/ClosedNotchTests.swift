@@ -2,6 +2,40 @@ import Foundation
 import Testing
 @testable import NotchOne
 
+struct EarIslandTests {
+    @Test func airPodsShowEachPart() throws {
+        let devices = [DeviceBattery(name: "AirPods Pro", symbol: "airpodspro", levels: [.left: 80, .right: 78, .case: 100])]
+        let content = EarContent.peek(.bluetooth(symbol: "airpodspro", connected: true, battery: 78, name: "AirPods Pro"))
+        let island = try #require(EarIsland.make(for: content, devices: devices))
+        #expect(island.title == "AirPods Pro")
+        #expect(island.chips.map(\.value) == ["80%", "78%", "100%"])
+        #expect(island.trailing == .success)
+    }
+
+    @Test func aDeviceWithoutLevelsStillShows() throws {
+        let content = EarContent.peek(.bluetooth(symbol: "headphones", connected: true, battery: nil, name: "Headset"))
+        let island = try #require(EarIsland.make(for: content, devices: []))
+        #expect(island.chips.isEmpty)
+        #expect(island.detail != nil)
+    }
+
+    @Test func aDisconnectIsNotASuccess() throws {
+        let content = EarContent.peek(.bluetooth(symbol: "headphones", connected: false, battery: nil, name: "Headset"))
+        #expect(try #require(EarIsland.make(for: content, devices: [])).trailing == .failure)
+    }
+
+    @Test func levelsAndMusicStayBesideTheNotch() {
+        #expect(EarIsland.make(for: .nowPlaying, devices: []) == nil)
+        #expect(EarIsland.make(for: .peek(.volume(level: 0.5, muted: false)), devices: []) == nil)
+        #expect(EarIsland.make(for: nil, devices: []) == nil)
+    }
+
+    @Test func anIslandOpensDownward() {
+        #expect(EarLayout.drop(for: .peek(.lowBattery(percent: 9))) == EarLayout.islandDrop)
+        #expect(EarLayout.drop(for: .peek(.volume(level: 0.5, muted: false))) == 0)
+    }
+}
+
 struct ClosedNotchLogicTests {
     @Test func clicksAreSplitByEar() {
         #expect(ClosedNotchLogic.side(x: 10, width: 260, notchWidth: 180) == .left)

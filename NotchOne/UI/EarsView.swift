@@ -13,6 +13,9 @@ struct EarsView: View {
                 // Opens downward: nothing beside the notch, everything under it.
                 Color.clear.frame(height: notchSize.height)
                 NotificationText(item: item)
+            } else if let island = EarIsland.make(for: content, devices: activity.devices.devices) {
+                Color.clear.frame(height: notchSize.height)
+                EarIslandView(island: island)
             } else if case .nowPlaying = content, activity.earPreview, let info = activity.nowPlaying {
                 sides
                 TrackPreview(info: info)
@@ -41,17 +44,6 @@ struct EarsView: View {
             FileThumbnail(url: url, image: activity.peekThumbnail)
         case .live(let item):
             LiveLeading(item: item)
-        case .peek(.power(let pluggedIn, _)):
-            if pluggedIn {
-                ChargingBolt()
-            } else {
-                Image(systemName: "powerplug")
-                    .font(Typo.icon(13))
-            }
-        case .peek(.lowBattery):
-            Image(systemName: "battery.25percent")
-                .font(Typo.icon(14))
-                .foregroundStyle(.red)
         case .peek(.volume(let level, let muted)):
             Image(systemName: LevelSymbols.volume(level: level, muted: muted))
                 .font(Typo.icon(13))
@@ -63,14 +55,8 @@ struct EarsView: View {
             Image(systemName: LevelSymbols.brightness(level: level))
                 .font(Typo.icon(13))
                 .contentTransition(.symbolEffect(.replace))
-        case .peek(.bluetooth(let symbol, let connected, _)):
-            Image(systemName: symbol)
-                .font(Typo.icon(13))
-                .foregroundStyle(connected ? .white : .secondary)
-        case .peek(.focus(let on)):
-            Image(systemName: on ? "moon.fill" : "moon")
-                .font(Typo.icon(13))
-                .foregroundStyle(on ? .indigo : .secondary)
+        default:
+            EmptyView()
         }
     }
 
@@ -96,39 +82,15 @@ struct EarsView: View {
                 .help("Drag into another app")
         case .live(let item):
             LiveTrailing(item: item)
-        case .peek(.power(let pluggedIn, let percent)):
-            if pluggedIn {
-                ChargingLevel(percent: percent)
-            } else {
-                percentText(percent, color: .white)
-            }
-        case .peek(.lowBattery(let percent)):
-            percentText(percent, color: .red)
         case .peek(.volume(let level, let muted)):
             LevelBar(level: muted ? 0 : level)
         case .peek(.brightness(let level)):
             LevelBar(level: level)
         case .peek(.keyboardBacklight(let level)):
             LevelBar(level: level)
-        case .peek(.bluetooth(_, let connected, let battery)):
-            if let battery {
-                percentText(battery, color: battery <= 20 ? .red : .white)
-            } else {
-                Image(systemName: connected ? "checkmark.circle.fill" : "xmark.circle.fill")
-                    .font(Typo.icon(13))
-                    .foregroundStyle(connected ? .green : .secondary)
-            }
-        case .peek(.focus(let on)):
-            Text(on ? "On" : "Off")
-                .font(Typo.number(12))
-                .foregroundStyle(on ? .white : .secondary)
+        default:
+            EmptyView()
         }
-    }
-
-    private func percentText(_ percent: Int, color: Color) -> some View {
-        Text("\(percent)%")
-            .font(Typo.number(12))
-            .foregroundStyle(color)
     }
 }
 
@@ -149,41 +111,76 @@ private struct TrackPreview: View {
     }
 }
 
-/// Bolt that bounces once when power is connected (a one-shot effect, not a loop).
-private struct ChargingBolt: View {
-    @State private var trigger = 0
+/// A short event as a card under the closed notch.
+private struct EarIslandView: View {
+    let island: EarIsland
 
-    var body: some View {
-        Image(systemName: "bolt.fill")
-            .font(Typo.icon(14))
-            .foregroundStyle(.green)
-            .symbolEffect(.bounce, options: .nonRepeating, value: trigger)
-            .onAppear { trigger += 1 }
-    }
-}
-
-/// Battery outline that fills up to the charge once, with the percentage.
-private struct ChargingLevel: View {
-    let percent: Int
-    @State private var shown: CGFloat = 0
-
-    var body: some View {
-        HStack(spacing: Space.xs) {
-            Text("\(percent)%")
-                .font(Typo.number(12))
-                .foregroundStyle(.green)
-            RoundedRectangle(cornerRadius: 3, style: .continuous)
-                .strokeBorder(.white.opacity(0.5), lineWidth: 1)
-                .frame(width: 22, height: 11)
-                .overlay(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 1.5, style: .continuous)
-                        .fill(.green)
-                        .frame(width: 18 * shown, height: 7)
-                        .padding(.leading, 2)
-                }
+    private var tint: Color {
+        switch island.tint {
+        case .neutral: .white
+        case .green: .green
+        case .red: .red
+        case .indigo: .indigo
         }
-        .onAppear {
-            withAnimation(.easeOut(duration: 0.9).delay(0.1)) { shown = CGFloat(min(100, max(0, percent))) / 100 }
+    }
+
+    var body: some View {
+        HStack(spacing: Space.m) {
+            Image(systemName: island.symbol)
+                .font(.system(size: 16, weight: .medium))
+                .foregroundStyle(tint)
+                .frame(width: 40, height: 40)
+                .background(tint.opacity(0.16), in: Circle())
+                .overlay(Circle().strokeBorder(tint.opacity(0.35), lineWidth: 1))
+            VStack(alignment: .leading, spacing: 4) {
+                Text(island.title)
+                    .font(Typo.title)
+                    .lineLimit(1)
+                if !island.chips.isEmpty {
+                    HStack(spacing: Space.xs) {
+                        ForEach(island.chips) { chip in
+                            HStack(spacing: 3) {
+                                Text(chip.label).foregroundStyle(.secondary)
+                                Text(chip.value)
+                            }
+                            .font(Typo.number(10, weight: .semibold))
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(Color.white.opacity(0.12), in: Capsule())
+                        }
+                    }
+                    .lineLimit(1)
+                } else if let detail = island.detail {
+                    Text(detail)
+                        .font(Typo.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                }
+            }
+            Spacer(minLength: 0)
+            trailing
+        }
+        .padding(.horizontal, Space.m)
+        .frame(maxWidth: .infinity, maxHeight: EarLayout.islandDrop)
+    }
+
+    @ViewBuilder
+    private var trailing: some View {
+        switch island.trailing {
+        case .none:
+            EmptyView()
+        case .success:
+            Image(systemName: "checkmark.circle.fill")
+                .font(.system(size: 20))
+                .foregroundStyle(.white, .green)
+        case .failure:
+            Image(systemName: "xmark.circle.fill")
+                .font(.system(size: 20))
+                .foregroundStyle(.white, Color(white: 0.35))
+        case .text(let text):
+            Text(text)
+                .font(Typo.number(15))
+                .foregroundStyle(island.tint == .neutral ? .white : tint)
         }
     }
 }

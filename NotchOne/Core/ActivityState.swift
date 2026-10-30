@@ -8,7 +8,7 @@ enum Peek: Equatable, Sendable {
     case volume(level: Float, muted: Bool)
     case brightness(level: Float)
     case keyboardBacklight(level: Float)
-    case bluetooth(symbol: String, connected: Bool, battery: Int?)
+    case bluetooth(symbol: String, connected: Bool, battery: Int?, name: String = "")
     /// A Focus was turned on or off.
     case focus(on: Bool)
     /// A new screenshot or download; drag the thumbnail out of the notch.
@@ -52,8 +52,13 @@ enum EarLayout {
     /// How far the track's name reaches below the closed notch while an ear is hovered.
     static let previewDrop: CGFloat = 38
 
+    /// A short event opens downward as a card under the notch.
+    static let islandDrop: CGFloat = 58
+    static let islandWidth: CGFloat = 112
+
     static func drop(for content: EarContent?, previewing: Bool = false) -> CGFloat {
         if case .live(let item) = content, item.source == .notification { return notificationDrop }
+        if EarIsland.make(for: content, devices: []) != nil { return islandDrop }
         if case .nowPlaying = content, previewing { return previewDrop }
         return 0
     }
@@ -113,10 +118,11 @@ enum EarLayout {
     }
 
     static func width(for content: EarContent?) -> CGFloat {
-        switch content {
+        if EarIsland.make(for: content, devices: []) != nil { return islandWidth }
+        return switch content {
         case nil: 0
         case .nowPlaying: nowPlayingWidth
-        case .peek(.volume), .peek(.brightness), .peek(.keyboardBacklight), .peek(.power(pluggedIn: true, _)): levelWidth
+        case .peek(.volume), .peek(.brightness), .peek(.keyboardBacklight): levelWidth
         case .peek(.newFile): liveTextWidth
         case .peek: peekWidth
         case .live(let item) where item.source == .notification: notificationWidth
@@ -259,6 +265,14 @@ final class ActivityState {
         if case .live(let item) = ears { return item.source == .notification }
         return false
     }
+
+    #if DEBUG
+    /// Screenshots: as if AirPods Pro connected.
+    func debugShowAirPods() {
+        devices.debugSet([DeviceBattery(name: "AirPods Pro", symbol: "airpodspro", levels: [.left: 80, .right: 78, .case: 100])])
+        showPeek(.bluetooth(symbol: "airpodspro", connected: true, battery: 78, name: "AirPods Pro"), seconds: 30)
+    }
+    #endif
 
     static let filePeekSeconds: Double = 6
 

@@ -70,7 +70,7 @@ struct LevelMathTests {
     @Test func levelPeeksGetWiderEars() {
         #expect(EarLayout.width(for: .peek(.volume(level: 0.5, muted: false))) == EarLayout.levelWidth)
         #expect(EarLayout.width(for: .peek(.brightness(level: 0.5))) == EarLayout.levelWidth)
-        #expect(EarLayout.width(for: .peek(.bluetooth(symbol: "airpods", connected: true, battery: nil))) == EarLayout.peekWidth)
+        #expect(EarLayout.width(for: .peek(.bluetooth(symbol: "airpods", connected: true, battery: nil))) == EarLayout.islandWidth)
     }
 }
 

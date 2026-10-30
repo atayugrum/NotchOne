@@ -65,7 +65,7 @@ struct LayoutTests {
     @Test func earWidths() {
         #expect(EarLayout.width(for: nil) == 0)
         #expect(EarLayout.width(for: .nowPlaying) == EarLayout.nowPlayingWidth)
-        #expect(EarLayout.width(for: .peek(.lowBattery(percent: 9))) == EarLayout.peekWidth)
+        #expect(EarLayout.width(for: .peek(.lowBattery(percent: 9))) == EarLayout.islandWidth)
     }
 
     @Test func closedHoverAreaGrowsWithEars() {

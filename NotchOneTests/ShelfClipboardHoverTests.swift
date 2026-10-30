@@ -157,6 +157,6 @@ struct MenuClearanceTests {
         activity.nowPlaying = NowPlayingInfo(source: .spotify, title: "T", artist: "", album: "", duration: nil, position: 0, isPlaying: true, updatedAt: .now)
         #expect(activity.earWidth == 22)
         activity.showPeek(.focus(on: true))
-        #expect(activity.earWidth == EarLayout.peekWidth)
+        #expect(activity.earWidth == EarLayout.islandWidth)
     }
 }

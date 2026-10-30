@@ -575,6 +575,16 @@
         }
       }
     },
+    "Bluetooth device": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bluetooth aygıtı"
+          }
+        }
+      }
+    },
     "Browsers, video players": {
       "localizations": {
         "tr": {
@@ -654,6 +664,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kompakt satır"
+          }
+        }
+      }
+    },
+    "Connected": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bağlandı"
           }
         }
       }
@@ -1188,6 +1208,16 @@
         }
       }
     },
+    "Disconnected": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bağlantı kesildi"
+          }
+        }
+      }
+    },
     "Displays with a real notch always use the notch shape.": {
       "localizations": {
         "tr": {
@@ -1419,6 +1449,26 @@
       }
     },
     "Focus is on": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odak açık"
+          }
+        }
+      }
+    },
+    "Focus off": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odak kapalı"
+          }
+        }
+      }
+    },
+    "Focus on": {
       "localizations": {
         "tr": {
           "stringUnit": {
@@ -1933,6 +1983,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Görünüş"
+          }
+        }
+      }
+    },
+    "Low battery": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pil azaldı"
           }
         }
       }
@@ -4222,52 +4282,49 @@
       }
     },
     "battery.case": {
-      "extractionState": "extracted_with_value",
       "localizations": {
         "en": {
           "stringUnit": {
-            "state": "new",
-            "value": "Case "
+            "state": "translated",
+            "value": "Case"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Kutu "
+            "value": "Kutu"
           }
         }
       }
     },
     "battery.left": {
-      "extractionState": "extracted_with_value",
       "localizations": {
         "en": {
           "stringUnit": {
-            "state": "new",
-            "value": "L "
+            "state": "translated",
+            "value": "L"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sol "
+            "value": "Sol"
           }
         }
       }
     },
     "battery.right": {
-      "extractionState": "extracted_with_value",
       "localizations": {
         "en": {
           "stringUnit": {
-            "state": "new",
-            "value": "R "
+            "state": "translated",
+            "value": "R"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sağ "
+            "value": "Sağ"
           }
         }
       }
