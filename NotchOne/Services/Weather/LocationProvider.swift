@@ -90,14 +90,19 @@ enum CitySearch {
         request.resultTypes = .address
         guard let response = try? await MKLocalSearch(request: request).start() else { return [] }
         return response.mapItems.prefix(6).compactMap { item in
-            let location = item.location.coordinate
-            let coordinate = Coordinate(latitude: location.latitude, longitude: location.longitude)
+            let place = place(of: item)
+            let coordinate = Coordinate(latitude: place.location.latitude, longitude: place.location.longitude)
             guard coordinate.isValid else { return nil }
-            return CityResult(
-                name: item.name ?? text,
-                detail: item.address?.shortAddress ?? "",
-                coordinate: coordinate
-            )
+            return CityResult(name: item.name ?? text, detail: place.detail, coordinate: coordinate)
         }
+    }
+
+    private static func place(of item: MKMapItem) -> (location: CLLocationCoordinate2D, detail: String) {
+        if #available(macOS 26.0, *) {
+            return (item.location.coordinate, item.address?.shortAddress ?? "")
+        }
+        let placemark = item.placemark
+        let detail = [placemark.administrativeArea, placemark.country].compactMap { $0 }.joined(separator: ", ")
+        return (placemark.coordinate, detail)
     }
 }

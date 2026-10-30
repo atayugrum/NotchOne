@@ -94,3 +94,10 @@ struct RemovedTabsTests {
         #expect(HomeCard.activity.tab == nil)
     }
 }
+
+struct UnavailableTabTests {
+    @Test func aTabTheSystemCantRunIsNeverShown() {
+        #expect(!AppearanceLogic.tabs(order: "translate,home", hidden: "", unavailable: [.translate]).contains(.translate))
+        #expect(AppearanceLogic.tabs(order: "translate,home", hidden: "", unavailable: []).contains(.translate))
+    }
+}

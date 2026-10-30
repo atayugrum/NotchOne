@@ -12,6 +12,9 @@ struct TranslatePanel: View {
 
     var body: some View {
         VStack(spacing: Space.s) {
+            if #unavailable(macOS 26.0) {
+                if #available(macOS 15.0, *) { SessionTranslationHost() }
+            }
             HStack(spacing: Space.s) {
                 LanguageMenu(title: "From", selection: from, languages: store.languages, includesDetect: true) {
                     store.setFrom($0)

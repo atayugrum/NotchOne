@@ -80,13 +80,20 @@ enum TranslateLogic {
 
 /// On-device translation with Apple's Translation framework.
 enum Translator {
+    /// Apple's Translation framework arrived in macOS 15.
+    static var isSupported: Bool {
+        if #available(macOS 15.0, *) { true } else { false }
+    }
+
     /// Every language this Mac can translate between.
     static func supportedLanguages() async -> [Locale.Language] {
-        await LanguageAvailability().supportedLanguages
+        guard #available(macOS 15.0, *) else { return [] }
+        return await LanguageAvailability().supportedLanguages
     }
 
     static func availability(_ pair: TranslationPair) async -> LanguageStatus {
-        switch await LanguageAvailability().status(from: pair.source, to: pair.target) {
+        guard #available(macOS 15.0, *) else { return .unsupported }
+        return switch await LanguageAvailability().status(from: pair.source, to: pair.target) {
         case .installed: .installed
         case .supported: .downloadable
         default: .unsupported
@@ -100,12 +107,20 @@ enum Translator {
             return .done(source: text, result: text, from: from, to: to)
         }
 
+        guard #available(macOS 15.0, *) else {
+            return .failed(String(localized: "Translation isn't available."))
+        }
         switch await LanguageAvailability().status(from: pair.source, to: pair.target) {
         case .installed:
             do {
-                let session = TranslationSession(installedSource: pair.source, target: pair.target)
-                let response = try await session.translate(text)
-                return .done(source: text, result: response.targetText, from: from, to: to)
+                let result: String
+                if #available(macOS 26.0, *) {
+                    let session = TranslationSession(installedSource: pair.source, target: pair.target)
+                    result = try await session.translate(text).targetText
+                } else {
+                    result = try await SessionTranslation.shared.translate(text, pair: pair)
+                }
+                return .done(source: text, result: result, from: from, to: to)
             } catch {
                 return .failed(String(localized: "Translation failed: \(error.localizedDescription)"))
             }

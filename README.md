@@ -143,7 +143,7 @@ xcodebuild -project NotchOne.xcodeproj -scheme NotchOne -derivedDataPath build t
 open build/Build/Products/Debug/NotchOne.app
 ```
 
-Requires macOS 26+, Xcode 27 and [XcodeGen](https://github.com/yonaskolb/XcodeGen)
+NotchOne runs on macOS 14 or later. Liquid Glass needs macOS 26 and translation macOS 15; older systems get a blurred panel and no Translate tab. Building requires Xcode 27 and [XcodeGen](https://github.com/yonaskolb/XcodeGen)
 (build time only). The Xcode project is generated from `project.yml` and not committed.
 
 ## Layout

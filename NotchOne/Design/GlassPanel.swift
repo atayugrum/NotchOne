@@ -29,7 +29,7 @@ struct GlassPanel<S: Shape>: View {
                     accentWash
                 } else {
                     Color.clear
-                        .glassEffect(.regular.tint(.black.opacity(AppearanceLogic.glassDarkness(strength: strength))), in: shape)
+                        .notchGlass(darkness: AppearanceLogic.glassDarkness(strength: strength), in: shape)
                     accentWash
                 }
                 if style == .glass, neckHeight > 0 {
@@ -65,4 +65,32 @@ struct GlassPanel<S: Shape>: View {
             endPoint: .bottom
         )
     }
+}
+
+extension View {
+    /// Liquid Glass on macOS 26; a blur of what's behind the window before that.
+    @ViewBuilder
+    func notchGlass<S: Shape>(darkness: Double, in shape: S) -> some View {
+        if #available(macOS 26.0, *) {
+            glassEffect(.regular.tint(.black.opacity(darkness)), in: shape)
+        } else {
+            background {
+                BehindWindowBlur()
+                    .overlay(Color.black.opacity(darkness))
+                    .clipShape(shape)
+            }
+        }
+    }
+}
+
+private struct BehindWindowBlur: NSViewRepresentable {
+    func makeNSView(context: Context) -> NSVisualEffectView {
+        let view = NSVisualEffectView()
+        view.material = .hudWindow
+        view.blendingMode = .behindWindow
+        view.state = .active
+        return view
+    }
+
+    func updateNSView(_ view: NSVisualEffectView, context: Context) {}
 }

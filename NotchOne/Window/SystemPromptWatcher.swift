@@ -1,6 +1,6 @@
 import AppKit
 import CoreGraphics
-import Synchronization
+import os
 
 /// macOS draws permission prompts below the notch, most at the modal-panel level and the
 /// Accessibility one as an ordinary window. After an Allow button is pressed, this watches for
@@ -20,7 +20,7 @@ final class SystemPromptWatcher {
         NotificationCenter.default.post(name: expected, object: nil)
     }
 
-    private nonisolated static let lastExpected = Mutex<Date?>(nil)
+    private nonisolated static let lastExpected = OSAllocatedUnfairLock<Date?>(initialState: nil)
 
     /// The notch's own level, and the one it drops to while a prompt shows.
     static let normalLevel = NSWindow.Level(rawValue: NSWindow.Level.statusBar.rawValue + 1)

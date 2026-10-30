@@ -61,7 +61,7 @@ enum AppearanceLogic {
     /// Visible tabs in the saved order. Unknown names are dropped, tabs missing from the
     /// saved order are appended (so new tabs show up; Home goes first), and at least one
     /// tab stays visible.
-    static func tabs(order: String, hidden: String) -> [NotchTab] {
+    static func tabs(order: String, hidden: String, unavailable: Set<NotchTab> = unavailableTabs) -> [NotchTab] {
         var result: [NotchTab] = []
         for name in order.split(separator: ",") {
             if let tab = NotchTab(rawValue: String(name)), !result.contains(tab) {
@@ -71,6 +71,7 @@ enum AppearanceLogic {
         let firstSaved = result.first
         if !result.isEmpty, !result.contains(.home) { result.insert(.home, at: 0) }
         result += NotchTab.allCases.filter { !result.contains($0) }
+        result.removeAll(where: unavailable.contains)
 
         // Search is a button now, not a tab you can hide; ⌃⌥K must always find it.
         let hiddenSet = Set(hidden.split(separator: ",").compactMap { NotchTab(rawValue: String($0)) }).subtracting([.search])
@@ -79,6 +80,11 @@ enum AppearanceLogic {
         guard !visible.contains(where: \.inTabBar) else { return visible }
         let keep = [firstSaved, result.first(where: \.inTabBar)].compactMap { $0 }.first { $0.inTabBar } ?? .home
         return result.filter { $0 == keep || $0 == .search }
+    }
+
+    /// Tabs this version of macOS can't run.
+    static var unavailableTabs: Set<NotchTab> {
+        Translator.isSupported ? [] : [.translate]
     }
 
     /// All tabs in the saved order, hidden ones included (for the Settings list).

@@ -110,7 +110,9 @@ private struct TourShortcuts: View {
     var body: some View {
         VStack(alignment: .leading, spacing: Space.xs + 2) {
             row(HotKey.palette.display, "Search clipboard, shelf and tabs")
-            row(HotKey.translate.display, "Translate the selected text")
+            if Translator.isSupported {
+                row(HotKey.translate.display, "Translate the selected text")
+            }
         }
     }
 

@@ -132,7 +132,7 @@ private struct LockScreenWidget: View {
         }
         .padding(.horizontal, Space.m)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .glassEffect(.regular.tint(.black.opacity(0.35)), in: RoundedRectangle(cornerRadius: Radius.l, style: .continuous))
+        .notchGlass(darkness: 0.35, in: RoundedRectangle(cornerRadius: Radius.l, style: .continuous))
         .foregroundStyle(.white)
         .environment(\.colorScheme, .dark)
     }

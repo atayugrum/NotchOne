@@ -93,7 +93,7 @@ struct NotchSettingsView: View {
 
     private var rail: some View {
         VStack(spacing: 1) {
-            ForEach(SettingsPage.allCases) { item in
+            ForEach(SettingsPage.allCases.filter { $0 != .translate || Translator.isSupported }) { item in
                 let isSelected = item == page
                 Button {
                     model.showSettingsPage(item)

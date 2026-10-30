@@ -27,7 +27,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         notchController = controller
         SettingsOpener.handler = { [weak controller] page in controller?.openSettings(page) }
 
-        HotKeyCenter.shared.register(.translate) { [weak controller] in controller?.translateSelection() }
+        if Translator.isSupported {
+            HotKeyCenter.shared.register(.translate) { [weak controller] in controller?.translateSelection() }
+        }
         HotKeyCenter.shared.register(.palette) { [weak controller] in controller?.toggleSearch() }
     }
 

@@ -56,12 +56,18 @@ struct UpdateLogicTests {
         #expect(update.notes == "Fixes.More fixes.")
     }
 
-    @Test func skipsOldPreAndInsecureReleases() {
+    @Test func skipsOldPreAndInsecureReleases() throws {
         #expect(UpdateLogic.update(fromRelease: release(), current: "2.1.0") == nil)
         #expect(UpdateLogic.update(fromRelease: release(prerelease: true), current: "2.0.0") == nil)
         #expect(UpdateLogic.update(fromRelease: release(url: "http://evil.example/NotchOne.zip"), current: "2.0.0") == nil)
         #expect(UpdateLogic.update(fromRelease: release(asset: "Other.zip"), current: "2.0.0") == nil)
         #expect(UpdateLogic.update(fromRelease: Data("nope".utf8), current: "2.0.0") == nil)
+        let needsNewerSystem = try JSONSerialization.data(withJSONObject: [
+            "tag_name": "v2.1.0", "minimum_system_version": "26.0",
+            "assets": [["name": "NotchOne.zip", "browser_download_url": "https://notchone.one/NotchOne.zip"]],
+        ])
+        #expect(UpdateLogic.update(fromRelease: needsNewerSystem, current: "2.0.0", system: "15.5") == nil)
+        #expect(UpdateLogic.update(fromRelease: needsNewerSystem, current: "2.0.0", system: "26.0.1") != nil)
     }
 
     @Test func checksAtMostDaily() {

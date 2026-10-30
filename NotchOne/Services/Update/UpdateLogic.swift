@@ -46,13 +46,19 @@ enum UpdateLogic {
         return b.lexicographicallyPrecedes(a)
     }
 
+    static var systemVersion: String {
+        let version = ProcessInfo.processInfo.operatingSystemVersion
+        return "\(version.majorVersion).\(version.minorVersion).\(version.patchVersion)"
+    }
+
     /// Reads the release feed, in the format of GitHub's "latest release" answer. Drafts and pre-releases are skipped, and
-    /// only an HTTPS zip named like the app is taken.
-    static func update(fromRelease data: Data, current: String) -> AvailableUpdate? {
+    /// only an HTTPS zip named like the app is taken. A release this Mac's system can't run isn't offered.
+    static func update(fromRelease data: Data, current: String, system: String = systemVersion) -> AvailableUpdate? {
         guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
               let tag = json["tag_name"] as? String,
               json["draft"] as? Bool != true, json["prerelease"] as? Bool != true,
               isNewer(tag, than: current),
+              !isNewer(json["minimum_system_version"] as? String ?? "0", than: system),
               let assets = json["assets"] as? [[String: Any]]
         else { return nil }
         let zip = assets.lazy.compactMap { asset -> URL? in

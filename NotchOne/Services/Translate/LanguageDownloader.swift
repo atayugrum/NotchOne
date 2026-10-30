@@ -21,6 +21,7 @@ enum LanguageDownloader {
     }
 
     static func download(_ pair: TranslationPair, done: @escaping @MainActor () -> Void) {
+        guard #available(macOS 15.0, *) else { return done() }
         window?.close()
         let view = LanguageDownloadView(pair: pair) {
             window?.close()
@@ -43,6 +44,7 @@ enum LanguageDownloader {
     }
 }
 
+@available(macOS 15.0, *)
 private struct LanguageDownloadView: View {
     let pair: TranslationPair
     let finish: @MainActor () -> Void

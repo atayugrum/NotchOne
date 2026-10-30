@@ -66,7 +66,9 @@ struct GeneralPage: View {
                 title: "Shortcuts",
                 footer: "Search looks through clipboard history, shelf files and tabs."
             ) {
-                shortcut("Translate the selection", HotKey.translate.display)
+                if Translator.isSupported {
+                    shortcut("Translate the selection", HotKey.translate.display)
+                }
                 RowDivider()
                 shortcut("Search", HotKey.palette.display)
             }
@@ -190,7 +192,7 @@ struct AppearancePage: View {
             var hidden = Set(hiddenTabs.split(separator: ",").map(String.init))
             if visible { hidden.remove(tab.rawValue) } else { hidden.insert(tab.rawValue) }
             // Keep at least one tab.
-            guard hidden.count < NotchTab.allCases.filter(\.inTabBar).count else { return }
+            guard hidden.count < NotchTab.allCases.filter({ $0.inTabBar && !AppearanceLogic.unavailableTabs.contains($0) }).count else { return }
             hiddenTabs = hidden.sorted().joined(separator: ",")
         }
     }
