@@ -145,9 +145,13 @@ struct NotchLevelTests {
     }
 
     @Test func theOpenNotchStepsAsideForTheAccessibilityPrompt() {
-        #expect(stepsAside(prompt: 0))
-        #expect(!stepsAside(prompt: 0, open: false))
-        #expect(!stepsAside(prompt: 8))
+        #expect(stepsAside(prompt: 0, flow: true))
+        #expect(!stepsAside(prompt: 0, flow: true, open: false))
+        #expect(!stepsAside(prompt: 8, flow: true))
+    }
+
+    @Test func aWindowAlreadyOnScreenNeverHidesTheNotch() {
+        #expect(!stepsAside(prompt: 0))
     }
 
     @Test func settingsOnlyMoveTheNotchDuringAPermissionFlow() {
@@ -160,9 +164,15 @@ struct NotchLevelTests {
 @MainActor
 struct PromptDetectionTests {
     @Test func theLocationPromptCounts() {
-        #expect(SystemPromptWatcher.isPrompt(owner: "CoreLocationAgent"))
-        #expect(SystemPromptWatcher.isPrompt(owner: "UserNotificationCenter"))
-        #expect(!SystemPromptWatcher.isPrompt(owner: "Dock"))
+        #expect(SystemPromptWatcher.isPrompt(owner: "CoreLocationAgent", level: 25))
+        #expect(SystemPromptWatcher.isPrompt(owner: "UserNotificationCenter", level: 8))
+        #expect(SystemPromptWatcher.isPrompt(owner: "universalAccessAuthWarn", level: 0))
+        #expect(!SystemPromptWatcher.isPrompt(owner: "Dock", level: 8))
+    }
+
+    @Test func ordinaryWindowsFromSystemAgentsArentPrompts() {
+        #expect(!SystemPromptWatcher.isPrompt(owner: "CoreServicesUIAgent", level: 0))
+        #expect(!SystemPromptWatcher.isPrompt(owner: "SecurityAgent", level: 0))
     }
 
     @Test func promptsBeatTheLoweredNotch() {

@@ -39,10 +39,11 @@ final class SystemPromptWatcher {
     }
 
     /// The open notch would cover an ordinary window it can't drop behind without also going
-    /// behind every other app.
+    /// behind every other app. Only after an Allow button: a system window that's simply on
+    /// screen must never hide the notch.
     static func stepsAside(promptLevel: Int?, settingsInFront: Bool, inPermissionFlow: Bool, notchOpen: Bool) -> Bool {
         let ordinaryPrompt = promptLevel.map { $0 <= NSWindow.Level.normal.rawValue } ?? false
-        return notchOpen && (ordinaryPrompt || (settingsInFront && inPermissionFlow))
+        return notchOpen && inPermissionFlow && (ordinaryPrompt || settingsInFront)
     }
 
     private let windows: () -> [NSWindow]
@@ -158,7 +159,7 @@ final class SystemPromptWatcher {
         for window in list {
             guard let layer = window[kCGWindowLayer as String] as? Int, levels.contains(layer),
                   (window[kCGWindowOwnerPID as String] as? Int32) != me,
-                  isPrompt(owner: window[kCGWindowOwnerName as String] as? String)
+                  isPrompt(owner: window[kCGWindowOwnerName as String] as? String, level: layer)
             else { continue }
             return layer
         }
@@ -166,10 +167,14 @@ final class SystemPromptWatcher {
     }
 
     /// Other apps' windows (a mini player, a colour picker) don't count.
-    nonisolated static func isPrompt(owner: String?) -> Bool {
-        guard let owner else { return false }
-        return promptOwners.contains(owner)
+    nonisolated static func isPrompt(owner: String?, level: Int) -> Bool {
+        guard let owner, promptOwners.contains(owner) else { return false }
+        // The other agents keep ordinary windows on screen that aren't prompts.
+        return level >= Int(CGWindowLevelForKey(.floatingWindow)) || owner == accessibilityPromptOwner
     }
+
+    /// Draws the Accessibility prompt, the one ordinary-level prompt.
+    nonisolated static let accessibilityPromptOwner = "universalAccessAuthWarn"
 
     /// The system processes that draw permission prompts.
     nonisolated static let promptOwners: Set<String> = [

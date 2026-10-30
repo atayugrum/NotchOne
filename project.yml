@@ -37,8 +37,8 @@ targets:
       properties:
         CFBundleDisplayName: NotchOne
         CFBundleLocalizations: [en, tr]
-        CFBundleShortVersionString: "1.0.2"
-        CFBundleVersion: "3"
+        CFBundleShortVersionString: "1.0.3"
+        CFBundleVersion: "4"
         # GitHub's latest-release API for the repo releases are published to; empty turns
         # the update check off.
         NotchOneUpdateFeed: "https://notchone.one/update.json"

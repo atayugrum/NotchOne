@@ -13,7 +13,8 @@ async function download(context) {
   const { request, env } = context;
   const feed = await env.ASSETS.fetch(new URL("/update.json", request.url));
   const release = feed.ok ? await feed.json() : null;
-  const name = release?.assets?.[0]?.name;
+  // The installer for people; the app's own updates use the zip.
+  const name = release?.assets?.find((asset) => asset.name.endsWith(".dmg"))?.name;
   if (!name) return new Response("Download not available", { status: 404 });
   record(context, "download", country(request));
   return Response.redirect(new URL(`/downloads/${name}`, request.url), 302);
