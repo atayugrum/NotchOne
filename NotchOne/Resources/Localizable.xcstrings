@@ -2277,16 +2277,6 @@
         }
       }
     },
-    "Mouse wheel changes the volume": {
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fare tekerleği sesi değiştirir"
-          }
-        }
-      }
-    },
     "Move %@ down": {
       "localizations": {
         "tr": {
@@ -2896,16 +2886,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "İsteğe bağlı izinler"
-          }
-        }
-      }
-    },
-    "Over the closed notch.": {
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kapalı notch'un üzerindeyken."
           }
         }
       }

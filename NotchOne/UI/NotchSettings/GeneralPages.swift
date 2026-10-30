@@ -10,7 +10,6 @@ struct GeneralPage: View {
     private var showOnDisplaysWithoutNotch = SettingsDefault.showOnDisplaysWithoutNotch
     @AppStorage(SettingsKey.gesturesEnabled) private var gesturesEnabled = SettingsDefault.gesturesEnabled
     @AppStorage(SettingsKey.earPreview) private var earPreview = SettingsDefault.earPreview
-    @AppStorage(SettingsKey.wheelVolume) private var wheelVolume = SettingsDefault.wheelVolume
     @AppStorage(SettingsKey.hideFromCapture) private var hideFromCapture = SettingsDefault.hideFromCapture
     @AppStorage(SettingsKey.lockScreenWidget) private var lockScreenWidget = SettingsDefault.lockScreenWidget
 
@@ -74,12 +73,6 @@ struct GeneralPage: View {
                     title: "Song name on hover",
                     detail: "Pointing at the sides of the closed notch shows what's playing.",
                     isOn: $earPreview
-                )
-                RowDivider()
-                ToggleRow(
-                    title: "Mouse wheel changes the volume",
-                    detail: "Over the closed notch.",
-                    isOn: $wheelVolume
                 )
             }
 

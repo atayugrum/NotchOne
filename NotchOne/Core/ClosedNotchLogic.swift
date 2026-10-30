@@ -54,11 +54,4 @@ enum ClosedNotchLogic {
         case .center: return .open
         }
     }
-
-    /// Volume change for one wheel notch; up on the wheel is louder.
-    static func wheelVolume(_ level: Float, dy: CGFloat) -> Float {
-        min(1, max(0, level + (dy > 0 ? wheelStep : -wheelStep)))
-    }
-
-    private static let wheelStep: Float = 1 / 32
 }

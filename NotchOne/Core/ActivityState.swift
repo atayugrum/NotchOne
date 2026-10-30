@@ -219,8 +219,6 @@ final class ActivityState {
     let drops: DropActionRunner
     /// Set by meeting mode while it runs.
     @ObservationIgnored var onToggleMicMute: (() -> Void)?
-    /// Set by the media key service; `up` is louder.
-    @ObservationIgnored var onWheelVolume: ((CGFloat) -> Void)?
     /// True while the Mirror tab has the camera on (so it isn't taken for a meeting).
     var isUsingCamera = false
     /// A Focus mode is on (only when the Focus indicator is enabled and allowed).

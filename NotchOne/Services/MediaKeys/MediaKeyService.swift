@@ -23,7 +23,6 @@ final class MediaKeyService {
 
     func start() {
         guard trustObserver == nil else { return }
-        activity.onWheelVolume = { [weak self] dy in self?.nudgeVolume(dy: dy) }
         // Posted whenever the Accessibility list changes; trust updates shortly after.
         trustObserver = DistributedNotificationCenter.default().addObserver(
             forName: Notification.Name("com.apple.accessibility.api"),
@@ -40,7 +39,6 @@ final class MediaKeyService {
     }
 
     func stop() {
-        activity.onWheelVolume = nil
         if let trustObserver { DistributedNotificationCenter.default().removeObserver(trustObserver) }
         trustObserver = nil
         removeTap()
@@ -169,15 +167,6 @@ final class MediaKeyService {
             activity.showPeek(.brightness(level: next), seconds: 1.5)
         }
         return true
-    }
-
-    /// A mouse wheel over the closed notch.
-    private func nudgeVolume(dy: CGFloat) {
-        guard let device = AudioOutput.defaultDevice(), AudioOutput.canSetVolume(device),
-              let current = AudioOutput.volume(device) else { return }
-        AudioOutput.setVolume(ClosedNotchLogic.wheelVolume(current, dy: dy), device: device)
-        if dy > 0, AudioOutput.isMuted(device) { AudioOutput.setMuted(false, device: device) }
-        showVolume(device: device)
     }
 
     private func showVolume(device: AudioDeviceID) {

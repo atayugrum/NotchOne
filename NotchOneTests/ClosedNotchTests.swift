@@ -55,12 +55,6 @@ struct ClosedNotchLogicTests {
         #expect(ClosedNotchLogic.click(ears: .peek(.focus(on: true)), side: .right, left: .playPause, right: .playPause) == .open)
     }
 
-    @Test func wheelVolumeStaysInRange() {
-        #expect(ClosedNotchLogic.wheelVolume(1, dy: 3) == 1)
-        #expect(ClosedNotchLogic.wheelVolume(0, dy: -3) == 0)
-        #expect(ClosedNotchLogic.wheelVolume(0.5, dy: 1) > 0.5)
-    }
-
     @Test func previewDropsOnlyForNowPlaying() {
         #expect(EarLayout.drop(for: .nowPlaying, previewing: true) == EarLayout.previewDrop)
         #expect(EarLayout.drop(for: .nowPlaying) == 0)

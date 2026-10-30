@@ -134,7 +134,6 @@ private struct TourFeatures: View {
     @AppStorage(SettingsKey.notificationsEnabled) private var notifications = SettingsDefault.notificationsEnabled
     @AppStorage(SettingsKey.focusIndicatorEnabled) private var focus = SettingsDefault.focusIndicatorEnabled
     @AppStorage(SettingsKey.lockScreenWidget) private var lockScreen = SettingsDefault.lockScreenWidget
-    @AppStorage(SettingsKey.wheelVolume) private var wheelVolume = SettingsDefault.wheelVolume
     @AppStorage(SettingsKey.hideFromCapture) private var hideFromCapture = SettingsDefault.hideFromCapture
     @State private var launchAtLogin = LaunchAtLogin.isEnabled
 
@@ -154,7 +153,6 @@ private struct TourFeatures: View {
                 }
             row("moon", "Show when a Focus is on", isOn: $focus)
             row("lock.rectangle", "Music and battery on the lock screen", isOn: $lockScreen)
-            row("computermouse", "Mouse wheel changes the volume", isOn: $wheelVolume)
             row("eye.slash", "Hide from screen sharing", isOn: $hideFromCapture)
         }
     }

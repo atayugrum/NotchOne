@@ -124,11 +124,7 @@ final class SwipeController {
             nonisolated(unsafe) var result: NSEvent? = event
             MainActor.assumeIsolated {
                 guard let self else { return }
-                if self.handle(event) || self.changedVolume(event) {
-                    result = nil
-                } else {
-                    result = self.sidewaysWheel(event) ?? event
-                }
+                result = self.handle(event) ? nil : self.sidewaysWheel(event) ?? event
             }
             return result
         }
@@ -137,17 +133,6 @@ final class SwipeController {
     func stop() {
         if let monitor { NSEvent.removeMonitor(monitor) }
         monitor = nil
-    }
-
-    /// A mouse wheel over the closed notch changes the volume, if that's turned on.
-    private func changedVolume(_ event: NSEvent) -> Bool {
-        guard !model.isOpen, event.scrollingDeltaY != 0,
-              event.phase.isEmpty, event.momentumPhase.isEmpty,
-              let window = event.window, windows().contains(where: { $0 === window }),
-              UserDefaults.standard.bool(forKey: SettingsKey.wheelVolume, default: SettingsDefault.wheelVolume)
-        else { return false }
-        model.activity.onWheelVolume?(event.scrollingDeltaY)
-        return true
     }
 
     /// A mouse wheel event turned sideways, when it's over a sideways list.
