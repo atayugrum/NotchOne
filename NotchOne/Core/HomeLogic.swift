@@ -108,6 +108,15 @@ enum HomeLogic {
         slots.map { $0?.rawValue ?? "" }.joined(separator: ",")
     }
 
+    /// Cards a box can choose from: its own and any not in another box of this template.
+    /// Boxes a smaller template doesn't use don't count.
+    static func options(forSlot index: Int, in slots: [HomeCard?], template: HomeTemplate) -> [HomeCard] {
+        let taken = slots.prefix(template.slotCount).enumerated()
+            .filter { $0.offset != index }
+            .compactMap(\.element)
+        return HomeCard.allCases.filter { !taken.contains($0) }
+    }
+
     /// Puts `card` in a box. If it was already in another box the two swap, so a card is
     /// never shown twice.
     static func assign(_ card: HomeCard?, to index: Int, in slots: [HomeCard?]) -> [HomeCard?] {

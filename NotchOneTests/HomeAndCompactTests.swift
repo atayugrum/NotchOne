@@ -115,6 +115,17 @@ struct HomeLayoutTests {
         #expect(HomeLogic.assign(nil, to: 1, in: slots) == [.nowPlaying, nil, nil])
     }
 
+    @Test func aBoxOffersOnlyCardsNotInOtherBoxes() {
+        let slots: [HomeCard?] = [.nowPlaying, .weather, .battery, .notes, .clipboard, .shelf]
+        let options = HomeLogic.options(forSlot: 0, in: slots, template: .feature)
+        #expect(options.contains(.nowPlaying))
+        #expect(!options.contains(.weather))
+        #expect(!options.contains(.clipboard))
+        // The feature template has five boxes, so the sixth doesn't count.
+        #expect(options.contains(.shelf))
+        #expect(options.contains(.system))
+    }
+
     @Test func boxesShareTheRow() {
         #expect(HomeLogic.width(span: 3, count: 2, in: 308, spacing: 8) == 150)
         #expect(HomeLogic.width(span: 6, count: 1, in: 300, spacing: 8) == 300)

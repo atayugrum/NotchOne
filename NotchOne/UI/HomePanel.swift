@@ -37,7 +37,10 @@ struct HomePanel: View {
     @ViewBuilder
     private func box(_ index: Int, span: Int, card: HomeCard?) -> some View {
         if model.isEditingHome {
-            HomeBoxPicker(card: card) { chosen in
+            HomeBoxPicker(
+                card: card,
+                options: HomeLogic.options(forSlot: index, in: HomeLogic.slots(savedSlots), template: template)
+            ) { chosen in
                 savedSlots = HomeLogic.encode(HomeLogic.assign(chosen, to: index, in: HomeLogic.slots(savedSlots)))
             }
         } else if let card {
@@ -90,11 +93,12 @@ private struct TemplatePicker: View {
 /// A box while Home is being edited: a menu of what can go in it.
 private struct HomeBoxPicker: View {
     let card: HomeCard?
+    let options: [HomeCard]
     let choose: (HomeCard?) -> Void
 
     var body: some View {
         Menu {
-            ForEach(HomeCard.allCases) { option in
+            ForEach(options) { option in
                 Button {
                     choose(option)
                 } label: {
