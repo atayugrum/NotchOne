@@ -56,6 +56,32 @@ enum SwipeLogic {
         }
     }
 
+    /// A mouse wheel only turns up and down, so over a sideways list it has to scroll
+    /// sideways. Trackpads report a phase and can already move in both directions.
+    static func wheelScrollsSideways(tab: NotchTab, isOpen: Bool, hasPhase: Bool, dx: CGFloat, dy: CGFloat) -> Bool {
+        guard isOpen, !hasPhase, dx == 0, dy != 0 else { return false }
+        return tab == .clipboard || tab == .shelf
+    }
+
+    /// The same scroll event with its vertical movement moved to the horizontal axis.
+    static func sideways(_ event: CGEvent) -> CGEvent? {
+        guard let copy = event.copy() else { return nil }
+        let integers: [(CGEventField, CGEventField)] = [
+            (.scrollWheelEventDeltaAxis1, .scrollWheelEventDeltaAxis2),
+            (.scrollWheelEventPointDeltaAxis1, .scrollWheelEventPointDeltaAxis2),
+        ]
+        for (vertical, horizontal) in integers {
+            copy.setIntegerValueField(horizontal, value: event.getIntegerValueField(vertical))
+            copy.setIntegerValueField(vertical, value: 0)
+        }
+        copy.setDoubleValueField(
+            .scrollWheelEventFixedPtDeltaAxis2,
+            value: event.getDoubleValueField(.scrollWheelEventFixedPtDeltaAxis1)
+        )
+        copy.setDoubleValueField(.scrollWheelEventFixedPtDeltaAxis1, value: 0)
+        return copy
+    }
+
     static func neighbour(of tab: NotchTab, in tabs: [NotchTab], forward: Bool) -> NotchTab? {
         guard let index = tabs.firstIndex(of: tab) else { return tabs.first }
         let next = index + (forward ? 1 : -1)
@@ -86,13 +112,34 @@ final class SwipeController {
     func start() {
         guard monitor == nil else { return }
         monitor = NSEvent.addLocalMonitorForEvents(matching: .scrollWheel) { [weak self] event in
-            MainActor.assumeIsolated { self?.handle(event) ?? false } ? nil : event
+            // Local monitors run on the main thread; NSEvent can't be returned across isolation.
+            nonisolated(unsafe) var result: NSEvent? = event
+            MainActor.assumeIsolated {
+                guard let self else { return }
+                result = self.handle(event) ? nil : self.sidewaysWheel(event) ?? event
+            }
+            return result
         }
     }
 
     func stop() {
         if let monitor { NSEvent.removeMonitor(monitor) }
         monitor = nil
+    }
+
+    /// A mouse wheel event turned sideways, when it's over a sideways list.
+    private func sidewaysWheel(_ event: NSEvent) -> NSEvent? {
+        guard let window = event.window, windows().contains(where: { $0 === window }),
+              model.settingsPage == nil,
+              SwipeLogic.wheelScrollsSideways(
+                  tab: model.selectedTab,
+                  isOpen: model.isOpen,
+                  hasPhase: !event.phase.isEmpty || !event.momentumPhase.isEmpty,
+                  dx: event.scrollingDeltaX,
+                  dy: event.scrollingDeltaY
+              )
+        else { return nil }
+        return event.cgEvent.flatMap(SwipeLogic.sideways).flatMap(NSEvent.init(cgEvent:))
     }
 
     /// Returns true when the event was used as a swipe and shouldn't scroll anything.

@@ -1,8 +1,27 @@
 import Foundation
+import CoreGraphics
 import Testing
 @testable import NotchOne
 
 struct SwipeLogicTests {
+    @Test func mouseWheelScrollsSidewaysLists() {
+        #expect(SwipeLogic.wheelScrollsSideways(tab: .clipboard, isOpen: true, hasPhase: false, dx: 0, dy: -3))
+        #expect(SwipeLogic.wheelScrollsSideways(tab: .shelf, isOpen: true, hasPhase: false, dx: 0, dy: 3))
+        // Trackpads, closed notch, other tabs and real sideways wheels stay as they are.
+        #expect(!SwipeLogic.wheelScrollsSideways(tab: .clipboard, isOpen: true, hasPhase: true, dx: 0, dy: 3))
+        #expect(!SwipeLogic.wheelScrollsSideways(tab: .clipboard, isOpen: false, hasPhase: false, dx: 0, dy: 3))
+        #expect(!SwipeLogic.wheelScrollsSideways(tab: .notes, isOpen: true, hasPhase: false, dx: 0, dy: 3))
+        #expect(!SwipeLogic.wheelScrollsSideways(tab: .clipboard, isOpen: true, hasPhase: false, dx: 3, dy: 0))
+    }
+
+    @Test func sidewaysEventMovesTheVerticalDelta() throws {
+        let event = try #require(CGEvent(scrollWheelEvent2Source: nil, units: .pixel, wheelCount: 2, wheel1: -7, wheel2: 0, wheel3: 0))
+        let turned = try #require(SwipeLogic.sideways(event))
+        #expect(turned.getIntegerValueField(.scrollWheelEventPointDeltaAxis1) == 0)
+        #expect(turned.getIntegerValueField(.scrollWheelEventPointDeltaAxis2) == event.getIntegerValueField(.scrollWheelEventPointDeltaAxis1))
+        #expect(turned.getDoubleValueField(.scrollWheelEventFixedPtDeltaAxis1) == 0)
+    }
+
     @Test func directionFollowsFingersWithEitherScrollSetting() {
         // Natural scrolling: deltas follow the fingers.
         #expect(SwipeLogic.direction(dx: 50, dy: 3, inverted: true) == .right)
