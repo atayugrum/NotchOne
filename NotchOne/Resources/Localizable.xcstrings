@@ -3300,6 +3300,16 @@
         }
       }
     },
+    "Show card": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kartı göster"
+          }
+        }
+      }
+    },
     "Show everything": {
       "localizations": {
         "tr": {

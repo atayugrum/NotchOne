@@ -10,72 +10,55 @@ struct HomePanel: View {
     private var activity: ActivityState { model.activity }
 
     var body: some View {
-        // Editing shows every card that's on, so one with nothing to show can still be moved.
-        let content = model.isEditingHome ? Set(HomeCard.allCases) : available
-        let cards = HomeLogic.cards(hasContent: content, hidden: hiddenCards, visibleTabs: model.tabs, order: cardOrder)
         Group {
-            if cards.isEmpty && !model.isEditingHome {
-                Label("Nothing to show yet. Play music, copy something or drop a file on the notch.", systemImage: "square.grid.2x2")
-                    .font(Typo.body)
-                    .foregroundStyle(.secondary)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .glassCard()
+            if model.isEditingHome {
+                editor
             } else {
-                Grid(horizontalSpacing: Space.s, verticalSpacing: Space.s) {
-                    ForEach(Array(HomeLogic.rows(cards, wide: wideCards).enumerated()), id: \.offset) { _, row in
-                        GridRow {
-                            ForEach(row) { slot in
-                                card(slot, shown: cards)
-                                    .gridCellColumns(slot.span)
-                            }
-                        }
-                    }
-                }
-                .overlay(alignment: .bottomTrailing) {
-                    if model.isEditingHome { addMenu }
-                }
+                cards
             }
         }
         .onDisappear { model.isEditingHome = false }
     }
 
     @ViewBuilder
-    private func card(_ slot: HomeSlot, shown: [HomeCard]) -> some View {
-        if model.isEditingHome {
-            HomeEditCard(card: slot.card, isWide: LayoutLogic.contains(slot.card.rawValue, in: wideCards)) {
-                wideCards = LayoutLogic.setting(slot.card.rawValue, in: wideCards, to: !LayoutLogic.contains(slot.card.rawValue, in: wideCards))
-            } hide: {
-                hiddenCards = LayoutLogic.setting(slot.card.rawValue, in: hiddenCards, to: true)
-            } drop: { moved in
-                cardOrder = HomeLogic.encode(LayoutLogic.move(moved, before: slot.card, in: HomeLogic.ordered(cardOrder)))
-            }
+    private var cards: some View {
+        let cards = HomeLogic.cards(hasContent: available, hidden: hiddenCards, visibleTabs: model.tabs, order: cardOrder)
+        if cards.isEmpty {
+            Label("Nothing to show yet. Play music, copy something or drop a file on the notch.", systemImage: "square.grid.2x2")
+                .font(Typo.body)
+                .foregroundStyle(.secondary)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .glassCard()
         } else {
-            HomeCardView(card: slot.card, isWide: slot.span > 1, model: model)
+            Grid(horizontalSpacing: Space.s, verticalSpacing: Space.s) {
+                ForEach(Array(HomeLogic.rows(cards, wide: wideCards).enumerated()), id: \.offset) { _, row in
+                    GridRow {
+                        ForEach(row) { slot in
+                            HomeCardView(card: slot.card, isWide: slot.span > 1, model: model)
+                                .gridCellColumns(slot.span)
+                        }
+                    }
+                }
+            }
         }
     }
 
-    /// Cards turned off, to bring back while editing.
-    @ViewBuilder
-    private var addMenu: some View {
-        let off = HomeLogic.ordered(cardOrder).filter { LayoutLogic.contains($0.rawValue, in: hiddenCards) }
-        if !off.isEmpty {
-            Menu {
-                ForEach(off) { card in
-                    Button(card.title) {
-                        hiddenCards = LayoutLogic.setting(card.rawValue, in: hiddenCards, to: false)
+    /// Every card, shown or not, so each one can be reached however many there are.
+    private var editor: some View {
+        ScrollView(.vertical, showsIndicators: false) {
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: Space.xs + 2), count: HomeLogic.columns), spacing: Space.xs + 2) {
+                ForEach(HomeLogic.ordered(cardOrder)) { card in
+                    let isHidden = LayoutLogic.contains(card.rawValue, in: hiddenCards)
+                    let isWide = LayoutLogic.contains(card.rawValue, in: wideCards)
+                    HomeEditCard(card: card, isHidden: isHidden, isWide: isWide) {
+                        wideCards = LayoutLogic.setting(card.rawValue, in: wideCards, to: !isWide)
+                    } toggleHidden: {
+                        hiddenCards = LayoutLogic.setting(card.rawValue, in: hiddenCards, to: !isHidden)
+                    } drop: { moved in
+                        cardOrder = HomeLogic.encode(LayoutLogic.move(moved, before: card, in: HomeLogic.ordered(cardOrder)))
                     }
                 }
-            } label: {
-                Image(systemName: "plus.circle.fill")
-                    .font(.system(size: 18))
-                    .symbolRenderingMode(.hierarchical)
             }
-            .menuStyle(.button)
-            .buttonStyle(.plain)
-            .menuIndicator(.hidden)
-            .fixedSize()
-            .help("Add a card")
-            .accessibilityLabel("Add a card")
         }
     }
 
@@ -98,25 +81,30 @@ struct HomePanel: View {
 /// A card while Home is being edited: drag it onto another to move it.
 private struct HomeEditCard: View {
     let card: HomeCard
+    let isHidden: Bool
     let isWide: Bool
     let toggleWide: () -> Void
-    let hide: () -> Void
+    let toggleHidden: () -> Void
     let drop: (HomeCard) -> Void
     @State private var isTargeted = false
 
     var body: some View {
-        HStack(spacing: Space.s) {
-            Image(systemName: card.symbol).font(.system(size: 14)).foregroundStyle(.secondary)
-            Text(card.title).font(Typo.body).lineLimit(1)
+        HStack(spacing: Space.xs) {
+            Image(systemName: card.symbol).font(.system(size: 12)).foregroundStyle(.secondary).frame(width: 18)
+            Text(card.title).font(Typo.captionStrong).lineLimit(1).minimumScaleFactor(0.8)
             Spacer(minLength: 0)
-            IconButton(symbol: isWide ? "rectangle.fill" : "rectangle", size: 11, frame: 22, label: "Wide card", action: toggleWide)
+            IconButton(symbol: isWide ? "rectangle.fill" : "rectangle", size: 10, frame: 20, label: "Wide card", action: toggleWide)
                 .help("Wide card")
-            IconButton(symbol: "xmark", size: 10, frame: 22, label: "Hide card", action: hide)
-                .help("Hide card")
+                .disabled(isHidden)
+                .opacity(isHidden ? 0.3 : 1)
+            IconButton(symbol: isHidden ? "eye.slash" : "eye", size: 10, frame: 20, label: isHidden ? "Show card" : "Hide card", action: toggleHidden)
+                .help(isHidden ? "Show card" : "Hide card")
         }
-        .padding(.horizontal, Space.m)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-        .glassCard(highlighted: isTargeted)
+        .padding(.leading, Space.s)
+        .padding(.trailing, Space.xs)
+        .frame(height: 34)
+        .glassCard(highlighted: isTargeted, radius: Radius.s + 2)
+        .opacity(isHidden ? 0.55 : 1)
         .contentShape(Rectangle())
         .draggable(card.rawValue)
         .dropDestination(for: String.self) { names, _ in

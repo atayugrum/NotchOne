@@ -243,6 +243,8 @@ final class NotchWindowController {
         if let name = UserDefaults.standard.string(forKey: "debugTour"), let step = OnboardingStep(rawValue: name) {
             model.startTour(Array(OnboardingStep.allCases.drop { $0 != step }))
         }
+        // `-debugEditHome YES` shows Home in edit mode.
+        if UserDefaults.standard.bool(forKey: "debugEditHome") { model.isEditingHome = true }
         // `-debugTranslate "<text>"` translates it in the Translate tab.
         if let text = UserDefaults.standard.string(forKey: "debugTranslate") {
             model.show(.translate)
