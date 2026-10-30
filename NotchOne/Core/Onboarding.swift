@@ -72,7 +72,7 @@ enum OnboardingStep: String, CaseIterable, Identifiable, Sendable {
         case .permissions:
             String(localized: "NotchOne asks for nothing until you press a button here. Each one is only for the feature next to it; skip any, and turn them on later in Settings → Privacy.")
         case .done:
-            String(localized: "Press ? next to the tabs to see this tour again. Settings are behind the gear.")
+            String(localized: "Settings are behind the gear, and the tour is in Settings → About if you want to see it again.")
         }
     }
 }

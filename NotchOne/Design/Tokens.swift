@@ -25,6 +25,9 @@ enum Typo {
     static let captionStrong = Font.system(size: 11, weight: .medium)
     static let micro = Font.system(size: 10, weight: .medium)
 
+    /// The main value on a card: a temperature, a percentage.
+    static let value = number(18)
+
     static func number(_ size: CGFloat, weight: Font.Weight = .semibold) -> Font {
         .system(size: size, weight: weight, design: .rounded).monospacedDigit()
     }

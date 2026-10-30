@@ -4,29 +4,78 @@ import SwiftUI
 struct HomePanel: View {
     let model: NotchViewModel
     @AppStorage(SettingsKey.hiddenHomeCards) private var hiddenCards = SettingsDefault.hiddenHomeCards
+    @AppStorage(SettingsKey.homeCardOrder) private var cardOrder = SettingsDefault.homeCardOrder
+    @AppStorage(SettingsKey.wideHomeCards) private var wideCards = SettingsDefault.wideHomeCards
 
     private var activity: ActivityState { model.activity }
 
     var body: some View {
-        let cards = HomeLogic.cards(hasContent: available, hidden: hiddenCards, visibleTabs: model.tabs)
+        // Editing shows every card that's on, so one with nothing to show can still be moved.
+        let content = model.isEditingHome ? Set(HomeCard.allCases) : available
+        let cards = HomeLogic.cards(hasContent: content, hidden: hiddenCards, visibleTabs: model.tabs, order: cardOrder)
         Group {
-            if cards.isEmpty {
+            if cards.isEmpty && !model.isEditingHome {
                 Label("Nothing to show yet. Play music, copy something or drop a file on the notch.", systemImage: "square.grid.2x2")
                     .font(Typo.body)
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .glassCard()
             } else {
-                VStack(spacing: Space.s) {
-                    ForEach(Array(HomeLogic.rows(cards).enumerated()), id: \.offset) { _, row in
-                        HStack(spacing: Space.s) {
-                            ForEach(row) { card in
-                                HomeCardView(card: card, model: model)
+                Grid(horizontalSpacing: Space.s, verticalSpacing: Space.s) {
+                    ForEach(Array(HomeLogic.rows(cards, wide: wideCards).enumerated()), id: \.offset) { _, row in
+                        GridRow {
+                            ForEach(row) { slot in
+                                card(slot, shown: cards)
+                                    .gridCellColumns(slot.span)
                             }
                         }
                     }
                 }
+                .overlay(alignment: .bottomTrailing) {
+                    if model.isEditingHome { addMenu }
+                }
             }
+        }
+        .onDisappear { model.isEditingHome = false }
+    }
+
+    @ViewBuilder
+    private func card(_ slot: HomeSlot, shown: [HomeCard]) -> some View {
+        if model.isEditingHome {
+            HomeEditCard(card: slot.card, isWide: LayoutLogic.contains(slot.card.rawValue, in: wideCards)) {
+                wideCards = LayoutLogic.setting(slot.card.rawValue, in: wideCards, to: !LayoutLogic.contains(slot.card.rawValue, in: wideCards))
+            } hide: {
+                hiddenCards = LayoutLogic.setting(slot.card.rawValue, in: hiddenCards, to: true)
+            } drop: { moved in
+                cardOrder = HomeLogic.encode(LayoutLogic.move(moved, before: slot.card, in: HomeLogic.ordered(cardOrder)))
+            }
+        } else {
+            HomeCardView(card: slot.card, isWide: slot.span > 1, model: model)
+        }
+    }
+
+    /// Cards turned off, to bring back while editing.
+    @ViewBuilder
+    private var addMenu: some View {
+        let off = HomeLogic.ordered(cardOrder).filter { LayoutLogic.contains($0.rawValue, in: hiddenCards) }
+        if !off.isEmpty {
+            Menu {
+                ForEach(off) { card in
+                    Button(card.title) {
+                        hiddenCards = LayoutLogic.setting(card.rawValue, in: hiddenCards, to: false)
+                    }
+                }
+            } label: {
+                Image(systemName: "plus.circle.fill")
+                    .font(.system(size: 18))
+                    .symbolRenderingMode(.hierarchical)
+            }
+            .menuStyle(.button)
+            .buttonStyle(.plain)
+            .menuIndicator(.hidden)
+            .fixedSize()
+            .help("Add a card")
+            .accessibilityLabel("Add a card")
         }
     }
 
@@ -46,8 +95,41 @@ struct HomePanel: View {
     }
 }
 
+/// A card while Home is being edited: drag it onto another to move it.
+private struct HomeEditCard: View {
+    let card: HomeCard
+    let isWide: Bool
+    let toggleWide: () -> Void
+    let hide: () -> Void
+    let drop: (HomeCard) -> Void
+    @State private var isTargeted = false
+
+    var body: some View {
+        HStack(spacing: Space.s) {
+            Image(systemName: card.symbol).font(.system(size: 14)).foregroundStyle(.secondary)
+            Text(card.title).font(Typo.body).lineLimit(1)
+            Spacer(minLength: 0)
+            IconButton(symbol: isWide ? "rectangle.fill" : "rectangle", size: 11, frame: 22, label: "Wide card", action: toggleWide)
+                .help("Wide card")
+            IconButton(symbol: "xmark", size: 10, frame: 22, label: "Hide card", action: hide)
+                .help("Hide card")
+        }
+        .padding(.horizontal, Space.m)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+        .glassCard(highlighted: isTargeted)
+        .contentShape(Rectangle())
+        .draggable(card.rawValue)
+        .dropDestination(for: String.self) { names, _ in
+            guard let moved = names.first.flatMap(HomeCard.init(rawValue:)) else { return false }
+            drop(moved)
+            return true
+        } isTargeted: { isTargeted = $0 }
+    }
+}
+
 private struct HomeCardView: View {
     let card: HomeCard
+    let isWide: Bool
     let model: NotchViewModel
     @State private var isHovering = false
 
@@ -82,13 +164,29 @@ private struct HomeCardView: View {
         case .nowPlaying:
             if let info = activity.nowPlaying {
                 HStack(spacing: Space.s) {
-                    ArtworkView(image: activity.artwork, size: 32, cornerRadius: 7)
+                    ArtworkView(image: activity.artwork, size: isWide ? 44 : 32, cornerRadius: isWide ? 9 : 7)
                         .opensPlayer(activity)
-                    lines(info.title, info.artist.isEmpty ? (AppInfo.name(for: info.appBundleID) ?? "") : info.artist)
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text(info.title).font(isWide ? Typo.title : Typo.body)
+                        Text(info.artist.isEmpty ? (AppInfo.name(for: info.appBundleID) ?? "") : info.artist)
+                            .font(Typo.micro)
+                            .foregroundStyle(.secondary)
+                    }
+                    .lineLimit(1)
                     Spacer(minLength: 0)
+                    if isWide {
+                        IconButton(symbol: "backward.fill", size: 11, frame: 26, label: "Previous") {
+                            activity.player?.perform(.previous)
+                        }
+                    }
                     IconButton(symbol: info.isPlaying ? "pause.fill" : "play.fill", size: 13, frame: 28,
                                label: info.isPlaying ? "Pause" : "Play") {
                         activity.player?.perform(.playPause)
+                    }
+                    if isWide {
+                        IconButton(symbol: "forward.fill", size: 11, frame: 26, label: "Next") {
+                            activity.player?.perform(.next)
+                        }
                     }
                 }
             }
@@ -154,7 +252,7 @@ private struct HomeCardView: View {
 
     private func lines(_ title: String, _ subtitle: String, numeric: Bool = false) -> some View {
         VStack(alignment: .leading, spacing: 1) {
-            Text(title).font(numeric ? Typo.number(15) : Typo.body)
+            Text(title).font(numeric ? Typo.value : Typo.body)
             Text(subtitle).font(Typo.micro).foregroundStyle(.secondary)
         }
         .lineLimit(1)
@@ -181,7 +279,7 @@ struct WeatherGlance: View {
                 .symbolRenderingMode(.multicolor)
                 .font(.system(size: 20))
             VStack(alignment: .leading, spacing: 1) {
-                Text(WeatherLogic.format(snapshot.temperature, unit: unit)).font(Typo.number(15))
+                Text(WeatherLogic.format(snapshot.temperature, unit: unit)).font(Typo.value)
                 Text(snapshot.condition.title).font(Typo.micro).foregroundStyle(.secondary)
             }
             .lineLimit(1)
@@ -205,7 +303,7 @@ private struct SystemGlance: View {
     private func stat(_ title: LocalizedStringKey, _ value: Double?) -> some View {
         VStack(alignment: .leading, spacing: 1) {
             Text(value.map { $0.formatted(.percent.precision(.fractionLength(0))) } ?? "–")
-                .font(Typo.number(15))
+                .font(Typo.value)
                 .contentTransition(.numericText())
             Text(title).font(Typo.micro).foregroundStyle(.secondary)
         }

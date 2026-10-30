@@ -100,10 +100,14 @@ private struct HeaderActions: View {
             .foregroundStyle(model.selectedTab == .search ? .primary : .secondary)
             .background(model.selectedTab == .search ? Color.white.opacity(0.14) : .clear, in: Circle())
             .help("Search (\(HotKey.palette.display))")
-            IconButton(symbol: "questionmark.circle", size: 12, frame: 24, label: "Show the tour") {
-                model.startTour()
+            if model.selectedTab == .home {
+                IconButton(symbol: "slider.horizontal.3", size: 12, frame: 24, label: "Edit Home") {
+                    withAnimation(Motion.tab) { model.isEditingHome.toggle() }
+                }
+                .foregroundStyle(model.isEditingHome ? .primary : .secondary)
+                .background(model.isEditingHome ? Color.white.opacity(0.14) : .clear, in: Circle())
+                .help("Edit Home")
             }
-            .help("Show the tour")
             IconButton(symbol: "gearshape", size: 12, frame: 24, label: "Settings") {
                 model.openSettings(.general)
             }
@@ -119,27 +123,32 @@ private struct HeaderStatus: View {
 
     let model: NotchViewModel
     let clock: Clock
+    @AppStorage(SettingsKey.hiddenHeaderItems) private var hidden = ""
+
+    private func shows(_ item: HeaderItem) -> Bool {
+        !LayoutLogic.contains(item.rawValue, in: hidden)
+    }
 
     var body: some View {
         let activity = model.activity
         HStack(spacing: Space.m) {
-            if activity.isFocused {
+            if activity.isFocused, shows(.focus) {
                 Image(systemName: "moon.fill")
                     .font(Typo.icon(12))
                     .foregroundStyle(.indigo)
                     .help("A Focus is on")
                     .accessibilityLabel("Focus is on")
             }
-            if model.selectedTab != .weather, model.tabs.contains(.weather),
+            if shows(.weather), model.selectedTab != .weather, model.tabs.contains(.weather),
                let snapshot = activity.weather.badgeSnapshot() {
                 WeatherBadge(snapshot: snapshot) {
                     withAnimation(Motion.tab) { model.show(.weather) }
                 }
             }
-            if let battery = activity.battery {
+            if let battery = activity.battery, shows(.battery) {
                 BatteryBadge(status: battery)
             }
-            if clock != .none {
+            if clock != .none, shows(.clock) {
                 TimelineView(.everyMinute) { context in
                     Group {
                         if clock == .full {

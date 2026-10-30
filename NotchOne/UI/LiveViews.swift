@@ -47,11 +47,13 @@ struct NotificationText: View {
     let item: LiveActivity
 
     var body: some View {
-        HStack(alignment: .top, spacing: Space.s) {
+        HStack(spacing: Space.s) {
             LiveLeading(item: item)
+                .frame(width: 34, height: 34)
+                .background(.white.opacity(0.12), in: Circle())
             VStack(alignment: .leading, spacing: 1) {
                 Text(item.title)
-                    .font(Typo.captionStrong)
+                    .font(Typo.title)
                     .lineLimit(1)
                 if let detail = item.detail, detail != item.appName {
                     Text(detail)
@@ -61,6 +63,11 @@ struct NotificationText: View {
                 }
             }
             Spacer(minLength: 0)
+            if item.appPID != nil {
+                Image(systemName: "chevron.right")
+                    .font(Typo.icon(10))
+                    .foregroundStyle(.secondary)
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: EarLayout.notificationDrop, alignment: .topLeading)
         .padding(.horizontal, Space.m)

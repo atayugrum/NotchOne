@@ -217,7 +217,9 @@ final class ActivityState {
     var ears: EarContent? {
         if let peek { return .peek(peek) }
         let top = live.top
-        if let top, top.priority > Self.nowPlayingPriority { return .live(top) }
+        let priority = UserDefaults.standard.value(forKey: SettingsKey.earPriority, default: SettingsDefault.earPriority)
+        let hasMusic = nowPlaying?.isPlaying == true
+        if let top, top.priority > Self.nowPlayingPriority, !hasMusic || priority.beatsMusic(top.priority) { return .live(top) }
         if nowPlaying?.isPlaying == true || isLingering { return .nowPlaying }
         if let top { return .live(top) }
         return nil

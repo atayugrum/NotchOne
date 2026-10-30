@@ -3,6 +3,7 @@ import SwiftUI
 enum SettingsPage: String, CaseIterable, Identifiable {
     case general
     case appearance
+    case layout
     case nowPlaying
     case weather
     case translate
@@ -18,6 +19,7 @@ enum SettingsPage: String, CaseIterable, Identifiable {
         switch self {
         case .general: String(localized: "General")
         case .appearance: String(localized: "Appearance")
+        case .layout: String(localized: "Layout")
         case .nowPlaying: String(localized: "Now Playing")
         case .weather: String(localized: "Weather")
         case .translate: String(localized: "Translate")
@@ -33,6 +35,7 @@ enum SettingsPage: String, CaseIterable, Identifiable {
         switch self {
         case .general: "gearshape"
         case .appearance: "paintpalette"
+        case .layout: "rectangle.3.group"
         case .nowPlaying: "music.note"
         case .weather: "cloud.sun"
         case .translate: "character.bubble"
@@ -123,6 +126,7 @@ struct NotchSettingsView: View {
         switch page {
         case .general: GeneralPage()
         case .appearance: AppearancePage()
+        case .layout: LayoutPage()
         case .nowPlaying: NowPlayingPage()
         case .weather: WeatherPage(weather: model.activity.weather)
         case .translate: TranslatePage(store: model.activity.translate)

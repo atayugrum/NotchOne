@@ -136,7 +136,7 @@ struct TabBar: View {
     let tabs: [NotchTab]
     @Binding var selection: NotchTab
     /// More tabs than this, and the rest go into a "More" menu at the end.
-    var maxVisible = 10
+    var maxVisible = 7
     @Namespace private var namespace
 
     private var split: (shown: [NotchTab], more: [NotchTab]) {
@@ -152,9 +152,19 @@ struct TabBar: View {
                 Button {
                     withAnimation(Motion.tab) { selection = tab }
                 } label: {
-                    Image(systemName: tab.symbol)
-                        .font(Typo.icon(12))
-                        .frame(width: 32, height: 24)
+                    HStack(spacing: Space.xs) {
+                        Image(systemName: tab.symbol)
+                            .font(Typo.icon(12))
+                        if isSelected {
+                            Text(tab.title)
+                                .font(Typo.captionStrong)
+                                .lineLimit(1)
+                                .fixedSize()
+                                .transition(.opacity)
+                        }
+                    }
+                    .padding(.horizontal, isSelected ? Space.s + 2 : 0)
+                    .frame(minWidth: 32, minHeight: 24)
                         .background {
                             if isSelected {
                                 Capsule()

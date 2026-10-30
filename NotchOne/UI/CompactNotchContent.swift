@@ -5,11 +5,11 @@ import SwiftUI
 struct CompactNotchContent: View {
     let model: NotchViewModel
 
+    @AppStorage(SettingsKey.hiddenCompactItems) private var hidden = ""
+
     private var activity: ActivityState { model.activity }
 
-    private enum Chip: Hashable {
-        case live, weather, battery
-    }
+    private typealias Chip = CompactItem
 
     var body: some View {
         HStack(spacing: Space.s) {
@@ -35,6 +35,7 @@ struct CompactNotchContent: View {
         if activity.live.top != nil { chips.append(.live) }
         if activity.weather.badgeSnapshot() != nil { chips.append(.weather) }
         if activity.battery != nil { chips.append(.battery) }
+        chips.removeAll { LayoutLogic.contains($0.rawValue, in: hidden) }
         return Array(chips.prefix(chips.first == .live ? 2 : 3))
     }
 

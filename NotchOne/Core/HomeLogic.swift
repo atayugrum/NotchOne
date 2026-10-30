@@ -62,23 +62,64 @@ enum HomeCard: String, CaseIterable, Identifiable, Sendable {
     }
 }
 
+/// A card and how many of a row's columns it takes.
+struct HomeSlot: Identifiable, Equatable, Sendable {
+    let card: HomeCard
+    var span: Int
+    var id: HomeCard { card }
+}
+
 enum HomeLogic {
     /// Two rows of three fit every size.
     static let maxCards = 6
+    static let maxRows = 2
     static let columns = 3
 
-    /// Cards to show, in their fixed order: turned on, with something to show, and whose
+    /// All cards in the saved order; cards missing from it go last, so new ones show up.
+    static func ordered(_ order: String) -> [HomeCard] {
+        var result: [HomeCard] = []
+        for name in order.split(separator: ",") {
+            if let card = HomeCard(rawValue: String(name)), !result.contains(card) { result.append(card) }
+        }
+        return result + HomeCard.allCases.filter { !result.contains($0) }
+    }
+
+    static func encode(_ cards: [HomeCard]) -> String {
+        cards.map(\.rawValue).joined(separator: ",")
+    }
+
+    /// Cards to show, in the saved order: turned on, with something to show, and whose
     /// tab (if any) isn't hidden.
-    static func cards(hasContent: Set<HomeCard>, hidden: String, visibleTabs: [NotchTab]) -> [HomeCard] {
+    static func cards(hasContent: Set<HomeCard>, hidden: String, visibleTabs: [NotchTab], order: String = "") -> [HomeCard] {
         let hiddenSet = Set(hidden.split(separator: ",").compactMap { HomeCard(rawValue: String($0)) })
-        let cards = HomeCard.allCases.filter { card in
+        let cards = ordered(order).filter { card in
             hasContent.contains(card) && !hiddenSet.contains(card) && (card.tab.map(visibleTabs.contains) ?? true)
         }
         return Array(cards.prefix(maxCards))
     }
 
-    /// Cards split into rows of at most three; up to three cards use one tall row.
-    static func rows(_ cards: [HomeCard]) -> [[HomeCard]] {
-        stride(from: 0, to: cards.count, by: columns).map { Array(cards[$0..<min($0 + columns, cards.count)]) }
+    /// Cards laid out on rows of three columns; a wide card takes two. The last card in a
+    /// row takes what's left, and cards past the last row don't show.
+    static func rows(_ cards: [HomeCard], wide: String = "") -> [[HomeSlot]] {
+        var rows: [[HomeSlot]] = []
+        var row: [HomeSlot] = []
+        var used = 0
+
+        func finish() {
+            guard !row.isEmpty else { return }
+            row[row.count - 1].span += columns - used
+            rows.append(row)
+            row = []
+            used = 0
+        }
+
+        for card in cards {
+            let span = LayoutLogic.contains(card.rawValue, in: wide) ? 2 : 1
+            if used + span > columns { finish() }
+            row.append(HomeSlot(card: card, span: span))
+            used += span
+        }
+        finish()
+        return Array(rows.prefix(maxRows))
     }
 }

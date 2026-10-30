@@ -44,11 +44,13 @@ struct GlassPanel<S: Shape>: View {
         if let accent {
             shape.fill(
                 LinearGradient(
-                    colors: [accent.opacity(0.18), accent.opacity(0.45)],
+                    colors: [accent.opacity(0.16), accent.opacity(0.36)],
                     startPoint: .top,
                     endPoint: .bottom
                 )
             )
+            // Keeps white text readable on a light album colour.
+            shape.fill(.black.opacity(0.14))
         }
     }
 

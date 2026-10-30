@@ -111,3 +111,54 @@ struct CompactModeTests {
         #expect(model.selectedTab == .weather)
     }
 }
+
+struct HomeLayoutTests {
+    @Test func savedOrderIsKeptAndNewCardsGoLast() {
+        let cards = HomeLogic.ordered("notes,bogus,weather,notes")
+        #expect(Array(cards.prefix(2)) == [.notes, .weather])
+        #expect(cards.count == HomeCard.allCases.count)
+    }
+
+    @Test func aWideCardTakesTwoColumnsAndRowsAreFilled() {
+        let rows = HomeLogic.rows([.nowPlaying, .weather, .battery, .notes], wide: "nowPlaying")
+        #expect(rows.map { $0.map(\.span) } == [[2, 1], [1, 2]])
+    }
+
+    @Test func aWideCardThatDoesntFitStartsTheNextRow() {
+        let rows = HomeLogic.rows([.weather, .battery, .nowPlaying], wide: "nowPlaying")
+        #expect(rows.map { $0.map(\.card) } == [[.weather, .battery], [.nowPlaying]])
+        #expect(rows.map { $0.map(\.span) } == [[1, 2], [3]])
+    }
+
+    @Test func cardsPastTheLastRowDontShow() {
+        let rows = HomeLogic.rows(HomeCard.allCases, wide: "nowPlaying,weather,battery,activity,devices")
+        #expect(rows.count == HomeLogic.maxRows)
+    }
+
+    @Test func movingPutsACardBeforeAnother() {
+        #expect(LayoutLogic.move(3, before: 1, in: [1, 2, 3]) == [3, 1, 2])
+        #expect(LayoutLogic.move(1, before: 3, in: [1, 2, 3]) == [2, 1, 3])
+        #expect(LayoutLogic.move(1, before: 9, in: [1, 2]) == [1, 2])
+    }
+
+    @Test func listsAddAndRemoveNames() {
+        #expect(LayoutLogic.setting("b", in: "a", to: true) == "a,b")
+        #expect(LayoutLogic.setting("a", in: "a,b", to: false) == "b")
+        #expect(LayoutLogic.contains("a", in: "a,b"))
+        #expect(!LayoutLogic.contains("ab", in: "abc"))
+    }
+
+    @Test func everyPresetCoversEveryCard() {
+        for preset in HomePreset.allCases {
+            #expect(Set(preset.order) == Set(HomeCard.allCases))
+            #expect(preset.order.count == HomeCard.allCases.count)
+        }
+    }
+
+    @Test func musicFirstKeepsOnlyUrgentThingsOverTheMusic() {
+        #expect(EarPriority.music.beatsMusic(100))
+        #expect(EarPriority.music.beatsMusic(70))
+        #expect(!EarPriority.music.beatsMusic(60))
+        #expect(EarPriority.balanced.beatsMusic(40))
+    }
+}

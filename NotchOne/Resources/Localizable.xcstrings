@@ -272,6 +272,16 @@
         }
       }
     },
+    "A card shows only when it has something to show. Two rows fit; drag cards on Home with the edit button.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kart yalnızca gösterecek bir şey varsa görünür. İki satır sığar; kartları Home'daki düzenleme düğmesiyle sürükle."
+          }
+        }
+      }
+    },
     "A Focus is on": {
       "localizations": {
         "tr": {
@@ -358,6 +368,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Erişilebilirlik"
+          }
+        }
+      }
+    },
+    "Add a card": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kart ekle"
           }
         }
       }
@@ -588,12 +608,62 @@
     "CC BY 4.0": {
       "shouldTranslate": false
     },
+    "Choose": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seç"
+          }
+        }
+      }
+    },
     "Clean link and copy": {
       "localizations": {
         "tr": {
           "stringUnit": {
             "state": "translated",
             "value": "Bağlantıyı temizleyip kopyala"
+          }
+        }
+      }
+    },
+    "Clicking the middle of the notch always opens it.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notch'un ortasına tıklamak her zaman açar."
+          }
+        }
+      }
+    },
+    "Clock": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saat"
+          }
+        }
+      }
+    },
+    "Closed notch": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kapalı notch"
+          }
+        }
+      }
+    },
+    "Compact row": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kompakt satır"
           }
         }
       }
@@ -1198,6 +1268,16 @@
         }
       }
     },
+    "Drag to reorder. Hidden tabs stay out of the tab bar. With more than seven, the rest go into the … menu.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sıralamak için sürükle. Gizli sekmeler sekme çubuğunda görünmez. Yediden fazlası … menüsüne gider."
+          }
+        }
+      }
+    },
     "Dragged files split the notch into zones: Shelf and AirDrop, plus remove background, compress and convert for images, compress and merge for PDFs, or copy path. Results are saved next to the original. The shelf keeps links to your files, not copies.": {
       "localizations": {
         "tr": {
@@ -1244,6 +1324,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bir işlemin üzerine bırakın"
+          }
+        }
+      }
+    },
+    "Edit Home": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Home'u düzenle"
           }
         }
       }
@@ -1314,6 +1404,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bitti"
+          }
+        }
+      }
+    },
+    "Focus": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odak"
           }
         }
       }
@@ -1494,6 +1594,16 @@
         }
       }
     },
+    "Hide card": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kartı gizle"
+          }
+        }
+      }
+    },
     "Hide the macOS banner": {
       "localizations": {
         "tr": {
@@ -1604,6 +1714,16 @@
         }
       }
     },
+    "Its tab is hidden": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sekmesi gizli"
+          }
+        }
+      }
+    },
     "JSON": {
       "shouldTranslate": false
     },
@@ -1707,12 +1827,32 @@
         }
       }
     },
+    "Layout": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Düzen"
+          }
+        }
+      }
+    },
     "Leaves your Mac": {
       "localizations": {
         "tr": {
           "stringUnit": {
             "state": "translated",
             "value": "Mac'inizden çıkanlar"
+          }
+        }
+      }
+    },
+    "Left side click": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sol taraf tıklaması"
           }
         }
       }
@@ -1907,6 +2047,16 @@
         }
       }
     },
+    "Minimal": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Minimal"
+          }
+        }
+      }
+    },
     "Mirror": {
       "localizations": {
         "tr": {
@@ -2003,6 +2153,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Müzik ve Spotify doğrudan okunur. Diğer uygulamalar sistemin Şimdi Çalıyor bilgisinden okunur."
+          }
+        }
+      }
+    },
+    "Music first": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Önce müzik"
           }
         }
       }
@@ -2690,6 +2850,16 @@
         }
       }
     },
+    "Previous": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Önceki"
+          }
+        }
+      }
+    },
     "Previous track": {
       "localizations": {
         "tr": {
@@ -2706,6 +2876,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Gizlilik"
+          }
+        }
+      }
+    },
+    "Productivity": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Üretkenlik"
           }
         }
       }
@@ -2786,6 +2966,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hazır"
+          }
+        }
+      }
+    },
+    "Ready-made layout": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hazır düzen"
           }
         }
       }
@@ -2900,6 +3090,16 @@
         }
       }
     },
+    "Right side click": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sağ taraf tıklaması"
+          }
+        }
+      }
+    },
     "Running": {
       "localizations": {
         "tr": {
@@ -3006,6 +3206,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ayarlar"
+          }
+        }
+      }
+    },
+    "Settings are behind the gear, and the tour is in Settings → About if you want to see it again.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ayarlar dişli simgesinde. Turu yeniden görmek istersen Ayarlar → Hakkında'da."
           }
         }
       }
@@ -3595,6 +3805,16 @@
         }
       }
     },
+    "Top bar": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Üst bar"
+          }
+        }
+      }
+    },
     "Tour": {
       "localizations": {
         "tr": {
@@ -3957,6 +4177,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bulunduğum yer"
+          }
+        }
+      }
+    },
+    "While music plays": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Müzik çalarken"
+          }
+        }
+      }
+    },
+    "Wide card": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geniş kart"
           }
         }
       }

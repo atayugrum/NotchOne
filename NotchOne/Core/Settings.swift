@@ -42,6 +42,11 @@ enum SettingsKey {
     static let weatherCache = "weatherCache"
     static let notchMode = "notchMode"
     static let hiddenHomeCards = "hiddenHomeCards"
+    static let homeCardOrder = "homeCardOrder"
+    static let wideHomeCards = "wideHomeCards"
+    static let hiddenHeaderItems = "hiddenHeaderItems"
+    static let hiddenCompactItems = "hiddenCompactItems"
+    static let earPriority = "earPriority"
     /// Language identifiers ("tr", "en-GB", "zh-Hans"); From can also be "auto".
     static let translateFrom = "translateFrom"
     static let translateTo = "translateTo"
@@ -93,6 +98,9 @@ enum SettingsDefault {
     static let notchMode = NotchMode.full
     /// System is opt-in on Home (it measures while it shows).
     static let hiddenHomeCards = "system"
+    static let homeCardOrder = HomeLogic.encode(HomeCard.allCases)
+    static let wideHomeCards = HomeCard.nowPlaying.rawValue
+    static let earPriority = EarPriority.balanced
     static let translateFrom = TranslateLogic.auto
     static let translateTo = TranslateLogic.defaultTarget()
     static let translateOtherwise = TranslateLogic.defaultOtherwise()
