@@ -9,6 +9,8 @@ struct GeneralPage: View {
     @AppStorage(SettingsKey.showOnDisplaysWithoutNotch)
     private var showOnDisplaysWithoutNotch = SettingsDefault.showOnDisplaysWithoutNotch
     @AppStorage(SettingsKey.gesturesEnabled) private var gesturesEnabled = SettingsDefault.gesturesEnabled
+    @AppStorage(SettingsKey.earPreview) private var earPreview = SettingsDefault.earPreview
+    @AppStorage(SettingsKey.wheelVolume) private var wheelVolume = SettingsDefault.wheelVolume
     @AppStorage(SettingsKey.lockScreenWidget) private var lockScreenWidget = SettingsDefault.lockScreenWidget
 
     @State private var launchAtLogin = LaunchAtLogin.isEnabled
@@ -57,8 +59,20 @@ struct GeneralPage: View {
                 RowDivider()
                 ToggleRow(
                     title: "Trackpad swipes",
-                    detail: "Sideways on the tabs switches tabs, on Now Playing skips tracks; down on the closed notch opens it.",
+                    detail: "Sideways on the tabs switches tabs, on Now Playing or the closed notch skips tracks; down on the closed notch opens it.",
                     isOn: $gesturesEnabled
+                )
+                RowDivider()
+                ToggleRow(
+                    title: "Song name on hover",
+                    detail: "Pointing at the sides of the closed notch shows what's playing.",
+                    isOn: $earPreview
+                )
+                RowDivider()
+                ToggleRow(
+                    title: "Mouse wheel changes the volume",
+                    detail: "Over the closed notch.",
+                    isOn: $wheelVolume
                 )
             }
 

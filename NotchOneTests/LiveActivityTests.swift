@@ -130,13 +130,21 @@ struct EarTuckTests {
     private let notch = CGRect(x: 645, y: 924, width: 180, height: 32)
 
     @Test func theMenuBarBesideTheEarsTucksThem() {
-        #expect(EarLayout.pointerNearEars(CGPoint(x: 850, y: 940), notchRect: notch, earWidth: 34))
-        #expect(EarLayout.pointerNearEars(CGPoint(x: 610, y: 940), notchRect: notch, earWidth: 34))
+        #expect(EarLayout.pointerNearEars(CGPoint(x: 885, y: 940), notchRect: notch, earWidth: 34))
+        #expect(EarLayout.pointerNearEars(CGPoint(x: 580, y: 940), notchRect: notch, earWidth: 34))
+    }
+
+    @Test func thePointerIsOnAnEarBesideOrBelowTheNotch() {
+        #expect(EarLayout.pointerOnEar(CGPoint(x: 850, y: 940), notchRect: notch))
+        #expect(EarLayout.pointerOnEar(CGPoint(x: 735, y: 900), notchRect: notch))
+        #expect(!EarLayout.pointerOnEar(CGPoint(x: 735, y: 940), notchRect: notch))
     }
 
     @Test func theNotchAndTheRestOfTheScreenDoNot() {
         #expect(!EarLayout.pointerNearEars(CGPoint(x: 735, y: 940), notchRect: notch, earWidth: 34))
         #expect(!EarLayout.pointerNearEars(CGPoint(x: 830, y: 940), notchRect: notch, earWidth: 34))
+        // On the ear itself: it stays, so it can be clicked.
+        #expect(!EarLayout.pointerNearEars(CGPoint(x: 850, y: 940), notchRect: notch, earWidth: 34))
         #expect(!EarLayout.pointerNearEars(CGPoint(x: 850, y: 800), notchRect: notch, earWidth: 34))
         #expect(!EarLayout.pointerNearEars(CGPoint(x: 1200, y: 940), notchRect: notch, earWidth: 34))
     }

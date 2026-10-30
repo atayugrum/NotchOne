@@ -37,8 +37,16 @@ enum SwipeLogic {
 
     /// - Parameters:
     ///   - inHeader: the swipe started on the tab bar row.
-    static func action(direction: Direction, isOpen: Bool, tab: NotchTab, inHeader: Bool) -> SwipeAction {
-        guard isOpen else { return direction == .down ? .open : .none }
+    ///   - hasMusic: something is playing or paused, so a closed notch can skip tracks.
+    static func action(direction: Direction, isOpen: Bool, tab: NotchTab, inHeader: Bool, hasMusic: Bool = false) -> SwipeAction {
+        guard isOpen else {
+            switch direction {
+            case .down: return .open
+            case .right where hasMusic: return .previousTrack
+            case .left where hasMusic: return .nextTrack
+            default: return .none
+            }
+        }
         let horizontal: (SwipeAction, SwipeAction)
         switch (tab, inHeader) {
         case (_, true), (.home, _), (.weather, _), (.system, _), (.mirror, _):
@@ -116,7 +124,11 @@ final class SwipeController {
             nonisolated(unsafe) var result: NSEvent? = event
             MainActor.assumeIsolated {
                 guard let self else { return }
-                result = self.handle(event) ? nil : self.sidewaysWheel(event) ?? event
+                if self.handle(event) || self.changedVolume(event) {
+                    result = nil
+                } else {
+                    result = self.sidewaysWheel(event) ?? event
+                }
             }
             return result
         }
@@ -125,6 +137,17 @@ final class SwipeController {
     func stop() {
         if let monitor { NSEvent.removeMonitor(monitor) }
         monitor = nil
+    }
+
+    /// A mouse wheel over the closed notch changes the volume, if that's turned on.
+    private func changedVolume(_ event: NSEvent) -> Bool {
+        guard !model.isOpen, event.scrollingDeltaY != 0,
+              event.phase.isEmpty, event.momentumPhase.isEmpty,
+              let window = event.window, windows().contains(where: { $0 === window }),
+              UserDefaults.standard.bool(forKey: SettingsKey.wheelVolume, default: SettingsDefault.wheelVolume)
+        else { return false }
+        model.activity.onWheelVolume?(event.scrollingDeltaY)
+        return true
     }
 
     /// A mouse wheel event turned sideways, when it's over a sideways list.
@@ -168,7 +191,8 @@ final class SwipeController {
         ) else { return false }
 
         let action = SwipeLogic.action(
-            direction: direction, isOpen: model.isOpen, tab: model.selectedTab, inHeader: startedInHeader
+            direction: direction, isOpen: model.isOpen, tab: model.selectedTab, inHeader: startedInHeader,
+            hasMusic: model.activity.nowPlaying != nil
         )
         guard action != .none else { return false }
         fired = true

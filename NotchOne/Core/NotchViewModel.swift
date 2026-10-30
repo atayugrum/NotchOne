@@ -256,6 +256,25 @@ final class NotchViewModel {
         withAnimation(Motion.hover) { isHovering = hovering }
     }
 
+    /// A click on the closed notch.
+    func clickClosed(on side: ClosedNotchSide) {
+        guard !isOpen else { return }
+        let defaults = UserDefaults.standard
+        let click = ClosedNotchLogic.click(
+            ears: activity.ears,
+            side: side,
+            left: defaults.value(forKey: SettingsKey.leftEarClick, default: SettingsDefault.leftEarClick),
+            right: defaults.value(forKey: SettingsKey.rightEarClick, default: SettingsDefault.rightEarClick)
+        )
+        switch click {
+        case .activateNotification(let item): activity.live.activate(item)
+        case .open, .ear(.open): open()   // click-to-open; also skips the hover delay
+        case .ear(.openPlayer): activity.openPlayingApp()
+        case .ear(.playPause): activity.player?.perform(.playPause)
+        case .ear(.nextTrack): activity.player?.perform(.next)
+        }
+    }
+
     /// Switches to `tab` if it's visible (e.g. the shelf when files are dragged in).
     func show(_ tab: NotchTab) {
         if tabs.contains(tab) { selectedTab = tab }

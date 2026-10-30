@@ -13,15 +13,22 @@ struct EarsView: View {
                 // Opens downward: nothing beside the notch, everything under it.
                 Color.clear.frame(height: notchSize.height)
                 NotificationText(item: item)
+            } else if case .nowPlaying = content, activity.earPreview, let info = activity.nowPlaying {
+                sides
+                TrackPreview(info: info)
             } else {
-                HStack(spacing: 0) {
-                    left.frame(width: earWidth, height: notchSize.height)
-                    Color.clear.frame(width: notchSize.width)
-                    right.frame(width: earWidth, height: notchSize.height)
-                }
+                sides
             }
         }
         .foregroundStyle(.white)
+    }
+
+    private var sides: some View {
+        HStack(spacing: 0) {
+            left.frame(width: earWidth, height: notchSize.height)
+            Color.clear.frame(width: notchSize.width)
+            right.frame(width: earWidth, height: notchSize.height)
+        }
     }
 
     @ViewBuilder
@@ -29,6 +36,7 @@ struct EarsView: View {
         switch content {
         case .nowPlaying:
             ArtworkView(image: activity.artwork, size: 20, cornerRadius: 5)
+                .opacity(activity.nowPlaying?.isPlaying == true ? 1 : 0.5)
         case .peek(.newFile(let url, _)):
             FileThumbnail(url: url, image: activity.peekThumbnail)
         case .live(let item):
@@ -70,8 +78,14 @@ struct EarsView: View {
     private var right: some View {
         switch content {
         case .nowPlaying:
-            AudioBarsView(isPlaying: activity.nowPlaying?.isPlaying == true, tint: activity.accent.map { NSColor($0.color) })
-                .frame(width: 16, height: 14)
+            if activity.nowPlaying?.isPlaying == true {
+                AudioBarsView(isPlaying: true, tint: activity.accent.map { NSColor($0.color) })
+                    .frame(width: 16, height: 14)
+            } else {
+                Image(systemName: "play.fill")
+                    .font(Typo.icon(11))
+                    .foregroundStyle(.secondary)
+            }
         case .peek(.newFile(let url, let isScreenshot)):
             Text(isScreenshot ? String(localized: "Screenshot") : url.lastPathComponent)
                 .font(Typo.captionStrong)
@@ -115,6 +129,23 @@ struct EarsView: View {
         Text("\(percent)%")
             .font(Typo.number(12))
             .foregroundStyle(color)
+    }
+}
+
+/// The track's name below the closed notch while an ear is hovered.
+private struct TrackPreview: View {
+    let info: NowPlayingInfo
+
+    var body: some View {
+        VStack(spacing: 1) {
+            Text(info.title).font(Typo.captionStrong)
+            if !info.artist.isEmpty {
+                Text(info.artist).font(Typo.micro).foregroundStyle(.secondary)
+            }
+        }
+        .lineLimit(1)
+        .frame(maxWidth: .infinity, maxHeight: EarLayout.previewDrop, alignment: .top)
+        .padding(.horizontal, Space.m)
     }
 }
 

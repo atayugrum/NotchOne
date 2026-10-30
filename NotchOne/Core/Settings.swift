@@ -24,6 +24,10 @@ enum SettingsKey {
     static let catchDownloads = "catchDownloads"
     static let meetingModeEnabled = "meetingModeEnabled"
     static let gesturesEnabled = "gesturesEnabled"
+    static let earPreview = "earPreview"
+    static let wheelVolume = "wheelVolume"
+    static let leftEarClick = "leftEarClick"
+    static let rightEarClick = "rightEarClick"
     static let focusIndicatorEnabled = "focusIndicatorEnabled"
     static let lockScreenWidget = "lockScreenWidget"
     static let notificationsEnabled = "notificationsEnabled"
@@ -74,6 +78,10 @@ enum SettingsDefault {
     static let catchDownloads = true
     static let meetingModeEnabled = true
     static let gesturesEnabled = true
+    static let earPreview = true
+    static let wheelVolume = false
+    static let leftEarClick = EarClick.openPlayer
+    static let rightEarClick = EarClick.playPause
     static let focusIndicatorEnabled = false
     /// Experimental (private API), so off until turned on.
     static let lockScreenWidget = false

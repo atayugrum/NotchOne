@@ -17,6 +17,11 @@ final class DropCatcherPanel: NSPanel {
         set { catcher.onDrop = newValue }
     }
 
+    var onClick: (() -> Void)? {
+        get { catcher.onClick }
+        set { catcher.onClick = newValue }
+    }
+
     private let catcher = DropCatcherView()
 
     init(frame: CGRect) {
@@ -40,6 +45,14 @@ final class DropCatcherPanel: NSPanel {
 private final class DropCatcherView: NSView {
     var onDragEnter: (([URL]) -> Void)?
     var onDrop: (([URL]) -> Void)?
+    var onClick: (() -> Void)?
+
+    override func acceptsFirstMouse(for event: NSEvent?) -> Bool { true }
+
+    // This window sits over the notch, so clicks on the middle of it land here.
+    override func mouseDown(with event: NSEvent) {
+        onClick?()
+    }
 
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)

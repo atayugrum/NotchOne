@@ -4,6 +4,12 @@ import Testing
 @testable import NotchOne
 
 struct SwipeLogicTests {
+    @Test func closedNotchSkipsTracksOnlyWithMusic() {
+        #expect(SwipeLogic.action(direction: .left, isOpen: false, tab: .home, inHeader: false, hasMusic: true) == .nextTrack)
+        #expect(SwipeLogic.action(direction: .right, isOpen: false, tab: .home, inHeader: false, hasMusic: true) == .previousTrack)
+        #expect(SwipeLogic.action(direction: .right, isOpen: false, tab: .home, inHeader: false) == SwipeAction.none)
+    }
+
     @Test func mouseWheelScrollsSidewaysLists() {
         #expect(SwipeLogic.wheelScrollsSideways(tab: .clipboard, isOpen: true, hasPhase: false, dx: 0, dy: -3))
         #expect(SwipeLogic.wheelScrollsSideways(tab: .shelf, isOpen: true, hasPhase: false, dx: 0, dy: 3))

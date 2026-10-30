@@ -71,16 +71,9 @@ struct NotchRootView: View {
         .frame(width: size.width, height: size.height, alignment: .top)
         .clipShape(shape)
         .contentShape(shape)
-        .onTapGesture {
-            guard !isOpen else { return }
-            // A notification: go straight to its app.
-            if case .live(let item) = ears, item.source == .notification, item.appPID != nil {
-                model.activity.live.activate(item)
-            } else {
-                // Click-to-open; also skips the hover delay.
-                model.open()
-            }
-        }
+        .gesture(SpatialTapGesture().onEnded { tap in
+            model.clickClosed(on: ClosedNotchLogic.side(x: tap.location.x, width: size.width, notchWidth: notch.width))
+        })
         // Files dropped outside the drop zones go to the shelf.
         .dropDestination(for: URL.self) { urls, _ in
             model.activity.shelf.add(urls)

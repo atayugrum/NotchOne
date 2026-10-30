@@ -49,8 +49,13 @@ enum EarLayout {
     /// A notification opens downward, so it only widens the notch a little.
     static let notificationWidth: CGFloat = 70
 
-    static func drop(for content: EarContent?) -> CGFloat {
-        if case .live(let item) = content, item.source == .notification { notificationDrop } else { 0 }
+    /// How far the track's name reaches below the closed notch while an ear is hovered.
+    static let previewDrop: CGFloat = 38
+
+    static func drop(for content: EarContent?, previewing: Bool = false) -> CGFloat {
+        if case .live(let item) = content, item.source == .notification { return notificationDrop }
+        if case .nowPlaying = content, previewing { return previewDrop }
+        return 0
     }
 
     /// Ears that stay for a long time step aside for the menu bar. Short or urgent ones don't.
@@ -75,11 +80,17 @@ enum EarLayout {
     /// The hover margin around the notch that still means the notch itself.
     static let notchMargin: CGFloat = 12
 
-    /// True when the pointer is on the menu bar near the ears, not on the notch.
+    /// True when the pointer is on the menu bar just past the ears, not on the notch or the
+    /// ears themselves (those can be clicked).
     static func pointerNearEars(_ pointer: CGPoint, notchRect: CGRect, earWidth: CGFloat) -> Bool {
-        let notch = notchRect.insetBy(dx: -notchMargin, dy: -6)
+        let notch = notchRect.insetBy(dx: -(notchMargin + earWidth), dy: -6)
         let band = notchRect.insetBy(dx: -(earWidth + tuckReach), dy: -6)
         return band.contains(pointer) && !notch.contains(pointer)
+    }
+
+    /// True when a pointer already on the closed notch is beside it or below it.
+    static func pointerOnEar(_ pointer: CGPoint, notchRect: CGRect) -> Bool {
+        abs(pointer.x - notchRect.midX) > notchRect.width / 2 + notchMargin || pointer.y < notchRect.minY - 6
     }
 
     /// True while the pointer stays anywhere on the menu bar's row.
@@ -118,7 +129,33 @@ enum EarLayout {
 @MainActor
 @Observable
 final class ActivityState {
-    var nowPlaying: NowPlayingInfo?
+    var nowPlaying: NowPlayingInfo? {
+        didSet { lingerAfterPause(was: oldValue?.isPlaying == true) }
+    }
+
+    /// The ear stays a moment after pausing, so playing again is one click away.
+    private(set) var isLingering = false
+    @ObservationIgnored private var lingerTask: Task<Void, Never>?
+    private static let lingerSeconds: Double = 6
+
+    private func lingerAfterPause(was playing: Bool) {
+        guard nowPlaying?.isPlaying != true else {
+            lingerTask?.cancel()
+            isLingering = false
+            return
+        }
+        guard playing, nowPlaying != nil else {
+            if nowPlaying == nil { isLingering = false }
+            return
+        }
+        isLingering = true
+        lingerTask?.cancel()
+        lingerTask = Task { [weak self] in
+            try? await Task.sleep(for: .seconds(Self.lingerSeconds))
+            guard !Task.isCancelled else { return }
+            withAnimation(Motion.peekOut) { self?.isLingering = false }
+        }
+    }
 
     /// Brings the playing app forward (opens it if it has quit since).
     func openPlayingApp() {
@@ -155,6 +192,8 @@ final class ActivityState {
     let drops: DropActionRunner
     /// Set by meeting mode while it runs.
     @ObservationIgnored var onToggleMicMute: (() -> Void)?
+    /// Set by the media key service; `up` is louder.
+    @ObservationIgnored var onWheelVolume: ((CGFloat) -> Void)?
     /// True while the Mirror tab has the camera on (so it isn't taken for a meeting).
     var isUsingCamera = false
     /// A Focus mode is on (only when the Focus indicator is enabled and allowed).
@@ -179,7 +218,7 @@ final class ActivityState {
         if let peek { return .peek(peek) }
         let top = live.top
         if let top, top.priority > Self.nowPlayingPriority { return .live(top) }
-        if nowPlaying?.isPlaying == true { return .nowPlaying }
+        if nowPlaying?.isPlaying == true || isLingering { return .nowPlaying }
         if let top { return .live(top) }
         return nil
     }
@@ -193,7 +232,10 @@ final class ActivityState {
     /// The pointer is on the menu bar beside the notch, so ears that would stay there step aside.
     var earsTucked = false
 
-    var earDrop: CGFloat { EarLayout.drop(for: ears) }
+    /// An ear is hovered, so the track's name shows below the notch.
+    var earPreview = false
+
+    var earDrop: CGFloat { EarLayout.drop(for: ears, previewing: earPreview) }
 
     /// Room left before the front app's menus. Only ears that stay keep clear of them.
     var menuEarLimit: CGFloat?
@@ -207,6 +249,12 @@ final class ActivityState {
     /// While a new file peeks, hovering doesn't open the notch, so the thumbnail can be dragged.
     var isShowingFilePeek: Bool {
         if case .newFile = peek { return true }
+        return false
+    }
+
+    /// A notification waits for its click: hovering it doesn't open the notch either.
+    var isShowingNotification: Bool {
+        if case .live(let item) = ears { return item.source == .notification }
         return false
     }
 

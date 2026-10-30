@@ -150,6 +150,7 @@ final class NotchWindowController {
             self.panel?.ignoresMouseEvents = false
             self.hover?.evaluate()
         }
+        catcher.onClick = { [weak model] in model?.clickClosed(on: .center) }
         catcher.onDrop = { [weak self] urls in
             guard let self, let model = self.model else { return }
             self.activity.shelf.add(urls)

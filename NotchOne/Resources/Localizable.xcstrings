@@ -1957,6 +1957,16 @@
         }
       }
     },
+    "Mouse wheel changes the volume": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fare tekerleği sesi değiştirir"
+          }
+        }
+      }
+    },
     "Move %@ down": {
       "localizations": {
         "tr": {
@@ -2440,6 +2450,16 @@
         }
       }
     },
+    "Open the player": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oynatıcıyı aç"
+          }
+        }
+      }
+    },
     "Open Weather": {
       "localizations": {
         "tr": {
@@ -2506,6 +2526,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "İsteğe bağlı izinler"
+          }
+        }
+      }
+    },
+    "Over the closed notch.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kapalı notch'un üzerindeyken."
           }
         }
       }
@@ -2620,12 +2650,32 @@
         }
       }
     },
+    "Play or pause": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oynat veya duraklat"
+          }
+        }
+      }
+    },
     "Play something in Music, Spotify or a browser": {
       "localizations": {
         "tr": {
           "stringUnit": {
             "state": "translated",
             "value": "Müzik'te, Spotify'da ya da bir tarayıcıda bir şey çalın"
+          }
+        }
+      }
+    },
+    "Pointing at the sides of the closed notch shows what's playing.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kapalı notch'un yanlarına gelince çalan şarkıyı gösterir."
           }
         }
       }
@@ -3130,6 +3180,16 @@
         }
       }
     },
+    "Sideways on the tabs switches tabs, on Now Playing or the closed notch skips tracks; down on the closed notch opens it.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sekmelerde yana kaydırmak sekme değiştirir, Şimdi Çalıyor'da veya kapalı notch'ta parça atlar; kapalı notch'ta aşağı kaydırmak açar."
+          }
+        }
+      }
+    },
     "Sideways on the tabs switches tabs, on Now Playing skips tracks; down on the closed notch opens it.": {
       "localizations": {
         "tr": {
@@ -3196,6 +3256,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kar sağanağı"
+          }
+        }
+      }
+    },
+    "Song name on hover": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Üzerine gelince şarkı adı"
           }
         }
       }

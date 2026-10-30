@@ -89,8 +89,12 @@ final class HoverController {
         let holdOpen = HoverLogic.holdsOpen(state: model.state, mouseButtonsDown: NSEvent.pressedMouseButtons != 0)
             || model.isPinnedOpen
 
+        let onEar = inside && !model.isOpen && model.activity.ears == .nowPlaying
+            && (notchRect().map { EarLayout.pointerOnEar(NSEvent.mouseLocation, notchRect: $0) } ?? false)
+        setEarPreview(onEar && UserDefaults.standard.bool(forKey: SettingsKey.earPreview, default: SettingsDefault.earPreview))
+
         let opensOnHover = UserDefaults.standard.bool(forKey: SettingsKey.openOnHover, default: SettingsDefault.openOnHover)
-            && !model.activity.isShowingFilePeek
+            && !model.activity.isShowingFilePeek && !model.activity.isShowingNotification && !onEar
         switch HoverLogic.decide(
             state: model.state,
             isInside: inside || holdOpen,
@@ -131,6 +135,11 @@ final class HoverController {
                 self?.setTucked(false)
             }
         }
+    }
+
+    private func setEarPreview(_ previewing: Bool) {
+        guard model.activity.earPreview != previewing else { return }
+        withAnimation(Motion.hover) { model.activity.earPreview = previewing }
     }
 
     private func setTucked(_ tucked: Bool) {
