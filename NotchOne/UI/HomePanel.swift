@@ -30,13 +30,17 @@ struct HomePanel: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .glassCard()
         } else {
-            Grid(horizontalSpacing: Space.s, verticalSpacing: Space.s) {
-                ForEach(Array(HomeLogic.rows(cards, wide: wideCards).enumerated()), id: \.offset) { _, row in
-                    GridRow {
-                        ForEach(row) { slot in
-                            HomeCardView(card: slot.card, isWide: slot.span > 1, model: model)
-                                .gridCellColumns(slot.span)
+            GeometryReader { proxy in
+                let column = HomeLogic.columnWidth(in: proxy.size.width, spacing: Space.s)
+                VStack(spacing: Space.s) {
+                    ForEach(Array(HomeLogic.rows(cards, wide: wideCards).enumerated()), id: \.offset) { _, row in
+                        HStack(spacing: Space.s) {
+                            ForEach(row) { slot in
+                                HomeCardView(card: slot.card, isWide: slot.span > 1, model: model)
+                                    .frame(width: column * CGFloat(slot.span) + Space.s * CGFloat(slot.span - 1))
+                            }
                         }
+                        .frame(maxHeight: .infinity)
                     }
                 }
             }

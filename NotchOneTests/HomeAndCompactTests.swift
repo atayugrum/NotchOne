@@ -130,6 +130,11 @@ struct HomeLayoutTests {
         #expect(rows.map { $0.map(\.span) } == [[1, 2], [3]])
     }
 
+    @Test func columnsShareTheRow() {
+        #expect(HomeLogic.columnWidth(in: 316, spacing: 8) == 100)
+        #expect(HomeLogic.columnWidth(in: 0, spacing: 8) == 0)
+    }
+
     @Test func cardsPastTheLastRowDontShow() {
         let rows = HomeLogic.rows(HomeCard.allCases, wide: "nowPlaying,weather,battery,activity,devices")
         #expect(rows.count == HomeLogic.maxRows)

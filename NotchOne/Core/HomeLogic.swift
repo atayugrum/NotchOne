@@ -75,6 +75,11 @@ enum HomeLogic {
     static let maxRows = 2
     static let columns = 3
 
+    /// Width of one column of a row `width` wide.
+    static func columnWidth(in width: CGFloat, spacing: CGFloat) -> CGFloat {
+        max(0, (width - spacing * CGFloat(columns - 1)) / CGFloat(columns))
+    }
+
     /// All cards in the saved order; cards missing from it go last, so new ones show up.
     static func ordered(_ order: String) -> [HomeCard] {
         var result: [HomeCard] = []
