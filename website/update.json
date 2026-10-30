@@ -1,7 +1,7 @@
 {
-  "tag_name": "v1.0.0",
-  "html_url": "https://notchone.pages.dev/",
+  "tag_name": "v1.0.1",
+  "html_url": "https://atayugrum.github.io/NotchOne/",
   "assets": [
-    { "name": "NotchOne-1.0.0.zip", "browser_download_url": "https://notchone.pages.dev/downloads/NotchOne-1.0.0.zip" }
+    { "name": "NotchOne-1.0.1.zip", "browser_download_url": "https://atayugrum.github.io/NotchOne/downloads/NotchOne-1.0.1.zip" }
   ]
 }

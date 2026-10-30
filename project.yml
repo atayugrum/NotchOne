@@ -37,11 +37,11 @@ targets:
       properties:
         CFBundleDisplayName: NotchOne
         CFBundleLocalizations: [en, tr]
-        CFBundleShortVersionString: "1.0.0"
-        CFBundleVersion: "1"
+        CFBundleShortVersionString: "1.0.1"
+        CFBundleVersion: "2"
         # GitHub's latest-release API for the repo releases are published to; empty turns
         # the update check off.
-        NotchOneUpdateFeed: "https://notchone.pages.dev/update.json"
+        NotchOneUpdateFeed: "https://atayugrum.github.io/NotchOne/update.json"
         LSUIElement: true
         LSApplicationCategoryType: public.app-category.utilities
         NSHumanReadableCopyright: "© 2026 NotchOne"
