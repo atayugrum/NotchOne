@@ -38,8 +38,8 @@ targets:
         CFBundleDisplayName: NotchOne
         CFBundleLocalizations: [en, tr]
         LSMinimumSystemVersion: $(MACOSX_DEPLOYMENT_TARGET)
-        CFBundleShortVersionString: "1.0.3"
-        CFBundleVersion: "4"
+        CFBundleShortVersionString: "1.1.0"
+        CFBundleVersion: "5"
         # GitHub's latest-release API for the repo releases are published to; empty turns
         # the update check off.
         NotchOneUpdateFeed: "https://notchone.one/update.json"
