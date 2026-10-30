@@ -136,7 +136,7 @@ struct TabBar: View {
     let tabs: [NotchTab]
     @Binding var selection: NotchTab
     /// More tabs than this, and the rest go into a "More" menu at the end.
-    var maxVisible = 7
+    var maxVisible = 6
     @Namespace private var namespace
 
     private var split: (shown: [NotchTab], more: [NotchTab]) {

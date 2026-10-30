@@ -1318,12 +1318,12 @@
         }
       }
     },
-    "Drag to reorder. Hidden tabs stay out of the tab bar. With more than seven, the rest go into the … menu.": {
+    "Drag to reorder. Hidden tabs stay out of the tab bar. With more than six, the rest go into the … menu.": {
       "localizations": {
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sıralamak için sürükle. Gizli sekmeler sekme çubuğunda görünmez. Yediden fazlası … menüsüne gider."
+            "value": "Sıralamak için sürükle. Gizli sekmeler sekme çubuğunda görünmez. Altıdan fazlası … menüsüne gider."
           }
         }
       }
@@ -1863,16 +1863,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Uyanık tut"
-          }
-        }
-      }
-    },
-    "Keep Awake is on. Click to turn it off.": {
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Uyanık tutma açık. Kapatmak için tıkla."
           }
         }
       }

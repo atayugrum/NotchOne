@@ -47,7 +47,7 @@ struct LayoutPage: View {
     // MARK: - Tabs
 
     private var tabsGroup: some View {
-        SettingsGroup(title: "Tabs", footer: "Drag to reorder. Hidden tabs stay out of the tab bar. With more than seven, the rest go into the … menu.") {
+        SettingsGroup(title: "Tabs", footer: "Drag to reorder. Hidden tabs stay out of the tab bar. With more than six, the rest go into the … menu.") {
             let tabs = AppearanceLogic.allTabs(order: tabOrder).filter(\.inTabBar)
             ForEach(Array(tabs.enumerated()), id: \.element) { index, tab in
                 if index > 0 { RowDivider() }

@@ -2,14 +2,13 @@ import Foundation
 
 /// Something the header can show on its right.
 enum HeaderItem: String, CaseIterable, Identifiable, Sendable {
-    case focus, keepAwake, weather, battery, clock
+    case focus, weather, battery, clock
 
     var id: String { rawValue }
 
     var title: String {
         switch self {
         case .focus: String(localized: "Focus")
-        case .keepAwake: String(localized: "Keep Awake")
         case .weather: String(localized: "Weather")
         case .battery: String(localized: "Battery")
         case .clock: String(localized: "Clock")

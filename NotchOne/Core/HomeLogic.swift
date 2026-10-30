@@ -96,7 +96,7 @@ enum HomeLogic {
     /// As many boxes as the largest template has; a smaller one uses the first few.
     static let maxSlots = 6
     static let rowUnits = 6
-    static let defaultSlots: [HomeCard?] = [.nowPlaying, .weather, .battery, .notes, .clipboard, .shelf]
+    static let defaultSlots: [HomeCard?] = [.nowPlaying, .weather, .battery, .notes, .keepAwake, .clipboard]
 
     /// The saved boxes, always `maxSlots` long; an empty name is an empty box.
     static func slots(_ saved: String) -> [HomeCard?] {

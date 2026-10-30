@@ -7,11 +7,6 @@ struct NowPlayingPanel: View {
     var glow: Color?
 
     var body: some View {
-        content
-            .overlay(alignment: .topTrailing) { OutputPicker(activity: activity) }
-    }
-
-    private var content: some View {
         VStack(alignment: .leading, spacing: 6) {
             if let info = activity.nowPlaying {
                 HStack(spacing: Space.l) {
@@ -191,7 +186,7 @@ struct OutputPicker: View {
             Image(systemName: "hifispeaker")
                 .font(Typo.icon(12))
                 .foregroundStyle(.secondary)
-                .frame(width: 26, height: 26)
+                .frame(width: 24, height: 24)
                 .contentShape(Rectangle())
         }
         .menuStyle(.button)

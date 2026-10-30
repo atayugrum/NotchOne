@@ -100,6 +100,12 @@ private struct HeaderActions: View {
             .foregroundStyle(model.selectedTab == .search ? .primary : .secondary)
             .background(model.selectedTab == .search ? Color.white.opacity(0.14) : .clear, in: Circle())
             .help("Search (\(HotKey.palette.display))")
+            IconButton(symbol: model.activity.keepAwake.isOn ? "cup.and.saucer.fill" : "cup.and.saucer", size: 12, frame: 24, label: "Keep Awake") {
+                model.activity.toggleKeepAwake()
+            }
+            .foregroundStyle(model.activity.keepAwake.isOn ? Color.green : .secondary)
+            .help("Keep Awake")
+            OutputPicker(activity: model.activity)
             if model.selectedTab == .home {
                 IconButton(symbol: "slider.horizontal.3", size: 12, frame: 24, label: "Edit Home") {
                     withAnimation(Motion.tab) { model.isEditingHome.toggle() }
@@ -139,17 +145,7 @@ private struct HeaderStatus: View {
                     .help("A Focus is on")
                     .accessibilityLabel("Focus is on")
             }
-            if activity.keepAwake.isOn, shows(.keepAwake) {
-                Button { activity.toggleKeepAwake() } label: {
-                    Image(systemName: "cup.and.saucer.fill")
-                        .font(Typo.icon(12))
-                        .foregroundStyle(.green)
-                }
-                .buttonStyle(.plain)
-                .help("Keep Awake is on. Click to turn it off.")
-                .accessibilityLabel("Turn off Keep Awake")
-            }
-            if shows(.weather), model.selectedTab != .weather, model.tabs.contains(.weather),
+            if shows(.weather), model.selectedTab != .weather, model.selectedTab != .home, model.tabs.contains(.weather),
                let snapshot = activity.weather.badgeSnapshot() {
                 WeatherBadge(snapshot: snapshot) {
                     withAnimation(Motion.tab) { model.show(.weather) }
