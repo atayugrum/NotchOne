@@ -1,0 +1,195 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "CFBundleDisplayName": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NotchOne"
+          }
+        }
+      },
+      "shouldTranslate": false
+    },
+    "CFBundleName": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NotchOne"
+          }
+        }
+      },
+      "shouldTranslate": false
+    },
+    "NSAppleEventsUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NotchOne shows what's playing in Music and Spotify and lets you play, pause and skip from the notch."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NotchOne, Müzik ve Spotify'da çalanı gösterir ve çentikten oynatma, duraklatma ve parça atlamayı sağlar."
+          }
+        }
+      }
+    },
+    "NSBluetoothAlwaysUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NotchOne shows a short alert in the notch when headphones or other Bluetooth devices connect or disconnect."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NotchOne, kulaklık ya da başka Bluetooth aygıtları bağlandığında veya bağlantısı kesildiğinde çentikte kısa bir uyarı gösterir."
+          }
+        }
+      }
+    },
+    "NSCameraUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The Mirror tab shows your camera so you can check yourself before a call. Nothing is recorded."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ayna sekmesi, aramadan önce kendinize bakabilmeniz için kameranızı gösterir. Hiçbir şey kaydedilmez."
+          }
+        }
+      }
+    },
+    "NSDesktopFolderUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NotchOne shows a new screenshot in the notch for a few seconds, so you can drag it straight into another app. It only looks at new files."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NotchOne yeni bir ekran görüntüsünü birkaç saniye çentikte gösterir; böylece onu doğrudan başka bir uygulamaya sürükleyebilirsiniz. Yalnızca yeni dosyalara bakar."
+          }
+        }
+      }
+    },
+    "NSDocumentsFolderUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NotchOne shows a new screenshot in the notch for a few seconds when screenshots are saved here. It only looks at new files."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ekran görüntüleri buraya kaydediliyorsa NotchOne yenisini birkaç saniye çentikte gösterir. Yalnızca yeni dosyalara bakar."
+          }
+        }
+      }
+    },
+    "NSDownloadsFolderUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NotchOne shows a new download in the notch for a few seconds, so you can drag it straight into another app. It only looks at new files."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NotchOne yeni bir indirmeyi birkaç saniye çentikte gösterir; böylece onu doğrudan başka bir uygulamaya sürükleyebilirsiniz. Yalnızca yeni dosyalara bakar."
+          }
+        }
+      }
+    },
+    "NSFocusStatusUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NotchOne shows a small moon in the notch while a Focus is on."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NotchOne, bir Odak açıkken çentikte küçük bir ay gösterir."
+          }
+        }
+      }
+    },
+    "NSHumanReadableCopyright": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "© 2026 NotchOne"
+          }
+        }
+      },
+      "shouldTranslate": false
+    },
+    "NSLocationUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NotchOne shows the weather where you are. Only your area, rounded to about 1 km, is sent to the weather service."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NotchOne bulunduğunuz yerin hava durumunu gösterir. Hava durumu servisine yalnızca yaklaşık 1 km'ye yuvarlanmış bölgeniz gönderilir."
+          }
+        }
+      }
+    },
+    "NSLocationWhenInUseUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NotchOne shows the weather where you are. Only your area, rounded to about 1 km, is sent to the weather service."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NotchOne bulunduğunuz yerin hava durumunu gösterir. Hava durumu servisine yalnızca yaklaşık 1 km'ye yuvarlanmış bölgeniz gönderilir."
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <!-- The notch at the top edge: smooth shoulders, rounded corners, a camera lens. -->
+  <g transform="scale(4.923077) translate(-24 -24)">
+    <path fill="#140D08" d="M86 24 H170 C163 24 160 27.5 160 33 V36 A10 10 0 0 1 150 46 H106 A10 10 0 0 1 96 36 V33 C96 27.5 93 24 86 24 Z"/>
+    <circle cx="128" cy="34" r="3.2" fill="#1A2236"/><circle cx="127" cy="33" r="1" fill="#7F98C9"/>
+  </g>
+</svg>

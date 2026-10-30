@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NotchOne Privacy</title>
+  <meta name="description" content="What NotchOne sends, what it keeps on your Mac, and the permissions it asks for.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <header class="top">
+    <a class="brand" href="./">NotchOne</a>
+    <nav><a href="privacy.html">Privacy</a><a href="https://github.com/OWNER/NotchOne/issues">Support</a></nav>
+  </header>
+
+  <h1>Privacy policy</h1>
+  <p class="lead">Last updated 29 October 2026. NotchOne has no servers, no accounts, no analytics and no third-party code. We don't collect, store or sell any personal data.</p>
+
+  <h2>What leaves your Mac</h2>
+  <div class="table-wrap">
+  <table>
+    <tr><th>What</th><th>Sent to</th><th>When</th></tr>
+    <tr><td>Your area, rounded to about 1&nbsp;km (or the city you typed)</td><td><a href="https://open-meteo.com/en/terms">Open-Meteo</a>, a free weather service</td><td>When the notch opens, at most every 30 minutes, while the weather is on</td></tr>
+    <tr><td>A request for the cover image of the playing song</td><td>Spotify's image server</td><td>While Spotify plays</td></tr>
+    <tr><td>A request for the latest release (no identifiers)</td><td>GitHub</td><td>At most once a day; can be turned off in Settings → About</td></tr>
+  </table>
+  </div>
+  <p>These services see your IP address, as any website does. Their own privacy policies apply to what they receive.</p>
+
+  <h2>What stays on your Mac</h2>
+  <ul>
+    <li><strong>Clipboard history</strong> is kept in memory and cleared when NotchOne quits. Copies from password managers are skipped.</li>
+    <li><strong>The Shelf</strong> keeps links to your files, not copies.</li>
+    <li><strong>Translation</strong> runs on your Mac with Apple's on-device models.</li>
+    <li><strong>Mirror</strong> shows a live camera preview. Nothing is recorded or saved.</li>
+    <li><strong>Claude Code notifications</strong> come from Claude Code's hooks on your Mac (project name and status only), and only after you connect it in Settings.</li>
+    <li><strong>Notes</strong> are a plain text file in NotchOne's folder in Application Support.</li>
+    <li><strong>System and device stats</strong> (CPU, memory, network, device batteries) are read from macOS only while they're on screen, and not kept.</li>
+    <li><strong>Settings</strong> are stored in your user's preferences.</li>
+  </ul>
+
+  <h2>Permissions</h2>
+  <p>Each one is optional and asked only when you turn on the feature that needs it.</p>
+  <ul>
+    <li><strong>Location</strong> for the weather where you are. You can type a city instead.</li>
+    <li><strong>Accessibility</strong> for translating the selected text, the volume and brightness keys, and controlling players other than Music and Spotify.</li>
+    <li><strong>Automation</strong> to read and control Music and Spotify.</li>
+    <li><strong>Files and Folders</strong> (Desktop and Downloads) to show a new screenshot or download in the notch for a few seconds. NotchOne only looks at new files and never uploads them. Both can be turned off.</li>
+    <li><strong>Camera</strong> for the Mirror tab.</li>
+    <li><strong>Bluetooth</strong> for connect and disconnect alerts.</li>
+    <li><strong>Focus status</strong> for the moon shown while a Focus is on.</li>
+  </ul>
+
+  <h2>Updates</h2>
+  <p>When it finds a new version, NotchOne downloads it over HTTPS and installs it only if Apple's code signing confirms it was signed with our Developer ID.</p>
+
+  <h2>Contact</h2>
+  <p>Questions or requests: <a href="https://github.com/OWNER/NotchOne/issues">open an issue on GitHub</a>.</p>
+
+  <footer>© 2026 NotchOne · <a href="./">NotchOne</a></footer>
+</main>
+</body>
+</html>

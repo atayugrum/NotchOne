@@ -1,0 +1,116 @@
+# Source of truth for the Xcode project. Regenerate with: xcodegen generate
+name: NotchOne
+
+options:
+  bundleIdPrefix: com.atayug
+  deploymentTarget:
+    macOS: "26.0"
+  createIntermediateGroups: true
+  developmentLanguage: en
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MACOSX_DEPLOYMENT_TARGET: "26.0"
+    DEVELOPMENT_TEAM: 4CALNLY425
+    CODE_SIGN_STYLE: Manual
+    CODE_SIGN_IDENTITY: "Apple Development"
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+    DEAD_CODE_STRIPPING: YES
+    SWIFT_EMIT_LOC_STRINGS: YES
+    LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+
+targets:
+  NotchOne:
+    type: application
+    platform: macOS
+    sources:
+      - path: NotchOne
+        excludes:
+          - "AppIcon.icon/**"
+      - path: NotchOne/AppIcon.icon
+        type: file
+        buildPhase: resources
+      - path: Shared
+    info:
+      path: NotchOne/Info.plist
+      properties:
+        CFBundleDisplayName: NotchOne
+        CFBundleLocalizations: [en, tr]
+        CFBundleShortVersionString: "2.0.0"
+        CFBundleVersion: "2"
+        # GitHub's latest-release API for the repo releases are published to; empty turns
+        # the update check off.
+        NotchOneUpdateFeed: ""
+        LSUIElement: true
+        LSApplicationCategoryType: public.app-category.utilities
+        NSHumanReadableCopyright: "© 2026 NotchOne"
+        NSAppleEventsUsageDescription: "NotchOne shows what's playing in Music and Spotify and lets you play, pause and skip from the notch."
+        CFBundleURLTypes:
+          - CFBundleURLName: com.atayug.notchone
+            CFBundleURLSchemes: [notchone]
+        NSCameraUsageDescription: "The Mirror tab shows your camera so you can check yourself before a call. Nothing is recorded."
+        NSDesktopFolderUsageDescription: "NotchOne shows a new screenshot in the notch for a few seconds, so you can drag it straight into another app. It only looks at new files."
+        NSDownloadsFolderUsageDescription: "NotchOne shows a new download in the notch for a few seconds, so you can drag it straight into another app. It only looks at new files."
+        NSDocumentsFolderUsageDescription: "NotchOne shows a new screenshot in the notch for a few seconds when screenshots are saved here. It only looks at new files."
+        NSFocusStatusUsageDescription: "NotchOne shows a small moon in the notch while a Focus is on."
+        NSBluetoothAlwaysUsageDescription: "NotchOne shows a short alert in the notch when headphones or other Bluetooth devices connect or disconnect."
+        NSLocationUsageDescription: "NotchOne shows the weather where you are. Only your area, rounded to about 1 km, is sent to the weather service."
+        NSLocationWhenInUseUsageDescription: "NotchOne shows the weather where you are. Only your area, rounded to about 1 km, is sent to the weather service."
+    entitlements:
+      path: NotchOne/NotchOne.entitlements
+      properties:
+        com.apple.security.app-sandbox: false
+        com.apple.security.automation.apple-events: true
+        com.apple.security.device.camera: true
+        com.apple.security.personal-information.location: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.atayug.notchone
+        ENABLE_HARDENED_RUNTIME: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+    dependencies:
+      - target: notch
+        embed: true
+        codeSign: true
+        copy:
+          destination: wrapper
+          subpath: Contents/Helpers
+
+  notch:
+    type: tool
+    platform: macOS
+    sources:
+      - path: NotchCLI
+      - path: Shared
+    settings:
+      base:
+        PRODUCT_NAME: notch
+        PRODUCT_BUNDLE_IDENTIFIER: com.atayug.notchone.cli
+        ENABLE_HARDENED_RUNTIME: YES
+        SKIP_INSTALL: YES
+
+  NotchOneTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: NotchOneTests
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.atayug.notchone.tests
+    dependencies:
+      - target: NotchOne
+
+schemes:
+  NotchOne:
+    build:
+      targets:
+        NotchOne: all
+        NotchOneTests: [test]
+    test:
+      # Tests compare English text, whatever language this Mac prefers.
+      language: en
+      region: US
+      targets:
+        - NotchOneTests

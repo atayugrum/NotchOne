@@ -1,0 +1,4006 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "%@": {
+      "shouldTranslate": false
+    },
+    "%@ %@": {
+      "shouldTranslate": false
+    },
+    "%@ and %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@ and %2$@"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ ve %2$@"
+          }
+        }
+      }
+    },
+    "%@ battery is low: %lld%%": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@ battery is low: %2$lld%%"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ pili azaldı: %%%2$lld"
+          }
+        }
+      }
+    },
+    "%@ free": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ boş"
+          }
+        }
+      }
+    },
+    "%@ need to be downloaded once for on-device translation.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cihazda çeviri için %@ bir kez indirilmeli."
+          }
+        }
+      }
+    },
+    "%@ to %@ can't be translated on this Mac.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@ to %2$@ can't be translated on this Mac."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ → %2$@ çevirisi bu Mac'te yapılamıyor."
+          }
+        }
+      }
+    },
+    "%@ · feels %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@ · feels %2$@"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · hissedilen %2$@"
+          }
+        }
+      }
+    },
+    "%@ → %@": {
+      "shouldTranslate": false
+    },
+    "%@ ⟷ %@": {
+      "shouldTranslate": false
+    },
+    "%@%lld%%": {
+      "shouldTranslate": false
+    },
+    "%@, %@": {
+      "shouldTranslate": false
+    },
+    "%@: %@": {
+      "shouldTranslate": false
+    },
+    "%lld": {
+      "shouldTranslate": false
+    },
+    "%lld characters": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld character"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld characters"
+                }
+              }
+            }
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld karakter"
+          }
+        }
+      }
+    },
+    "%lld files": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld file"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld files"
+                }
+              }
+            }
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld dosya"
+          }
+        }
+      }
+    },
+    "%lld paths": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld path"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld paths"
+                }
+              }
+            }
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld yol"
+          }
+        }
+      }
+    },
+    "%lld paths copied": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld path copied"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld paths copied"
+                }
+              }
+            }
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld yol kopyalandı"
+          }
+        }
+      }
+    },
+    "%lld words": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld word"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld words"
+                }
+              }
+            }
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld kelime"
+          }
+        }
+      }
+    },
+    "%lld%%": {
+      "shouldTranslate": false
+    },
+    "+%lld more": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%lld daha"
+          }
+        }
+      }
+    },
+    "A Focus is on": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bir Odak açık"
+          }
+        }
+      }
+    },
+    "A card shows only when it has something to show, and at most six at a time.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bir kart yalnızca gösterecek bir şey olduğunda görünür; aynı anda en fazla altı kart."
+          }
+        }
+      }
+    },
+    "A city": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bir şehir"
+          }
+        }
+      }
+    },
+    "A live preview; nothing is recorded": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Canlı önizleme; hiçbir şey kaydedilmez"
+          }
+        }
+      }
+    },
+    "A new file shows a thumbnail in the notch for a few seconds; drag it straight into another app.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yeni bir dosya, çentikte birkaç saniye küçük resim olarak görünür; doğrudan başka bir uygulamaya sürükleyin."
+          }
+        }
+      }
+    },
+    "A small Now Playing and battery card under the notch while your Mac is locked. Uses a private macOS feature; turn it off if anything looks wrong.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mac'iniz kilitliyken çentiğin altında küçük bir Şimdi Çalıyor ve pil kartı. Özel bir macOS özelliği kullanır; bir sorun görürseniz kapatın."
+          }
+        }
+      }
+    },
+    "A text file in NotchOne's folder in Application Support": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Application Support'taki NotchOne klasöründe bir metin dosyası"
+          }
+        }
+      }
+    },
+    "About": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hakkında"
+          }
+        }
+      }
+    },
+    "Accessibility": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erişilebilirlik"
+          }
+        }
+      }
+    },
+    "AirDrop": {
+      "shouldTranslate": false
+    },
+    "AirDrop isn't available": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AirDrop kullanılamıyor"
+          }
+        }
+      }
+    },
+    "Alerts when headphones and other devices connect": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kulaklık ve başka aygıtlar bağlandığında uyarı"
+          }
+        }
+      }
+    },
+    "Allow NotchOne in Privacy & Security → Accessibility to control %@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ uygulamasını denetlemek için Gizlilik ve Güvenlik → Erişilebilirlik'te NotchOne'a izin verin"
+          }
+        }
+      }
+    },
+    "Allow NotchOne to control %@ in Privacy & Security → Automation": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gizlilik ve Güvenlik → Otomasyon'da NotchOne'un %@ uygulamasını denetlemesine izin verin"
+          }
+        }
+      }
+    },
+    "Allow…": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İzin ver…"
+          }
+        }
+      }
+    },
+    "Already in that language? Into": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zaten o dilde mi? Şu dile"
+          }
+        }
+      }
+    },
+    "Appearance": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Görünüm"
+          }
+        }
+      }
+    },
+    "Apple's on-device Translation framework": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple'ın cihazda çalışan Çeviri altyapısı"
+          }
+        }
+      }
+    },
+    "Apple's on-device models": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple'ın cihazda çalışan modelleri"
+          }
+        }
+      }
+    },
+    "Asked only when you choose it": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yalnızca siz seçtiğinizde sorulur"
+          }
+        }
+      }
+    },
+    "Automation": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Otomasyon"
+          }
+        }
+      }
+    },
+    "Back": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geri"
+          }
+        }
+      }
+    },
+    "Back to compact": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kompakt görünüme dön"
+          }
+        }
+      }
+    },
+    "Back to the tabs": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sekmelere dön"
+          }
+        }
+      }
+    },
+    "Background removed": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arka plan kaldırıldı"
+          }
+        }
+      }
+    },
+    "Balanced": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dengeli"
+          }
+        }
+      }
+    },
+    "Battery": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pil"
+          }
+        }
+      }
+    },
+    "Battery alerts": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pil uyarıları"
+          }
+        }
+      }
+    },
+    "Bluetooth": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bluetooth"
+          }
+        }
+      }
+    },
+    "Bluetooth alerts": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bluetooth uyarıları"
+          }
+        }
+      }
+    },
+    "Browsers, video players": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tarayıcılar, video oynatıcılar"
+          }
+        }
+      }
+    },
+    "CC BY 4.0": {
+      "shouldTranslate": false
+    },
+    "CPU": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İşlemci"
+          }
+        }
+      }
+    },
+    "CPU, memory, network and batteries, read from macOS only while shown": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İşlemci, bellek, ağ ve piller; yalnızca gösterilirken macOS'tan okunur"
+          }
+        }
+      }
+    },
+    "Calls and Focus": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aramalar ve Odak"
+          }
+        }
+      }
+    },
+    "Camera": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kamera"
+          }
+        }
+      }
+    },
+    "Camera in use": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kamera kullanımda"
+          }
+        }
+      }
+    },
+    "Cancel": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vazgeç"
+          }
+        }
+      }
+    },
+    "Charging": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Şarj oluyor"
+          }
+        }
+      }
+    },
+    "Check for updates automatically": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Güncellemeleri otomatik denetle"
+          }
+        }
+      }
+    },
+    "Check now": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Şimdi denetle"
+          }
+        }
+      }
+    },
+    "Check yourself before a call.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aramadan önce kendinize bir bakın."
+          }
+        }
+      }
+    },
+    "Checking…": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Denetleniyor…"
+          }
+        }
+      }
+    },
+    "Checks GitHub once a day. An update is installed only if it's signed by NotchOne's developer.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Günde bir kez GitHub'a bakar. Güncelleme yalnızca NotchOne'ın geliştiricisi tarafından imzalanmışsa yüklenir."
+          }
+        }
+      }
+    },
+    "Choose a city…": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Şehir seçin…"
+          }
+        }
+      }
+    },
+    "City": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Şehir"
+          }
+        }
+      }
+    },
+    "Classic black": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Klasik siyah"
+          }
+        }
+      }
+    },
+    "Claude Code": {
+      "shouldTranslate": false
+    },
+    "Claude Code notifications": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Claude Code bildirimleri"
+          }
+        }
+      }
+    },
+    "Claude Code tells the notch when it needs your approval and when it finishes, through its hooks. Click the notification to go to that session.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Claude Code, onayınız gerektiğinde ve işini bitirdiğinde bunu kancaları aracılığıyla çentiğe bildirir. O oturuma gitmek için bildirime tıklayın."
+          }
+        }
+      }
+    },
+    "Claude finished": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Claude bitirdi"
+          }
+        }
+      }
+    },
+    "Claude is working": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Claude çalışıyor"
+          }
+        }
+      }
+    },
+    "Claude needs you": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Claude sizi bekliyor"
+          }
+        }
+      }
+    },
+    "Claude needs your input": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Claude sizi bekliyor"
+          }
+        }
+      }
+    },
+    "Clear": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Temizle"
+          }
+        }
+      }
+    },
+    "Clear?": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Temizlensin mi?"
+          }
+        }
+      }
+    },
+    "Clearer": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Şeffaf"
+          }
+        }
+      }
+    },
+    "Click to copy": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kopyalamak için tıklayın"
+          }
+        }
+      }
+    },
+    "Clipboard": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pano"
+          }
+        }
+      }
+    },
+    "Clipboard history": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pano geçmişi"
+          }
+        }
+      }
+    },
+    "Clipboard history is turned off in Settings.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pano geçmişi Ayarlar'da kapalı."
+          }
+        }
+      }
+    },
+    "Clipboard · Return copies it": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pano · Return kopyalar"
+          }
+        }
+      }
+    },
+    "Close delay": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kapanma gecikmesi"
+          }
+        }
+      }
+    },
+    "Cloudy": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bulutlu"
+          }
+        }
+      }
+    },
+    "Code": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kod"
+          }
+        }
+      }
+    },
+    "Command line": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Komut satırı"
+          }
+        }
+      }
+    },
+    "Compact": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kompakt"
+          }
+        }
+      }
+    },
+    "Compact opens a small notch with one row: what's playing, the weather, jobs and the battery. Click anything to see everything.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kompakt, tek satırlık küçük bir çentik açar: çalan müzik, hava durumu, işler ve pil. Hepsini görmek için herhangi birine tıklayın."
+          }
+        }
+      }
+    },
+    "Compress": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sıkıştır"
+          }
+        }
+      }
+    },
+    "Compressed": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sıkıştırıldı"
+          }
+        }
+      }
+    },
+    "Compressing": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sıkıştırılıyor"
+          }
+        }
+      }
+    },
+    "Connect": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bağlan"
+          }
+        }
+      }
+    },
+    "Connected": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bağlı"
+          }
+        }
+      }
+    },
+    "Connect…": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bağlan…"
+          }
+        }
+      }
+    },
+    "Control Music and Spotify": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Müzik ve Spotify'ı denetle"
+          }
+        }
+      }
+    },
+    "Convert": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dönüştür"
+          }
+        }
+      }
+    },
+    "Converted": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dönüştürüldü"
+          }
+        }
+      }
+    },
+    "Converting": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dönüştürülüyor"
+          }
+        }
+      }
+    },
+    "Copied": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kopyalandı"
+          }
+        }
+      }
+    },
+    "Copy": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kopyala"
+          }
+        }
+      }
+    },
+    "Copy path": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yolu kopyala"
+          }
+        }
+      }
+    },
+    "Copy something and it shows up here. Click an item to copy it again.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bir şey kopyalayın, burada görünür. Yeniden kopyalamak için bir öğeye tıklayın."
+          }
+        }
+      }
+    },
+    "Couldn't check for updates: %@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Güncellemeler denetlenemedi: %@"
+          }
+        }
+      }
+    },
+    "Couldn't read the file": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dosya okunamadı"
+          }
+        }
+      }
+    },
+    "Couldn't save the result": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sonuç kaydedilemedi"
+          }
+        }
+      }
+    },
+    "Credits": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Katkıda bulunanlar"
+          }
+        }
+      }
+    },
+    "Current location": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mevcut konum"
+          }
+        }
+      }
+    },
+    "Darker": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Koyu"
+          }
+        }
+      }
+    },
+    "Desktop and Downloads, only to show new screenshots and downloads; turn them off in Shelf & Drops": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Masaüstü ve İndirilenler, yalnızca yeni ekran görüntülerini ve indirmeleri göstermek için; Raf ve Bırakma'dan kapatılabilir"
+          }
+        }
+      }
+    },
+    "Detect": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Algıla"
+          }
+        }
+      }
+    },
+    "Detect language": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dili algıla"
+          }
+        }
+      }
+    },
+    "Devices": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aygıtlar"
+          }
+        }
+      }
+    },
+    "Disconnect": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bağlantıyı kes"
+          }
+        }
+      }
+    },
+    "Displays with a real notch always use the notch shape.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gerçek çentiği olan ekranlar her zaman çentik şeklini kullanır."
+          }
+        }
+      }
+    },
+    "Done": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bitti"
+          }
+        }
+      }
+    },
+    "Download Languages": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dilleri İndir"
+          }
+        }
+      }
+    },
+    "Download in Settings…": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ayarlar'da indir…"
+          }
+        }
+      }
+    },
+    "Download…": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İndir…"
+          }
+        }
+      }
+    },
+    "Drag files onto the notch to keep them on the Shelf, send them with AirDrop, or convert and compress images and PDFs.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dosyaları çentiğe sürükleyip Raf'ta tutun, AirDrop ile gönderin ya da görselleri ve PDF'leri dönüştürüp sıkıştırın."
+          }
+        }
+      }
+    },
+    "Drag into another app": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Başka bir uygulamaya sürükleyin"
+          }
+        }
+      }
+    },
+    "Dragged files split the notch into zones: Shelf and AirDrop, plus remove background, compress and convert for images, compress and merge for PDFs, or copy path. Results are saved next to the original. The shelf keeps links to your files, not copies.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sürüklenen dosyalar çentiği bölgelere ayırır: Raf ve AirDrop; görseller için arka planı kaldır, sıkıştır ve dönüştür; PDF'ler için sıkıştır ve birleştir; ya da yolu kopyala. Sonuçlar orijinalin yanına kaydedilir. Raf dosyalarınızın kopyasını değil, bağlantısını tutar."
+          }
+        }
+      }
+    },
+    "Drizzle": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çisenti"
+          }
+        }
+      }
+    },
+    "Drop files here to keep them handy": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dosyaları elinizin altında tutmak için buraya bırakın"
+          }
+        }
+      }
+    },
+    "Drop files on the notch": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dosyaları çentiğe bırakın"
+          }
+        }
+      }
+    },
+    "Drop on an action": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bir işlemin üzerine bırakın"
+          }
+        }
+      }
+    },
+    "Everything has a tab": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Her şeyin bir sekmesi var"
+          }
+        }
+      }
+    },
+    "Experimental": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deneysel"
+          }
+        }
+      }
+    },
+    "Failed": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Başarısız"
+          }
+        }
+      }
+    },
+    "Fetched when you open the notch, at most every 30 minutes.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çentiği açtığınızda alınır, en fazla 30 dakikada bir."
+          }
+        }
+      }
+    },
+    "Files": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dosyalar"
+          }
+        }
+      }
+    },
+    "Files and Folders": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dosyalar ve Klasörler"
+          }
+        }
+      }
+    },
+    "Finished": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bitti"
+          }
+        }
+      }
+    },
+    "Focus is on": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odak açık"
+          }
+        }
+      }
+    },
+    "Fog": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sis"
+          }
+        }
+      }
+    },
+    "Free, with no accounts or tracking.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ücretsiz; hesap da izleme de yok."
+          }
+        }
+      }
+    },
+    "Freezing drizzle": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Donan çisenti"
+          }
+        }
+      }
+    },
+    "Freezing rain": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Donan yağmur"
+          }
+        }
+      }
+    },
+    "From": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kaynak"
+          }
+        }
+      }
+    },
+    "From a link": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bir bağlantıdan"
+          }
+        }
+      }
+    },
+    "Full": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tam"
+          }
+        }
+      }
+    },
+    "General": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Genel"
+          }
+        }
+      }
+    },
+    "Getting %@ and %@ ready": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Getting %1$@ and %2$@ ready"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ ve %2$@ hazırlanıyor"
+          }
+        }
+      }
+    },
+    "Glass": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cam"
+          }
+        }
+      }
+    },
+    "Granted": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verildi"
+          }
+        }
+      }
+    },
+    "Grant…": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İzin ver…"
+          }
+        }
+      }
+    },
+    "Headphone connect alerts": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kulaklık bağlantı uyarıları"
+          }
+        }
+      }
+    },
+    "Hidden tabs stay out of the tab bar. With more than ten, the rest go into the … menu.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gizli sekmeler sekme çubuğunda görünmez. Ondan fazla sekme olursa kalanlar … menüsüne gider."
+          }
+        }
+      }
+    },
+    "Home": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ana Sayfa"
+          }
+        }
+      }
+    },
+    "Home sums everything up. Reorder or hide tabs in Settings → Appearance, or switch to a smaller compact notch.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ana Sayfa her şeyi özetler. Sekmeleri Ayarlar → Görünüm'den sıralayın veya gizleyin ya da daha küçük kompakt çentiğe geçin."
+          }
+        }
+      }
+    },
+    "Image": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Görsel"
+          }
+        }
+      }
+    },
+    "In memory only; password managers are skipped": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yalnızca bellekte; parola yöneticileri atlanır"
+          }
+        }
+      }
+    },
+    "In the Weather tab, on Home and next to the battery": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hava Durumu sekmesinde, Ana Sayfa'da ve pilin yanında"
+          }
+        }
+      }
+    },
+    "Include other apps": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diğer uygulamaları da göster"
+          }
+        }
+      }
+    },
+    "Install": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yükle"
+          }
+        }
+      }
+    },
+    "Installing the update…": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Güncelleme yükleniyor…"
+          }
+        }
+      }
+    },
+    "Integrations": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Entegrasyonlar"
+          }
+        }
+      }
+    },
+    "Into one PDF": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tek bir PDF'e"
+          }
+        }
+      }
+    },
+    "JSON": {
+      "shouldTranslate": false
+    },
+    "Job": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İş"
+          }
+        }
+      }
+    },
+    "Jot something down. It stays on this Mac and is saved as you type.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bir şeyler not alın. Bu Mac'te kalır ve siz yazarken kaydedilir."
+          }
+        }
+      }
+    },
+    "Keep clipboard history": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pano geçmişini tut"
+          }
+        }
+      }
+    },
+    "Keep it handy": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Elinizin altında tutun"
+          }
+        }
+      }
+    },
+    "Kept in memory only and cleared when NotchOne quits. Passwords and copies from password managers are skipped.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yalnızca bellekte tutulur ve NotchOne kapanınca silinir. Parolalar ve parola yöneticilerinden yapılan kopyalar alınmaz."
+          }
+        }
+      }
+    },
+    "Keyboard shortcuts": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Klavye kısayolları"
+          }
+        }
+      }
+    },
+    "Language": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dil"
+          }
+        }
+      }
+    },
+    "Languages on this Mac": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu Mac'teki diller"
+          }
+        }
+      }
+    },
+    "Large": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Büyük"
+          }
+        }
+      }
+    },
+    "Launch at login": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Girişte başlat"
+          }
+        }
+      }
+    },
+    "Leaves your Mac": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mac'inizden çıkanlar"
+          }
+        }
+      }
+    },
+    "Link": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bağlantı"
+          }
+        }
+      }
+    },
+    "Links `notch` into ~/.local/bin. Then `notch run <command>` shows any command's progress in the notch; `notch progress 0.4 \"Uploading\"`, `notch done` and `notch say \"…\"` work from scripts.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "`notch` komutunu ~/.local/bin içine bağlar. Ardından `notch run <komut>` her komutun ilerlemesini çentikte gösterir; `notch progress 0.4 \"Yükleniyor\"`, `notch done` ve `notch say \"…\"` betiklerde çalışır."
+          }
+        }
+      }
+    },
+    "Links to your files, not copies": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dosyalarınızın kopyası değil, bağlantısı"
+          }
+        }
+      }
+    },
+    "Loading the weather…": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hava durumu yükleniyor…"
+          }
+        }
+      }
+    },
+    "Location": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konum"
+          }
+        }
+      }
+    },
+    "Location access": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konum erişimi"
+          }
+        }
+      }
+    },
+    "Location is off for NotchOne.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NotchOne için konum kapalı."
+          }
+        }
+      }
+    },
+    "Look": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Görünüş"
+          }
+        }
+      }
+    },
+    "Meeting mode": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toplantı modu"
+          }
+        }
+      }
+    },
+    "Meeting mode needs no camera or microphone permission. The Focus moon asks for Focus Status access when turned on.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toplantı modu kamera veya mikrofon izni gerektirmez. Odak ayı açıldığında Odak Durumu erişimi ister."
+          }
+        }
+      }
+    },
+    "Memory": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bellek"
+          }
+        }
+      }
+    },
+    "Merge": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Birleştir"
+          }
+        }
+      }
+    },
+    "Merging PDFs": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF'ler birleştiriliyor"
+          }
+        }
+      }
+    },
+    "Message": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mesaj"
+          }
+        }
+      }
+    },
+    "Microphone and camera in use": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mikrofon ve kamera kullanımda"
+          }
+        }
+      }
+    },
+    "Microphone in use": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mikrofon kullanımda"
+          }
+        }
+      }
+    },
+    "Microphone muted": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mikrofon sessizde"
+          }
+        }
+      }
+    },
+    "Microphone muted for every app": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mikrofon tüm uygulamalar için sessizde"
+          }
+        }
+      }
+    },
+    "Mirror": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ayna"
+          }
+        }
+      }
+    },
+    "Mirror tab, a camera check before calls": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ayna sekmesi, görüşmeden önce kamera kontrolü"
+          }
+        }
+      }
+    },
+    "Mode": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mod"
+          }
+        }
+      }
+    },
+    "More tabs": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diğer sekmeler"
+          }
+        }
+      }
+    },
+    "Mostly clear": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çoğunlukla açık"
+          }
+        }
+      }
+    },
+    "Move %@ down": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ aşağı taşı"
+          }
+        }
+      }
+    },
+    "Move %@ up": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ yukarı taşı"
+          }
+        }
+      }
+    },
+    "Music": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Müzik"
+          }
+        }
+      }
+    },
+    "Music and Spotify are read directly. Other apps are read from the system's Now Playing info.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Müzik ve Spotify doğrudan okunur. Diğer uygulamalar sistemin Şimdi Çalıyor bilgisinden okunur."
+          }
+        }
+      }
+    },
+    "Mute": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sessize al"
+          }
+        }
+      }
+    },
+    "Needs Accessibility permission to see the keys": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tuşları görmek için Erişilebilirlik izni gerekir"
+          }
+        }
+      }
+    },
+    "Needs your approval": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Onayınız gerekiyor"
+          }
+        }
+      }
+    },
+    "Network": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ağ"
+          }
+        }
+      }
+    },
+    "Next": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İleri"
+          }
+        }
+      }
+    },
+    "Next track": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sonraki parça"
+          }
+        }
+      }
+    },
+    "No devices with a battery connected": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pilli bir aygıt bağlı değil"
+          }
+        }
+      }
+    },
+    "No location for the weather yet.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hava durumu için henüz konum yok."
+          }
+        }
+      }
+    },
+    "No matches": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eşleşme yok"
+          }
+        }
+      }
+    },
+    "No places found.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yer bulunamadı."
+          }
+        }
+      }
+    },
+    "No subject found": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nesne bulunamadı"
+          }
+        }
+      }
+    },
+    "None chosen": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seçilmedi"
+          }
+        }
+      }
+    },
+    "Not available": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kullanılamıyor"
+          }
+        }
+      }
+    },
+    "Not available on this version of macOS.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "macOS'in bu sürümünde kullanılamıyor."
+          }
+        }
+      }
+    },
+    "Notch": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çentik"
+          }
+        }
+      }
+    },
+    "NotchOne": {
+      "shouldTranslate": false
+    },
+    "NotchOne %@ is available": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NotchOne %@ hazır"
+          }
+        }
+      }
+    },
+    "NotchOne %@ is available. Settings → About": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NotchOne %@ hazır. Ayarlar → Hakkında"
+          }
+        }
+      }
+    },
+    "NotchOne asks for nothing until you press a button here. Each one is only for the feature next to it; skip any, and turn them on later in Settings → Privacy.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NotchOne siz buradaki bir düğmeye basana kadar hiçbir izin istemez. Her biri yalnızca yanındaki özellik içindir; istediğinizi atlayın, sonra Ayarlar → Gizlilik'ten açın."
+          }
+        }
+      }
+    },
+    "NotchOne couldn't replace itself. Download the update from the website instead.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NotchOne kendini güncelleyemedi. Güncellemeyi web sitesinden indirin."
+          }
+        }
+      }
+    },
+    "NotchOne doesn't have camera access.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NotchOne'un kamera erişimi yok."
+          }
+        }
+      }
+    },
+    "NotchOne has no servers, no accounts, no analytics and no third-party code. This is everything it sends and keeps.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NotchOne'ın sunucusu, hesabı, analitiği ve üçüncü taraf kodu yok. Gönderdiği ve sakladığı her şey burada."
+          }
+        }
+      }
+    },
+    "NotchOne is up to date": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NotchOne güncel"
+          }
+        }
+      }
+    },
+    "NotchOne will add these hooks to %@ and keep a backup next to it (settings.json.notchone-backup). It also installs the `notch` command. Disconnect removes only these entries.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NotchOne bu kancaları %@ dosyasına ekler ve yanına bir yedek bırakır (settings.json.notchone-backup). Ayrıca `notch` komutunu yükler. Bağlantıyı kesmek yalnızca bu girdileri kaldırır."
+          }
+        }
+      }
+    },
+    "Notes": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notlar"
+          }
+        }
+      }
+    },
+    "Nothing copied yet": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Henüz bir şey kopyalanmadı"
+          }
+        }
+      }
+    },
+    "Nothing playing": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hiçbir şey çalmıyor"
+          }
+        }
+      }
+    },
+    "Nothing to show yet. Play music, copy something or drop a file on the notch.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Henüz gösterilecek bir şey yok. Müzik çalın, bir şey kopyalayın ya da çentiğe bir dosya bırakın."
+          }
+        }
+      }
+    },
+    "Notifications": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bildirimler"
+          }
+        }
+      }
+    },
+    "Now Playing": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Şimdi Çalıyor"
+          }
+        }
+      }
+    },
+    "Now Playing on the lock screen": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kilit ekranında Şimdi Çalıyor"
+          }
+        }
+      }
+    },
+    "Off": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kapalı"
+          }
+        }
+      }
+    },
+    "On": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Açık"
+          }
+        }
+      }
+    },
+    "On battery": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pilde"
+          }
+        }
+      }
+    },
+    "On click": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tıklayınca"
+          }
+        }
+      }
+    },
+    "On hover": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Üzerine gelince"
+          }
+        }
+      }
+    },
+    "Once a day to GitHub, with no identifiers; can be turned off in About": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Günde bir kez GitHub'a, kimlik bilgisi olmadan; Hakkında'dan kapatılabilir"
+          }
+        }
+      }
+    },
+    "Only for the Mirror tab; nothing is recorded": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yalnızca Ayna sekmesi için; hiçbir şey kaydedilmez"
+          }
+        }
+      }
+    },
+    "Only for the weather, and only after you choose “Use my location”": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yalnızca hava durumu için ve yalnızca “Konumumu kullan”ı seçtikten sonra"
+          }
+        }
+      }
+    },
+    "Only your area, rounded to about 1 km, is sent to Open-Meteo, a free weather service. No account, no tracking.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ücretsiz bir hava durumu servisi olan Open-Meteo'ya yalnızca yaklaşık 1 km'ye yuvarlanmış bölgeniz gönderilir. Hesap yok, izleme yok."
+          }
+        }
+      }
+    },
+    "Open": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aç"
+          }
+        }
+      }
+    },
+    "Open %@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ aç"
+          }
+        }
+      }
+    },
+    "Open Login Items…": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giriş Öğelerini Aç…"
+          }
+        }
+      }
+    },
+    "Open Privacy Settings…": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gizlilik Ayarlarını Aç…"
+          }
+        }
+      }
+    },
+    "Open Weather": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hava Durumu'nu aç"
+          }
+        }
+      }
+    },
+    "Open delay": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Açılma gecikmesi"
+          }
+        }
+      }
+    },
+    "Open the notch": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çentiği aç"
+          }
+        }
+      }
+    },
+    "Open the notch when files are dragged over it": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Üzerine dosya sürüklenince çentiği aç"
+          }
+        }
+      }
+    },
+    "Opening": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Açılış"
+          }
+        }
+      }
+    },
+    "Open…": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aç…"
+          }
+        }
+      }
+    },
+    "Optional permissions": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İsteğe bağlı izinler"
+          }
+        }
+      }
+    },
+    "PDFs merged": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF'ler birleştirildi"
+          }
+        }
+      }
+    },
+    "Partly cloudy": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Parçalı bulutlu"
+          }
+        }
+      }
+    },
+    "Path copied": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yol kopyalandı"
+          }
+        }
+      }
+    },
+    "Pause": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Duraklat"
+          }
+        }
+      }
+    },
+    "Peek new downloads": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yeni indirmeleri göster"
+          }
+        }
+      }
+    },
+    "Peek new screenshots": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yeni ekran görüntülerini göster"
+          }
+        }
+      }
+    },
+    "Peek new screenshots and downloads": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yeni ekran görüntülerini ve indirmeleri göster"
+          }
+        }
+      }
+    },
+    "Permissions": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İzinler"
+          }
+        }
+      }
+    },
+    "Pill": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hap"
+          }
+        }
+      }
+    },
+    "Place": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yer"
+          }
+        }
+      }
+    },
+    "Play": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oynat"
+          }
+        }
+      }
+    },
+    "Play something in Music, Spotify or a browser": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Müzik'te, Spotify'da ya da bir tarayıcıda bir şey çalın"
+          }
+        }
+      }
+    },
+    "Press ? next to the tabs to see this tour again. Settings are behind the gear.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu turu yeniden görmek için sekmelerin yanındaki ?'e basın. Ayarlar dişli simgesinde."
+          }
+        }
+      }
+    },
+    "Previous track": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Önceki parça"
+          }
+        }
+      }
+    },
+    "Privacy": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gizlilik"
+          }
+        }
+      }
+    },
+    "Quit": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çık"
+          }
+        }
+      }
+    },
+    "Quit NotchOne": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NotchOne'dan Çık"
+          }
+        }
+      }
+    },
+    "Rain": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yağmur"
+          }
+        }
+      }
+    },
+    "Reading and controlling Music and Spotify": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Müzik ve Spotify'ı okuma ve denetleme"
+          }
+        }
+      }
+    },
+    "Reading the selection…": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seçim okunuyor…"
+          }
+        }
+      }
+    },
+    "Ready": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hazır"
+          }
+        }
+      }
+    },
+    "Recent translations": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Son çeviriler"
+          }
+        }
+      }
+    },
+    "Reduce Transparency is on in Accessibility settings, so the glass is shown as a solid surface.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erişilebilirlik ayarlarında Saydamlığı Azalt açık; bu yüzden cam düz bir yüzey olarak gösteriliyor."
+          }
+        }
+      }
+    },
+    "Regular": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Normal"
+          }
+        }
+      }
+    },
+    "Remove": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kaldır"
+          }
+        }
+      }
+    },
+    "Remove %@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ öğesini kaldır"
+          }
+        }
+      }
+    },
+    "Remove background": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arka planı kaldır"
+          }
+        }
+      }
+    },
+    "Remove from Shelf": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Raftan kaldır"
+          }
+        }
+      }
+    },
+    "Remove from history": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geçmişten kaldır"
+          }
+        }
+      }
+    },
+    "Removing background": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arka plan kaldırılıyor"
+          }
+        }
+      }
+    },
+    "Restart": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yeniden başlat"
+          }
+        }
+      }
+    },
+    "Restart NotchOne to switch the language": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dili değiştirmek için NotchOne'u yeniden başlatın"
+          }
+        }
+      }
+    },
+    "Running": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çalışıyor"
+          }
+        }
+      }
+    },
+    "Screenshot": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ekran görüntüsü"
+          }
+        }
+      }
+    },
+    "Search": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ara"
+          }
+        }
+      }
+    },
+    "Search (%@)": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ara (%@)"
+          }
+        }
+      }
+    },
+    "Search clipboard, shelf and tabs": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pano, raf ve sekmelerde ara"
+          }
+        }
+      }
+    },
+    "Search for a city": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Şehir arayın"
+          }
+        }
+      }
+    },
+    "Search looks through clipboard history, shelf files and tabs.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arama; pano geçmişine, raftaki dosyalara ve sekmelere bakar."
+          }
+        }
+      }
+    },
+    "See the weather where you are.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bulunduğunuz yerin hava durumunu görün."
+          }
+        }
+      }
+    },
+    "Select some text first, then press %@.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Önce bir metin seçin, sonra %@ tuşlarına basın."
+          }
+        }
+      }
+    },
+    "Send nearby": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yakındakilere gönder"
+          }
+        }
+      }
+    },
+    "Sent by Claude Code's hooks on this Mac, only while connected": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu Mac'teki Claude Code kancalarından, yalnızca bağlıyken"
+          }
+        }
+      }
+    },
+    "Settings": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ayarlar"
+          }
+        }
+      }
+    },
+    "Settings…": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ayarlar…"
+          }
+        }
+      }
+    },
+    "Shape without a notch": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çentiksiz ekranda şekil"
+          }
+        }
+      }
+    },
+    "Shelf": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Raf"
+          }
+        }
+      }
+    },
+    "Shelf & Drops": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Raf ve Bırakma"
+          }
+        }
+      }
+    },
+    "Shelf · Return opens it": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Raf · Return açar"
+          }
+        }
+      }
+    },
+    "Shortcuts": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kısayollar"
+          }
+        }
+      }
+    },
+    "Show %@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ sekmesini göster"
+          }
+        }
+      }
+    },
+    "Show a notch on displays without one": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çentiği olmayan ekranlarda çentik göster"
+          }
+        }
+      }
+    },
+    "Show everything": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Her şeyi göster"
+          }
+        }
+      }
+    },
+    "Show in Finder": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finder'da göster"
+          }
+        }
+      }
+    },
+    "Show the tour": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turu göster"
+          }
+        }
+      }
+    },
+    "Show the weather": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hava durumunu göster"
+          }
+        }
+      }
+    },
+    "Show what's playing": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çalan müziği göster"
+          }
+        }
+      }
+    },
+    "Show when a Focus is on": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odak açıkken göster"
+          }
+        }
+      }
+    },
+    "Showers": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sağanak"
+          }
+        }
+      }
+    },
+    "Shows when the camera or microphone is in use, with a mute for every app": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kamera veya mikrofon kullanımdayken gösterir; tüm uygulamalar için sessize alma düğmesiyle"
+          }
+        }
+      }
+    },
+    "Sideways on the tabs switches tabs, on Now Playing skips tracks; down on the closed notch opens it.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sekmelerde yana kaydırmak sekme değiştirir, Şimdi Çalıyor'da parça atlar; kapalı çentikte aşağı kaydırmak onu açar."
+          }
+        }
+      }
+    },
+    "Size": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Boyut"
+          }
+        }
+      }
+    },
+    "Skip": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Atla"
+          }
+        }
+      }
+    },
+    "Smaller JPEG": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Daha küçük JPEG"
+          }
+        }
+      }
+    },
+    "Smaller PDF": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Daha küçük PDF"
+          }
+        }
+      }
+    },
+    "Snow": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kar"
+          }
+        }
+      }
+    },
+    "Snow showers": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kar sağanağı"
+          }
+        }
+      }
+    },
+    "Spotify": {
+      "shouldTranslate": false
+    },
+    "Spotify artwork": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spotify kapak görseli"
+          }
+        }
+      }
+    },
+    "Stays on your Mac": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mac'inizde kalanlar"
+          }
+        }
+      }
+    },
+    "Step %lld of %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Step %1$lld of %2$lld"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adım %1$lld / %2$lld"
+          }
+        }
+      }
+    },
+    "Style": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stil"
+          }
+        }
+      }
+    },
+    "Swap languages": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dilleri değiştir"
+          }
+        }
+      }
+    },
+    "System": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sistem"
+          }
+        }
+      }
+    },
+    "System and devices": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sistem ve aygıtlar"
+          }
+        }
+      }
+    },
+    "Tab": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sekme"
+          }
+        }
+      }
+    },
+    "Tabs": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sekmeler"
+          }
+        }
+      }
+    },
+    "Temperature": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sıcaklık"
+          }
+        }
+      }
+    },
+    "Text in %@ goes into %@; everything else into %@.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Text in %1$@ goes into %2$@; everything else into %3$@."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ metinler %2$@ diline, diğer her şey %3$@ diline çevrilir."
+          }
+        }
+      }
+    },
+    "The clipboard has no text": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Panoda metin yok"
+          }
+        }
+      }
+    },
+    "The cover image, fetched from Spotify's image server": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kapak görseli, Spotify'ın görsel sunucusundan alınır"
+          }
+        }
+      }
+    },
+    "The download doesn't contain NotchOne.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İndirilen dosyada NotchOne yok."
+          }
+        }
+      }
+    },
+    "The translation shows here.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çeviri burada görünür."
+          }
+        }
+      }
+    },
+    "The update couldn't be downloaded.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Güncelleme indirilemedi."
+          }
+        }
+      }
+    },
+    "The update isn't signed by NotchOne's developer, so it wasn't installed.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Güncelleme NotchOne'ın geliştiricisi tarafından imzalanmadığı için yüklenmedi."
+          }
+        }
+      }
+    },
+    "The update server answered with an error (%lld).": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Güncelleme sunucusu bir hatayla yanıt verdi (%lld)."
+          }
+        }
+      }
+    },
+    "The weather service answered with an error (%lld).": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hava durumu servisi bir hatayla yanıt verdi (%lld)."
+          }
+        }
+      }
+    },
+    "The weather service sent something unexpected.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hava durumu servisi beklenmedik bir yanıt gönderdi."
+          }
+        }
+      }
+    },
+    "These work from any app, even while the notch is closed.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çentik kapalıyken bile her uygulamada çalışır."
+          }
+        }
+      }
+    },
+    "This microphone can't be muted": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu mikrofon sessize alınamıyor"
+          }
+        }
+      }
+    },
+    "Thunderstorms": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gök gürültülü fırtına"
+          }
+        }
+      }
+    },
+    "Tint with the album colour": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Albüm rengiyle renklendir"
+          }
+        }
+      }
+    },
+    "To": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hedef"
+          }
+        }
+      }
+    },
+    "To JPEG": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "JPEG'e"
+          }
+        }
+      }
+    },
+    "To PNG": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PNG'ye"
+          }
+        }
+      }
+    },
+    "To clipboard": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Panoya"
+          }
+        }
+      }
+    },
+    "Tour": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tur"
+          }
+        }
+      }
+    },
+    "Trackpad swipes": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İzleme dörtgeni kaydırmaları"
+          }
+        }
+      }
+    },
+    "Translate": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çeviri"
+          }
+        }
+      }
+    },
+    "Translate clipboard": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Panoyu çevir"
+          }
+        }
+      }
+    },
+    "Translate tab": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çeviri sekmesi"
+          }
+        }
+      }
+    },
+    "Translate the selected text": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seçili metni çevir"
+          }
+        }
+      }
+    },
+    "Translate the selection": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seçimi çevir"
+          }
+        }
+      }
+    },
+    "Translating…": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çevriliyor…"
+          }
+        }
+      }
+    },
+    "Translation": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çeviri"
+          }
+        }
+      }
+    },
+    "Translation failed: %@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çeviri başarısız: %@"
+          }
+        }
+      }
+    },
+    "Translation isn't available.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çeviri kullanılamıyor."
+          }
+        }
+      }
+    },
+    "Translation runs on this Mac with Apple's models; nothing is sent anywhere. macOS downloads each language once.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çeviri bu Mac'te Apple'ın modelleriyle yapılır; hiçbir şey hiçbir yere gönderilmez. macOS her dili bir kez indirir."
+          }
+        }
+      }
+    },
+    "Transparent PNG": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Şeffaf PNG"
+          }
+        }
+      }
+    },
+    "Try again": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tekrar dene"
+          }
+        }
+      }
+    },
+    "Turn On Camera": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kamerayı Aç"
+          }
+        }
+      }
+    },
+    "Turn on": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aç"
+          }
+        }
+      }
+    },
+    "Type or paste text. %@ translates the selection in any app.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Metin yazın ya da yapıştırın. %@ her uygulamadaki seçimi çevirir."
+          }
+        }
+      }
+    },
+    "Unmute": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sesi aç"
+          }
+        }
+      }
+    },
+    "Update check": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Güncelleme denetimi"
+          }
+        }
+      }
+    },
+    "Update failed": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Güncelleme başarısız"
+          }
+        }
+      }
+    },
+    "Updates": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Güncellemeler"
+          }
+        }
+      }
+    },
+    "Use my location": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konumumu kullan"
+          }
+        }
+      }
+    },
+    "Version %@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sürüm %@"
+          }
+        }
+      }
+    },
+    "Version %@ (%@)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Version %1$@ (%2$@)"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sürüm %1$@ (%2$@)"
+          }
+        }
+      }
+    },
+    "Volume and brightness keys, translating the selection, and controlling players other than Music and Spotify": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ses ve parlaklık tuşları, seçimi çevirme ve Müzik ile Spotify dışındaki oynatıcıları denetleme"
+          }
+        }
+      }
+    },
+    "Volume keys, translating the selection": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ses tuşları, seçimi çevirme"
+          }
+        }
+      }
+    },
+    "Volume, brightness & keyboard light in the notch": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çentikte ses, parlaklık ve klavye ışığı"
+          }
+        }
+      }
+    },
+    "Weather": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hava Durumu"
+          }
+        }
+      }
+    },
+    "Weather data by Open-Meteo.com": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hava durumu verisi: Open-Meteo.com"
+          }
+        }
+      }
+    },
+    "Weather for": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hava durumu"
+          }
+        }
+      }
+    },
+    "Weather is turned off.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hava durumu kapalı."
+          }
+        }
+      }
+    },
+    "Weather where you are": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bulunduğunuz yerin hava durumu"
+          }
+        }
+      }
+    },
+    "Welcome to NotchOne": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NotchOne'a hoş geldiniz"
+          }
+        }
+      }
+    },
+    "What the notch can do, step by step": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çentiğin neler yapabildiği, adım adım"
+          }
+        }
+      }
+    },
+    "What's new": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yenilikler"
+          }
+        }
+      }
+    },
+    "Where I am": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bulunduğum yer"
+          }
+        }
+      }
+    },
+    "You're all set": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Her şey hazır"
+          }
+        }
+      }
+    },
+    "Your area, rounded to about 1 km, to Open-Meteo": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bölgeniz, yaklaşık 1 km'ye yuvarlanarak Open-Meteo'ya"
+          }
+        }
+      }
+    },
+    "Your notch now shows what's playing, the weather, your devices and running jobs. The weather and the battery stay on the right.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çentiğiniz artık çalan müziği, hava durumunu, aygıtlarınızı ve çalışan işleri gösteriyor. Hava durumu ve pil sağda kalır."
+          }
+        }
+      }
+    },
+    "battery.case": {
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Case "
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kutu "
+          }
+        }
+      }
+    },
+    "battery.left": {
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "L "
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sol "
+          }
+        }
+      }
+    },
+    "battery.right": {
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "R "
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sağ "
+          }
+        }
+      }
+    },
+    "macOS downloads these languages once, so translation works on this Mac without the internet.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "macOS bu dilleri bir kez indirir; böylece çeviri bu Mac'te internetsiz çalışır."
+          }
+        }
+      }
+    },
+    "notch command": {
+      "shouldTranslate": false
+    },
+    "open-meteo.com": {
+      "shouldTranslate": false
+    },
+    "the player": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "oynatıcıyı"
+          }
+        }
+      }
+    },
+    "weather.clear": {
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Clear"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Açık"
+          }
+        }
+      }
+    },
+    "weather.now": {
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Now"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Şimdi"
+          }
+        }
+      }
+    },
+    "weather.today": {
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Today"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bugün"
+          }
+        }
+      }
+    },
+    "°C": {
+      "shouldTranslate": false
+    },
+    "°F": {
+      "shouldTranslate": false
+    },
+    "·": {
+      "shouldTranslate": false
+    }
+  },
+  "version": "1.0"
+}
