@@ -282,6 +282,10 @@ struct AboutPage: View {
                 SettingsRow(title: "Translation", detail: "Apple's on-device Translation framework") { EmptyView() }
             }
             SettingsGroup {
+                SettingsRow(title: "Support NotchOne", detail: "Free to use. A coffee helps keep it going.") {
+                    PillButton(title: "Support", symbol: "heart") { NSWorkspace.shared.open(URL(string: "https://github.com/sponsors/atayugrum")!) }
+                }
+                RowDivider()
                 SettingsRow(title: "Tour", detail: "What the notch can do, step by step") {
                     PillButton(title: "Show the tour", symbol: "questionmark.circle") { showTour() }
                 }

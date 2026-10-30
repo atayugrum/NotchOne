@@ -1288,6 +1288,16 @@
         }
       }
     },
+    "Free to use. A coffee helps keep it going.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ücretsiz kullanılır. Bir kahve geliştirmeye destek olur."
+          }
+        }
+      }
+    },
     "Free, with no accounts or tracking.": {
       "localizations": {
         "tr": {
@@ -3165,6 +3175,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Stil"
+          }
+        }
+      }
+    },
+    "Support": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Destekle"
+          }
+        }
+      }
+    },
+    "Support NotchOne": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NotchOne'ı destekle"
           }
         }
       }

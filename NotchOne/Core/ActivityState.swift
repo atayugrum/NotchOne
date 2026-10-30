@@ -63,6 +63,13 @@ enum EarLayout {
         }
     }
 
+    /// Room beside the notch before the app's menus. Macs hide the menus that would fall behind
+    /// the notch, so anything over it isn't a menu that shows.
+    static func menuLimit(notchRect: CGRect, menus: [CGRect], corner: CGFloat) -> CGFloat? {
+        let visible = menus.filter { $0.width > 0 && !$0.intersects(notchRect) }
+        return limit(notchRect: notchRect, indicators: visible, corner: corner)
+    }
+
     /// Extra reach beside the ears that already counts as heading for the menu bar.
     static let tuckReach: CGFloat = 40
     /// The hover margin around the notch that still means the notch itself.
@@ -188,7 +195,14 @@ final class ActivityState {
 
     var earDrop: CGFloat { EarLayout.drop(for: ears) }
 
-    var earWidth: CGFloat { earsTucked && EarLayout.canTuck(ears) ? 0 : EarLayout.width(for: ears, limit: earLimit) }
+    /// Room left before the front app's menus. Only ears that stay keep clear of them.
+    var menuEarLimit: CGFloat?
+
+    var earWidth: CGFloat {
+        guard EarLayout.canTuck(ears) else { return EarLayout.width(for: ears, limit: earLimit) }
+        if earsTucked { return 0 }
+        return EarLayout.width(for: ears, limit: [earLimit, menuEarLimit].compactMap { $0 }.min())
+    }
 
     /// While a new file peeks, hovering doesn't open the notch, so the thumbnail can be dragged.
     var isShowingFilePeek: Bool {

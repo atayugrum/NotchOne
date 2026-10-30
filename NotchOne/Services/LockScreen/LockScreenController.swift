@@ -11,8 +11,12 @@ final class LockScreenController {
     private var observers: [NSObjectProtocol] = []
     private var panel: NSPanel?
     private var space: SkyLightSpace?
+    private var screenObserver: NSObjectProtocol?
+    private var repositionTask: Task<Void, Never>?
     /// How far down the screen the card starts.
-    private static let topFraction: CGFloat = 0.34
+    private nonisolated static let topFraction: CGFloat = 0.34
+    private nonisolated static let cardSize = CGSize(width: 360, height: 92)
+    private static let settleDelays: [Duration] = [.milliseconds(500), .seconds(2)]
 
     init(activity: ActivityState) {
         self.activity = activity
@@ -39,18 +43,7 @@ final class LockScreenController {
     }
 
     private func locked() {
-        guard panel == nil, let space,
-              let screen = NSScreen.screens.first(where: \.hasHardwareNotch) ?? NSScreen.main
-        else { return }
-        let size = CGSize(width: 360, height: 92)
-        let notch = screen.notchMetrics.notchRect
-        let frame = CGRect(
-            x: notch.midX - size.width / 2,
-            // Below the big clock, which fills the top of the lock screen.
-            y: screen.frame.maxY - screen.frame.height * Self.topFraction - size.height,
-            width: size.width,
-            height: size.height
-        )
+        guard panel == nil, let space, let frame = Self.cardFrame() else { return }
         let panel = NSPanel(contentRect: frame, styleMask: [.borderless, .nonactivatingPanel], backing: .buffered, defer: false)
         panel.isOpaque = false
         panel.backgroundColor = .clear
@@ -59,14 +52,52 @@ final class LockScreenController {
         panel.collectionBehavior = [.canJoinAllSpaces, .stationary, .ignoresCycle]
         panel.isReleasedWhenClosed = false
         let hosting = NSHostingView(rootView: LockScreenWidget(activity: activity))
-        hosting.frame = CGRect(origin: .zero, size: size)
+        hosting.frame = CGRect(origin: .zero, size: frame.size)
         panel.contentView = hosting
         panel.orderFrontRegardless()
         space.add(panel)
         self.panel = panel
+
+        // macOS can rearrange displays around the lock, so the card is placed again afterwards.
+        screenObserver = NotificationCenter.default.addObserver(
+            forName: NSApplication.didChangeScreenParametersNotification, object: nil, queue: .main
+        ) { [weak self] _ in
+            MainActor.assumeIsolated { self?.reposition() }
+        }
+        repositionTask = Task { [weak self] in
+            for delay in Self.settleDelays {
+                try? await Task.sleep(for: delay)
+                guard !Task.isCancelled else { return }
+                self?.reposition()
+            }
+        }
+    }
+
+    private func reposition() {
+        guard let panel, let frame = Self.cardFrame(), frame != panel.frame else { return }
+        panel.setFrame(frame, display: true)
+    }
+
+    /// Centred on the screen with the notch, below the clock.
+    private static func cardFrame() -> CGRect? {
+        guard let screen = NSScreen.screens.first(where: \.hasHardwareNotch) ?? NSScreen.main else { return nil }
+        return cardFrame(screen: screen.frame, notchRect: screen.notchMetrics.notchRect)
+    }
+
+    nonisolated static func cardFrame(screen: CGRect, notchRect: CGRect) -> CGRect {
+        CGRect(
+            x: notchRect.midX - cardSize.width / 2,
+            y: screen.maxY - screen.height * topFraction - cardSize.height,
+            width: cardSize.width,
+            height: cardSize.height
+        )
     }
 
     private func unlocked() {
+        repositionTask?.cancel()
+        repositionTask = nil
+        if let screenObserver { NotificationCenter.default.removeObserver(screenObserver) }
+        screenObserver = nil
         panel?.orderOut(nil)
         panel?.close()
         panel = nil

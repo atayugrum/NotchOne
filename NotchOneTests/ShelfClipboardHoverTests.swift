@@ -124,3 +124,39 @@ struct StatusIndicatorTests {
         #expect(!StatusIndicatorWatcher.isIndicator(owner: "Teams", name: "StatusIndicator", layer: 2_147_483_630))
     }
 }
+
+struct LockScreenCardTests {
+    @Test func staysCentredUnderTheNotchWhereverTheScreenIs() {
+        let screen = CGRect(x: 225, y: -956, width: 1470, height: 956)
+        let notch = CGRect(x: 870, y: -32, width: 180, height: 32)
+        let frame = LockScreenController.cardFrame(screen: screen, notchRect: notch)
+        #expect(frame.midX == notch.midX)
+        #expect(frame.maxY < screen.maxY - 300)
+        #expect(frame.minY > screen.minY)
+    }
+}
+
+struct MenuClearanceTests {
+    private let notch = CGRect(x: 645, y: 924, width: 180, height: 32)
+
+    @Test func earsStopBeforeTheNearestMenu() {
+        let menus = [CGRect(x: 560, y: 930, width: 52, height: 24), CGRect(x: 850, y: 930, width: 60, height: 24)]
+        // Left gap 33, right gap 25: the tighter one wins, less the corner and gap.
+        #expect(EarLayout.menuLimit(notchRect: notch, menus: menus, corner: 6) == 15)
+    }
+
+    @Test func menusBehindTheNotchAndEmptyOnesDontCount() {
+        let behind = CGRect(x: 700, y: 930, width: 50, height: 24)
+        let empty = CGRect(x: 830, y: 930, width: 0, height: 24)
+        #expect(EarLayout.menuLimit(notchRect: notch, menus: [behind, empty], corner: 6) == nil)
+    }
+
+    @Test @MainActor func onlyEarsThatStayKeepClear() {
+        let activity = ActivityState()
+        activity.menuEarLimit = 22
+        activity.nowPlaying = NowPlayingInfo(source: .spotify, title: "T", artist: "", album: "", duration: nil, position: 0, isPlaying: true, updatedAt: .now)
+        #expect(activity.earWidth == 22)
+        activity.showPeek(.focus(on: true))
+        #expect(activity.earWidth == EarLayout.peekWidth)
+    }
+}

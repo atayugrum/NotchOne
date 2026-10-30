@@ -65,7 +65,7 @@ struct NotchRootView: View {
             } else if let ears, earWidth > 0 {
                 EarsView(content: ears, activity: model.activity, notchSize: notch, earWidth: earWidth)
                     .padding(.horizontal, topRadius)
-                    .transition(.opacity.animation(Motion.quick))
+                    .transition(.opacity.combined(with: .scale(scale: 0.8)).animation(Motion.quick))
             }
         }
         .frame(width: size.width, height: size.height, alignment: .top)
