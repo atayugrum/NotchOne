@@ -125,3 +125,35 @@ struct PermissionGateTests {
         #expect(OnboardingLogic.steps(seenVersion: 1) == [.permissions])
     }
 }
+
+@MainActor
+struct NotchLevelTests {
+    @Test func theOpenNotchStaysBehindSystemSettings() {
+        #expect(SystemPromptWatcher.level(promptShowing: false, settingsInFront: true, notchOpen: true) == .normal)
+        #expect(SystemPromptWatcher.level(promptShowing: true, settingsInFront: true, notchOpen: true) == .normal)
+    }
+
+    @Test func theClosedNotchKeepsItsPlaceAboveSystemSettings() {
+        #expect(SystemPromptWatcher.level(promptShowing: false, settingsInFront: true, notchOpen: false) == SystemPromptWatcher.normalLevel)
+    }
+
+    @Test func promptsStillComeFirstEverywhereElse() {
+        #expect(SystemPromptWatcher.level(promptShowing: true, settingsInFront: false, notchOpen: true) == SystemPromptWatcher.belowPrompts)
+        #expect(SystemPromptWatcher.level(promptShowing: false, settingsInFront: false, notchOpen: true) == SystemPromptWatcher.normalLevel)
+    }
+}
+
+@MainActor
+struct PromptDetectionTests {
+    @Test func theLocationPromptCounts() {
+        #expect(SystemPromptWatcher.isPrompt(owner: "CoreLocationAgent"))
+        #expect(SystemPromptWatcher.isPrompt(owner: "UserNotificationCenter"))
+        #expect(!SystemPromptWatcher.isPrompt(owner: "Dock"))
+    }
+
+    @Test func promptsBeatTheLoweredNotch() {
+        // Levels measured on macOS 26: 8 for most prompts, 25 for location.
+        #expect(SystemPromptWatcher.belowPrompts.rawValue < 8)
+        #expect(SystemPromptWatcher.normalLevel.rawValue > 25)
+    }
+}

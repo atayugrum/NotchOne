@@ -61,7 +61,11 @@ enum NotchTab: String, CaseIterable, Identifiable {
 @Observable
 final class NotchViewModel {
     let activity: ActivityState
-    private(set) var state: NotchState = .closed
+    private(set) var state: NotchState = .closed {
+        didSet { if state != oldValue { onStateChange?() } }
+    }
+    /// Told when the notch opens or closes, however that happened.
+    @ObservationIgnored var onStateChange: (() -> Void)?
     var selectedTab: NotchTab = .home
     /// Visible tabs in the user's order.
     private(set) var tabs: [NotchTab] = NotchTab.allCases

@@ -4,7 +4,8 @@ import Synchronization
 
 /// macOS draws permission prompts at the modal-panel level, below the notch. After an Allow
 /// button is pressed, this watches for such a prompt for a while and lowers the notch below it
-/// while it's on screen, so the prompt is never hidden behind the open notch.
+/// while it's on screen, so the prompt is never hidden behind the open notch. System Settings is
+/// an ordinary window, so while it's in front the open notch drops below it too.
 @MainActor
 final class SystemPromptWatcher {
     /// Posted when a button is about to make macOS ask for a permission.
@@ -24,48 +25,94 @@ final class SystemPromptWatcher {
     static let belowPrompts = NSWindow.Level(rawValue: NSWindow.Level.modalPanel.rawValue - 1)
     /// Long enough to read the prompt and answer it.
     static let watchFor: TimeInterval = 90
+    /// How long a prompt can take to appear after a button is pressed.
+    static let promptDelay: TimeInterval = 2
+
+    /// Where permissions are switched on after a prompt sends you there.
+    nonisolated static let settingsBundleID = "com.apple.systempreferences"
+
+    /// Above everything normally; below prompts while one shows; below System Settings while
+    /// the open notch would cover it.
+    static func level(promptShowing: Bool, settingsInFront: Bool, notchOpen: Bool) -> NSWindow.Level {
+        if settingsInFront && notchOpen { return .normal }
+        return promptShowing ? belowPrompts : normalLevel
+    }
 
     private let windows: () -> [NSWindow]
+    private let notchOpen: () -> Bool
     private var observer: NSObjectProtocol?
+    private var activationObserver: NSObjectProtocol?
     private var task: Task<Void, Never>?
+    private var promptShowing = false
 
-    init(windows: @escaping () -> [NSWindow]) {
+    init(windows: @escaping () -> [NSWindow], notchOpen: @escaping () -> Bool) {
         self.windows = windows
+        self.notchOpen = notchOpen
     }
 
     func start() {
         observer = NotificationCenter.default.addObserver(forName: Self.expected, object: nil, queue: .main) { [weak self] _ in
-            MainActor.assumeIsolated { self?.watch() }
+            MainActor.assumeIsolated { self?.watch(expected: true) }
         }
-        if let since = Self.lastExpected.withLock({ $0 }), Date().timeIntervalSince(since) < Self.watchFor {
-            watch()
+        activationObserver = NSWorkspace.shared.notificationCenter.addObserver(
+            forName: NSWorkspace.didActivateApplicationNotification, object: nil, queue: .main
+        ) { [weak self] _ in
+            MainActor.assumeIsolated { self?.refresh() }
+        }
+        let expected = Self.lastExpected.withLock({ $0 }).map { Date().timeIntervalSince($0) < Self.watchFor } ?? false
+        // A prompt can already be waiting from before this launch.
+        if expected || Self.isPromptShowing() { watch(expected: expected) }
+        refresh()
+    }
+
+    /// The notch opened: a prompt that's waiting mustn't end up behind it.
+    func notchOpened() {
+        guard task == nil else { return }
+        watch(expected: false)
+    }
+
+    /// Call when the notch opens or closes, or the front app changes.
+    func refresh() {
+        let settingsInFront = NSWorkspace.shared.frontmostApplication?.bundleIdentifier == Self.settingsBundleID
+        let level = Self.level(promptShowing: promptShowing, settingsInFront: settingsInFront, notchOpen: notchOpen())
+        for window in windows() where window.level != level {
+            window.level = level
         }
     }
 
     func stop() {
         if let observer { NotificationCenter.default.removeObserver(observer) }
         observer = nil
+        if let activationObserver { NSWorkspace.shared.notificationCenter.removeObserver(activationObserver) }
+        activationObserver = nil
         task?.cancel()
+        task = nil
         setLowered(false)
     }
 
-    private func watch() {
+    private func watch(expected: Bool) {
         task?.cancel()
+        // Lowered at once: a prompt takes a moment to appear and mustn't start behind the notch.
+        if expected { setLowered(true) }
         task = Task { [weak self] in
-            let end = Date().addingTimeInterval(Self.watchFor)
-            while !Task.isCancelled, Date() < end {
-                self?.setLowered(Self.isPromptShowing())
-                try? await Task.sleep(for: .milliseconds(250))
+            let start = Date()
+            let end = start.addingTimeInterval(Self.watchFor)
+            var showing = false
+            // A prompt stays until it's answered, however long that takes.
+            while !Task.isCancelled, Date() < end || showing {
+                let waiting = expected && Date().timeIntervalSince(start) < Self.promptDelay
+                showing = Self.isPromptShowing()
+                self?.setLowered(waiting || showing)
+                try? await Task.sleep(for: .milliseconds(waiting ? 50 : 250))
             }
             self?.setLowered(false)
+            self?.task = nil
         }
     }
 
     private func setLowered(_ lowered: Bool) {
-        let level = lowered ? Self.belowPrompts : Self.normalLevel
-        for window in windows() where window.level != level {
-            window.level = level
-        }
+        promptShowing = lowered
+        refresh()
     }
 
     /// A window from another process above normal windows but below the Dock: where macOS
@@ -75,7 +122,8 @@ final class SystemPromptWatcher {
         guard let list = CGWindowListCopyWindowInfo([.optionOnScreenOnly, .excludeDesktopElements], kCGNullWindowID) as? [[String: Any]]
         else { return false }
         let me = ProcessInfo.processInfo.processIdentifier
-        let levels = Int(CGWindowLevelForKey(.floatingWindow))..<Int(CGWindowLevelForKey(.dockWindow))
+        // Up to the notch's own level: the location prompt sits at 25, others at 8.
+        let levels = Int(CGWindowLevelForKey(.floatingWindow))..<normalLevel.rawValue
         return list.contains { window in
             guard let layer = window[kCGWindowLayer as String] as? Int, levels.contains(layer),
                   (window[kCGWindowOwnerPID as String] as? Int32) != me
@@ -93,5 +141,6 @@ final class SystemPromptWatcher {
     /// The system processes that draw permission prompts.
     nonisolated static let promptOwners: Set<String> = [
         "UserNotificationCenter", "universalAccessAuthWarn", "CoreServicesUIAgent", "SecurityAgent", "tccd",
+        "CoreLocationAgent",
     ]
 }

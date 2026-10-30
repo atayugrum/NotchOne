@@ -131,10 +131,11 @@ final class NotchWindowController {
                 )
             },
             notchRect: { [weak self] in self?.metrics?.notchRect },
-            onInsideChange: { [weak panel, weak model] inside in
+            onInsideChange: { [weak self, weak panel, weak model] inside in
                 // Let clicks through everywhere except the notch itself.
                 panel?.ignoresMouseEvents = !inside
                 model?.setHovering(inside)
+                self?.promptWatcher?.refresh()
             }
         )
 
@@ -177,8 +178,15 @@ final class NotchWindowController {
         swipes.start()
         self.swipes = swipes
         model.openSearch = { [weak self] in self?.focus(.search) }
-        let promptWatcher = SystemPromptWatcher(windows: { [weak self] in [self?.panel].compactMap { $0 } })
+        let promptWatcher = SystemPromptWatcher(
+            windows: { [weak self] in [self?.panel].compactMap { $0 } },
+            notchOpen: { [weak self] in self?.model?.isOpen == true }
+        )
         promptWatcher.start()
+        model.onStateChange = { [weak self] in
+            if self?.model?.isOpen == true { self?.promptWatcher?.notchOpened() }
+            self?.promptWatcher?.refresh()
+        }
         self.promptWatcher = promptWatcher
         let indicatorWatcher = StatusIndicatorWatcher(
             activity: activity,
