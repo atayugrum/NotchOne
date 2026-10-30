@@ -12,6 +12,7 @@ final class NotchWindowController {
     private var hover: HoverController?
     private var swipes: SwipeController?
     private var promptWatcher: SystemPromptWatcher?
+    private var indicatorWatcher: StatusIndicatorWatcher?
     private var metrics: NotchMetrics?
     private var panelFrame: CGRect = .zero
     private var observers: [NSObjectProtocol] = []
@@ -176,6 +177,13 @@ final class NotchWindowController {
         let promptWatcher = SystemPromptWatcher(windows: { [weak self] in [self?.panel].compactMap { $0 } })
         promptWatcher.start()
         self.promptWatcher = promptWatcher
+        let indicatorWatcher = StatusIndicatorWatcher(
+            activity: activity,
+            panel: { [weak self] in self?.panel },
+            notchRect: { [weak self] in self?.metrics?.notchRect }
+        )
+        indicatorWatcher.start()
+        self.indicatorWatcher = indicatorWatcher
         observeKeyboard()
 
         // First launch: the tour. After an update: only the steps added since.
@@ -305,6 +313,8 @@ final class NotchWindowController {
         swipes = nil
         promptWatcher?.stop()
         promptWatcher = nil
+        indicatorWatcher?.stop()
+        indicatorWatcher = nil
         panel?.orderOut(nil)
         panel?.close()
         dropCatcher?.orderOut(nil)

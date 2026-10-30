@@ -18,7 +18,7 @@ struct NotchRootView: View {
         let isOpen = model.isOpen
         let isPill = model.outline == .pill
         let ears = isOpen ? nil : model.activity.ears
-        let earWidth = EarLayout.width(for: ears)
+        let earWidth = isOpen ? 0 : model.activity.earWidth
         let notch = model.notchSize
         let topRadius = isPill ? 0 : (isOpen ? NotchRadius.openTop : NotchRadius.closedTop)
         let bottomRadius = isPill
@@ -62,7 +62,7 @@ struct NotchRootView: View {
                             .combined(with: .scale(scale: 0.92, anchor: .top))
                             .animation(.easeOut(duration: 0.18))
                     )
-            } else if let ears {
+            } else if let ears, earWidth > 0 {
                 EarsView(content: ears, activity: model.activity, notchSize: notch, earWidth: earWidth)
                     .padding(.horizontal, topRadius)
                     .transition(.opacity.animation(Motion.quick))

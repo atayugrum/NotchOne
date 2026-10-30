@@ -32,6 +32,32 @@ enum EarLayout {
     /// Room for a short message or a project name.
     static let liveTextWidth: CGFloat = 150
 
+    /// Narrower than this, an ear can't show anything, so it isn't shown.
+    static let minimumWidth: CGFloat = 20
+    /// Space kept between an ear and macOS's own indicator.
+    static let indicatorGap: CGFloat = 4
+
+    /// The ear width, kept within `limit` (room left before macOS's mic or camera indicator).
+    static func width(for content: EarContent?, limit: CGFloat?) -> CGFloat {
+        let width = width(for: content)
+        guard let limit, limit < width else { return width }
+        return limit >= minimumWidth ? limit : 0
+    }
+
+    /// How wide an ear can be without covering an indicator next to the notch, or nil when
+    /// none is close. `corner` is the notch's flared top corner, outside each ear.
+    static func limit(notchRect: CGRect, indicators: [CGRect], corner: CGFloat) -> CGFloat? {
+        let room = indicators
+            .filter { $0.maxY > notchRect.minY && $0.minY < notchRect.maxY }
+            .compactMap { rect -> CGFloat? in
+                if rect.minX >= notchRect.maxX { return rect.minX - notchRect.maxX }
+                if rect.maxX <= notchRect.minX { return notchRect.minX - rect.maxX }
+                return 0
+            }
+            .min()
+        return room.map { max(0, $0 - corner - indicatorGap) }
+    }
+
     static func width(for content: EarContent?) -> CGFloat {
         switch content {
         case nil: 0
@@ -116,7 +142,11 @@ final class ActivityState {
 
     nonisolated static let nowPlayingPriority = 10
 
-    var earWidth: CGFloat { EarLayout.width(for: ears) }
+    /// Room left before macOS's mic, camera or screen-recording indicator, when it's next to
+    /// the notch (see `StatusIndicatorWatcher`).
+    var earLimit: CGFloat?
+
+    var earWidth: CGFloat { EarLayout.width(for: ears, limit: earLimit) }
 
     /// While a new file peeks, hovering doesn't open the notch, so the thumbnail can be dragged.
     var isShowingFilePeek: Bool {

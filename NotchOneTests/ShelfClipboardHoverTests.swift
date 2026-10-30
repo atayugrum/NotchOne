@@ -103,3 +103,39 @@ struct HoverAndEarsTests {
         }
     }
 }
+
+struct StatusIndicatorTests {
+    private let notch = CGRect(x: 645, y: 924, width: 180, height: 32)
+
+    @Test func indicatorNextToTheNotchNarrowsTheEars() {
+        // macOS's mic dot 50 pt right of the notch: 50 - 6 (corner) - 4 (gap) left.
+        let mic = CGRect(x: 875, y: 926, width: 28, height: 28)
+        let limit = EarLayout.limit(notchRect: notch, indicators: [mic], corner: 6)
+        #expect(limit == 40)
+        #expect(EarLayout.width(for: .peek(.focus(on: true)), limit: limit) == 40)
+        #expect(EarLayout.width(for: .nowPlaying, limit: limit) == EarLayout.nowPlayingWidth)
+    }
+
+    @Test func farOrLowerIndicatorsDontMatter() {
+        let farRight = CGRect(x: 1443, y: 926, width: 28, height: 28)
+        #expect(EarLayout.limit(notchRect: notch, indicators: [farRight], corner: 6) == 608)
+        let belowMenuBar = CGRect(x: 830, y: 500, width: 28, height: 28)
+        #expect(EarLayout.limit(notchRect: notch, indicators: [belowMenuBar], corner: 6) == nil)
+        #expect(EarLayout.limit(notchRect: notch, indicators: [], corner: 6) == nil)
+    }
+
+    @Test func tooLittleRoomHidesTheEars() {
+        let close = CGRect(x: 830, y: 926, width: 28, height: 28)
+        let limit = EarLayout.limit(notchRect: notch, indicators: [close], corner: 6)
+        #expect(EarLayout.width(for: .nowPlaying, limit: limit) == 0)
+        let left = CGRect(x: 600, y: 926, width: 28, height: 28)
+        #expect(EarLayout.limit(notchRect: notch, indicators: [left], corner: 6) == 7)
+    }
+
+    @Test func onlyTheWindowServersTopWindowCounts() {
+        #expect(StatusIndicatorWatcher.isIndicator(owner: "Window Server", name: "StatusIndicator", layer: 0))
+        #expect(StatusIndicatorWatcher.isIndicator(owner: "Window Server", name: nil, layer: 2_147_483_630))
+        #expect(!StatusIndicatorWatcher.isIndicator(owner: "Window Server", name: "Menubar", layer: 24))
+        #expect(!StatusIndicatorWatcher.isIndicator(owner: "Teams", name: "StatusIndicator", layer: 2_147_483_630))
+    }
+}

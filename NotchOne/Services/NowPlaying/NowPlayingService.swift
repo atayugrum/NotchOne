@@ -170,7 +170,16 @@ final class NowPlayingService: PlayerControlling {
     // MARK: - Publishing
 
     private func publish() {
-        let current = NowPlayingParser.select(infos.values)
+        var current = NowPlayingParser.select(infos.values)
+        #if DEBUG
+        // `-debugTrack <title>` shows a sample track instead of what's playing (for screenshots).
+        if let title = UserDefaults.standard.string(forKey: "debugTrack") {
+            current = NowPlayingInfo(
+                source: .system, title: title, artist: "NotchOne", album: "", duration: 200, position: 60,
+                isPlaying: true, updatedAt: Date(), appBundleID: "com.spotify.client"
+            )
+        }
+        #endif
         if current?.trackKey != activity.nowPlaying?.trackKey || current?.isPlaying != activity.nowPlaying?.isPlaying {
             withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) { activity.nowPlaying = current }
         } else {
