@@ -65,8 +65,8 @@ private struct HomeCardView: View {
                 if let tab = card.tab {
                     withAnimation(Motion.tab) { model.show(tab) }
                 } else if card == .activity, let top = activity.live.top, top.source != .meeting {
-                    // Claude: go to its session's app. Anything else: clear it.
-                    if top.appPID != nil || top.status == .needsYou {
+                    // A notification: go to its app. Anything else: clear it.
+                    if top.appPID != nil {
                         activity.live.activate(top)
                     } else {
                         activity.live.dismiss(top.id)

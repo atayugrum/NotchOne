@@ -132,6 +132,7 @@ enum ScreenGeometry {
         isOpen: Bool,
         panelFrame: CGRect,
         earWidth: CGFloat = 0,
+        earDrop: CGFloat = 0,
         openSize: CGSize = NotchLayout.openSize
     ) -> CGRect {
         if isOpen {
@@ -146,9 +147,9 @@ enum ScreenGeometry {
         let margin = 12 + max(0, earWidth)
         return CGRect(
             x: notchRect.minX - margin,
-            y: notchRect.minY - 6,
+            y: notchRect.minY - 6 - earDrop,
             width: notchRect.width + margin * 2,
-            height: notchRect.height + 6 + 4
+            height: notchRect.height + 6 + 4 + earDrop
         )
     }
 }

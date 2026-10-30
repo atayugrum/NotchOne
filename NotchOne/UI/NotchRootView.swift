@@ -34,7 +34,7 @@ struct NotchRootView: View {
             )
             : CGSize(
                 width: notch.width + earWidth * 2 + topRadius * 2,
-                height: notch.height
+                height: notch.height + (earWidth > 0 ? model.activity.earDrop : 0)
             )
         let usesGlass = isOpen && style == .glass
 
@@ -73,8 +73,8 @@ struct NotchRootView: View {
         .contentShape(shape)
         .onTapGesture {
             guard !isOpen else { return }
-            // Claude needs you: go straight to that session's app.
-            if case .live(let item) = ears, item.status == .needsYou, item.appPID != nil {
+            // A notification: go straight to its app.
+            if case .live(let item) = ears, item.source == .notification, item.appPID != nil {
                 model.activity.live.activate(item)
             } else {
                 // Click-to-open; also skips the hover delay.

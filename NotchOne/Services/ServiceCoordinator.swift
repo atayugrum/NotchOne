@@ -11,6 +11,7 @@ final class ServiceCoordinator {
     private var meeting: MeetingMonitor?
     private var focus: FocusMonitor?
     private var lockScreen: LockScreenController?
+    private var notifications: NotificationMirror?
     private var defaultsObserver: NSObjectProtocol?
     private(set) lazy var input = ExternalInput(store: activity.live)
     private lazy var fileCatcher = FileCatcher(activity: activity)
@@ -52,6 +53,8 @@ final class ServiceCoordinator {
         focus = nil
         lockScreen?.stop()
         lockScreen = nil
+        notifications?.stop()
+        notifications = nil
         bluetooth?.stop()
         activity.clipboard.stop()
         nowPlaying = nil
@@ -104,6 +107,13 @@ final class ServiceCoordinator {
             &lockScreen,
             enabled: Self.isOn(SettingsKey.lockScreenWidget, SettingsDefault.lockScreenWidget),
             make: { LockScreenController(activity: $0) },
+            start: { $0.start() },
+            stop: { $0.stop() }
+        )
+        toggle(
+            &notifications,
+            enabled: Self.isOn(SettingsKey.notificationsEnabled, SettingsDefault.notificationsEnabled),
+            make: { NotificationMirror(activity: $0) },
             start: { $0.start() },
             stop: { $0.stop() }
         )

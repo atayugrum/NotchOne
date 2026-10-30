@@ -26,6 +26,8 @@ enum SettingsKey {
     static let gesturesEnabled = "gesturesEnabled"
     static let focusIndicatorEnabled = "focusIndicatorEnabled"
     static let lockScreenWidget = "lockScreenWidget"
+    static let notificationsEnabled = "notificationsEnabled"
+    static let notificationsHideBanners = "notificationsHideBanners"
     static let weatherEnabled = "weatherEnabled"
     static let weatherLocationSource = "weatherLocationSource"
     static let weatherCityName = "weatherCityName"
@@ -75,6 +77,8 @@ enum SettingsDefault {
     static let focusIndicatorEnabled = false
     /// Experimental (private API), so off until turned on.
     static let lockScreenWidget = false
+    static let notificationsEnabled = false
+    static let notificationsHideBanners = false
     static let weatherEnabled = true
     static let weatherLocationSource = WeatherLocationSource.current
     static let weatherUnit = WeatherUnit.system

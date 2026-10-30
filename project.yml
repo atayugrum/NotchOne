@@ -41,7 +41,7 @@ targets:
         CFBundleVersion: "2"
         # GitHub's latest-release API for the repo releases are published to; empty turns
         # the update check off.
-        NotchOneUpdateFeed: ""
+        NotchOneUpdateFeed: "https://notchone.pages.dev/update.json"
         LSUIElement: true
         LSApplicationCategoryType: public.app-category.utilities
         NSHumanReadableCopyright: "© 2026 NotchOne"

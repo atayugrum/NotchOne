@@ -1,16 +1,17 @@
 import Foundation
 
-/// Something ongoing that wants room in the notch: a CLI job, a Claude Code session, a
+/// Something ongoing that wants room in the notch: a CLI job, a notification, a
 /// message. New sources post these instead of adding cases to the notch layout.
 struct LiveActivity: Identifiable, Equatable, Sendable {
     enum Source: Equatable, Sendable {
         case job
-        case claude
         case message
+        /// A macOS notification from another app.
+        case notification
         /// Camera or microphone in use (meeting mode).
         case meeting
         /// A `notchone://` link, which any web page or app can open: always shown with a
-        /// link symbol, so it can't pass for Claude or the system.
+        /// link symbol, so it can't pass for the system.
         case link
     }
 
@@ -18,7 +19,6 @@ struct LiveActivity: Identifiable, Equatable, Sendable {
         case running(fraction: Double?)
         case succeeded
         case failed
-        case needsYou
         case info
         case meeting(mic: Bool, camera: Bool, muted: Bool)
     }
@@ -35,17 +35,19 @@ struct LiveActivity: Identifiable, Equatable, Sendable {
     var expiresAt: Date?
     /// App shown with the activity (the app using the microphone).
     var appBundleID: String?
+    /// Name of the app a notification came from.
+    var appName: String?
 
     /// Higher wins the ears. Now Playing is 10 (see `ActivityState.ears`).
     var priority: Int {
         switch (source, status) {
+        // Anyone can open a link, so it never pushes aside a real job or notification.
+        case (.link, _): 30
         case (_, .meeting): 100
-        case (_, .needsYou): 90
         case (_, .failed): 70
         case (.job, .running): 60
         case (_, .succeeded): 50
         case (_, .info): 40
-        // A working Claude session only shows when nothing else does.
         case (_, .running): 5
         }
     }
@@ -55,13 +57,13 @@ struct LiveActivity: Identifiable, Equatable, Sendable {
     }
 
     var symbol: String {
-        switch status {
+        if source == .link { return "link" }
+        return switch status {
         case .meeting(_, let camera, let muted): muted ? "mic.slash.fill" : (camera ? "video.fill" : "mic.fill")
-        case .needsYou: "hand.raised.fill"
         case .failed: "xmark.circle.fill"
         case .succeeded: "checkmark.circle.fill"
-        case .info: source == .link ? "link" : "text.bubble.fill"
-        case .running: source == .claude ? "sparkle" : (source == .link ? "link" : "terminal.fill")
+        case .info: "text.bubble.fill"
+        case .running: "terminal.fill"
         }
     }
 }
@@ -71,22 +73,13 @@ enum LiveActivityLogic {
     static let maxCount = 8
     static let finishedLifetime: TimeInterval = 8
     static let messageLifetime: TimeInterval = 5
-    static let needsYouLifetime: TimeInterval = 15 * 60
     /// A job that stops reporting (killed CLI) disappears after this.
     static let staleLifetime: TimeInterval = 60 * 60
-
-    /// Commands a `notchone://` link may send. Claude events come only from the `notch`
-    /// tool (a local process), so a web page can't fake "Claude needs your input".
-    static func allowedFromLink(_ command: NotchCommand) -> Bool {
-        if case .claude = command { return false }
-        return true
-    }
 
     /// `fromLink`: the command came from a `notchone://` URL. Its items are kept apart
     /// from the CLI's and marked as coming from a link.
     static func apply(_ command: NotchCommand, to activities: [LiveActivity], now: Date, fromLink: Bool = false) -> [LiveActivity] {
         guard fromLink else { return applyCommand(command, to: activities, now: now) }
-        guard allowedFromLink(command) else { return prune(activities, now: now) }
         // Own ids, so a link can't change or relabel a job the `notch` tool is running.
         let command: NotchCommand = switch command {
         case .progress(let id, let label, let fraction): .progress(id: "link." + id, label: label, fraction: fraction)
@@ -142,37 +135,25 @@ enum LiveActivityLogic {
                 startedAt: now,
                 expiresAt: now + messageLifetime
             ), into: &list)
-
-        case .claude(let event):
-            // Claude shows only when it has something to tell you: it needs you, or it's done.
-            // While it works nothing shows, and a new prompt clears what it said before.
-            let key = "claude:" + event.session
-            let existing = list.first { $0.id == key }
-            guard event.kind != .started else {
-                list.removeAll { $0.id == key }
-                break
-            }
-            var item = existing ?? LiveActivity(
-                id: key, source: .claude, title: "", status: .info, startedAt: now
-            )
-            item.appPID = event.appPID ?? item.appPID
-            switch event.kind {
-            case .started:
-                break
-            case .needsYou:
-                item.status = .needsYou
-                item.title = String(localized: "Claude needs you")
-                item.detail = event.message.map { "\(event.project): \($0)" } ?? event.project
-                item.expiresAt = now + needsYouLifetime
-            case .finished:
-                item.status = .succeeded
-                item.title = String(localized: "Claude finished")
-                item.detail = event.project
-                item.finishedAt = now
-                item.expiresAt = now + finishedLifetime
-            }
-            upsert(item, into: &list)
         }
+        return trim(list)
+    }
+
+    /// A macOS notification, shown for a few seconds and clickable to open its app.
+    static func apply(_ banner: NotificationBanner, appPID: Int32?, appBundleID: String?, to activities: [LiveActivity], now: Date) -> [LiveActivity] {
+        var list = prune(activities, now: now)
+        upsert(LiveActivity(
+            id: "notification:" + banner.id,
+            source: .notification,
+            title: banner.title,
+            detail: banner.body.isEmpty ? banner.app : banner.body,
+            status: .info,
+            startedAt: now,
+            appPID: appPID,
+            expiresAt: now + NotificationBannerLogic.lifetime,
+            appBundleID: appBundleID,
+            appName: banner.app
+        ), into: &list)
         return trim(list)
     }
 

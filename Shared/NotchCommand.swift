@@ -1,25 +1,5 @@
 import Foundation
 
-/// What Claude Code reported through a hook.
-enum ClaudeEventKind: String, Equatable, Sendable {
-    /// A prompt was submitted; Claude is working.
-    case started
-    /// Claude is waiting for permission or input.
-    case needsYou
-    /// Claude finished its turn.
-    case finished
-}
-
-struct ClaudeEvent: Equatable, Sendable {
-    var kind: ClaudeEventKind
-    var session: String
-    /// Project folder name (last path component of the working directory).
-    var project: String
-    var message: String?
-    /// The app that hosts the session (Terminal, iTerm, VS Code…), to bring it forward.
-    var appPID: Int32?
-}
-
 /// A message to the app from the `notch` command line tool or a `notchone://` URL.
 ///
 /// Shared by the app and the CLI. Both sides go through `fields`/`init?(fields:)`, which
@@ -31,7 +11,6 @@ enum NotchCommand: Equatable, Sendable {
     case progress(id: String, label: String, fraction: Double?)
     case finish(id: String, label: String, success: Bool, seconds: Double?)
     case say(text: String)
-    case claude(ClaudeEvent)
 
     /// Distributed notification the CLI posts; `userInfo` is `fields`.
     static let notificationName = "com.atayug.notchone.command"
@@ -54,11 +33,6 @@ enum NotchCommand: Equatable, Sendable {
             return fields
         case .say(let text):
             return ["cmd": "say", "text": text]
-        case .claude(let event):
-            var fields = ["cmd": "claude", "event": event.kind.rawValue, "session": event.session, "project": event.project]
-            if let message = event.message { fields["message"] = message }
-            if let pid = event.appPID { fields["pid"] = String(pid) }
-            return fields
         }
     }
 
@@ -83,18 +57,6 @@ enum NotchCommand: Equatable, Sendable {
         case "say":
             guard let message = text("text") else { return nil }
             self = .say(text: message)
-        case "claude":
-            guard let kind = fields["event"].flatMap(ClaudeEventKind.init(rawValue:)),
-                  let session = text("session", max: Self.maxID)
-            else { return nil }
-            let pid = fields["pid"].flatMap(Int32.init).flatMap { $0 > 0 ? $0 : nil }
-            self = .claude(ClaudeEvent(
-                kind: kind,
-                session: session,
-                project: text("project") ?? "Claude Code",
-                message: text("message"),
-                appPID: pid
-            ))
         default:
             return nil
         }

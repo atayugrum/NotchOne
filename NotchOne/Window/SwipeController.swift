@@ -45,7 +45,7 @@ enum SwipeLogic {
             horizontal = (.previousTab, .nextTab)
         case (.nowPlaying, false):
             horizontal = (.previousTrack, .nextTrack)
-        case (.shelf, false), (.clipboard, false), (.search, false), (.translate, false), (.notes, false):
+        case (.shelf, false), (.clipboard, false), (.search, false), (.translate, false), (.notes, false), (.notifications, false):
             return .none
         }
         switch direction {

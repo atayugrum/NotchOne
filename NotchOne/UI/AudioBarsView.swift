@@ -5,6 +5,8 @@ import SwiftUI
 /// app itself stays idle. (A SwiftUI timeline cost ~10–20% CPU; a symbol effect ~7%.)
 struct AudioBarsView: NSViewRepresentable {
     let isPlaying: Bool
+    /// The album colour; white without one.
+    var tint: NSColor?
 
     func makeNSView(context: Context) -> AudioBarsNSView {
         AudioBarsNSView()
@@ -12,6 +14,7 @@ struct AudioBarsView: NSViewRepresentable {
 
     func updateNSView(_ view: AudioBarsNSView, context: Context) {
         view.isPlaying = isPlaying
+        view.tint = tint
     }
 }
 
@@ -22,6 +25,14 @@ final class AudioBarsNSView: NSView {
     private static let animationKey = "bounce"
 
     private let bars: [CALayer] = AudioBarsNSView.durations.map { _ in CALayer() }
+
+    var tint: NSColor? {
+        didSet {
+            guard oldValue != tint else { return }
+            let color = (tint ?? NSColor.white.withAlphaComponent(0.9)).cgColor
+            bars.forEach { $0.backgroundColor = color }
+        }
+    }
 
     var isPlaying = false {
         didSet { if oldValue != isPlaying { updateAnimations() } }

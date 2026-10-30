@@ -176,7 +176,7 @@ final class NowPlayingService: PlayerControlling {
         if let title = UserDefaults.standard.string(forKey: "debugTrack") {
             current = NowPlayingInfo(
                 source: .system, title: title, artist: "NotchOne", album: "", duration: 200, position: 60,
-                isPlaying: true, updatedAt: Date(), appBundleID: "com.spotify.client"
+                isPlaying: true, updatedAt: Date()
             )
         }
         #endif
@@ -197,6 +197,15 @@ final class NowPlayingService: PlayerControlling {
         activity.artwork = nil
         guard let info, let key else { return }
 
+        #if DEBUG
+        if UserDefaults.standard.string(forKey: "debugTrack") != nil {
+            activity.artwork = NSImage(size: NSSize(width: 256, height: 256), flipped: false) { rect in
+                NSGradient(colors: [.systemOrange, .systemPink, .systemIndigo])?.draw(in: rect, angle: 45)
+                return true
+            }
+            return
+        }
+        #endif
         // No artwork is available for other apps; show the app's icon instead.
         if info.source == .system {
             activity.artwork = AppInfo.icon(for: info.appBundleID)

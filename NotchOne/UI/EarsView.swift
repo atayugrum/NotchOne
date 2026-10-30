@@ -8,10 +8,18 @@ struct EarsView: View {
     let earWidth: CGFloat
 
     var body: some View {
-        HStack(spacing: 0) {
-            left.frame(width: earWidth, height: notchSize.height)
-            Color.clear.frame(width: notchSize.width)
-            right.frame(width: earWidth, height: notchSize.height)
+        VStack(spacing: 0) {
+            if case .live(let item) = content, item.source == .notification {
+                // Opens downward: nothing beside the notch, everything under it.
+                Color.clear.frame(height: notchSize.height)
+                NotificationText(item: item)
+            } else {
+                HStack(spacing: 0) {
+                    left.frame(width: earWidth, height: notchSize.height)
+                    Color.clear.frame(width: notchSize.width)
+                    right.frame(width: earWidth, height: notchSize.height)
+                }
+            }
         }
         .foregroundStyle(.white)
     }
@@ -62,7 +70,7 @@ struct EarsView: View {
     private var right: some View {
         switch content {
         case .nowPlaying:
-            AudioBarsView(isPlaying: activity.nowPlaying?.isPlaying == true)
+            AudioBarsView(isPlaying: activity.nowPlaying?.isPlaying == true, tint: activity.accent.map { NSColor($0.color) })
                 .frame(width: 16, height: 14)
         case .peek(.newFile(let url, let isScreenshot)):
             Text(isScreenshot ? String(localized: "Screenshot") : url.lastPathComponent)

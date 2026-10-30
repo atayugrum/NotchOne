@@ -101,7 +101,7 @@ struct CompactNotchContent: View {
         .onTapGesture {
             switch chip {
             case .live:
-                if let top = activity.live.top, top.appPID != nil || top.status == .needsYou {
+                if let top = activity.live.top, top.appPID != nil {
                     activity.live.activate(top)
                 } else {
                     model.expand(to: .home)

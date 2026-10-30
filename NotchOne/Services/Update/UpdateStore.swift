@@ -96,6 +96,7 @@ final class UpdateStore {
             do {
                 let app = try await Self.download(update, session: session)
                 try Self.verify(app)
+                try Self.checkVersion(of: app)
                 try Self.replace(Bundle.main.bundleURL, with: app)
                 AppLanguage.relaunch()
             } catch {
@@ -108,13 +109,14 @@ final class UpdateStore {
     // MARK: - Install steps
 
     enum UpdateError: Error {
-        case download, noApp, signature, cantReplace
+        case download, noApp, signature, notNewer, cantReplace
 
         var message: String {
             switch self {
             case .download: String(localized: "The update couldn't be downloaded.")
             case .noApp: String(localized: "The download doesn't contain NotchOne.")
             case .signature: String(localized: "The update isn't signed by NotchOne's developer, so it wasn't installed.")
+            case .notNewer: String(localized: "This update is older than the version you have, so it wasn't installed.")
             case .cantReplace: String(localized: "NotchOne couldn't replace itself. Download the update from the website instead.")
             }
         }
@@ -141,7 +143,8 @@ final class UpdateStore {
         try unzip.run()
         unzip.waitUntilExit()
         let app = folder.appending(path: "NotchOne.app")
-        guard unzip.terminationStatus == 0, FileManager.default.fileExists(atPath: app.path) else { throw UpdateError.noApp }
+        let isLink = (try? app.resourceValues(forKeys: [.isSymbolicLinkKey]))?.isSymbolicLink ?? true
+        guard unzip.terminationStatus == 0, !isLink, FileManager.default.fileExists(atPath: app.path) else { throw UpdateError.noApp }
         return app
     }
 
@@ -153,8 +156,17 @@ final class UpdateStore {
               SecRequirementCreateWithString(UpdateLogic.requirement as CFString, [], &requirement) == errSecSuccess,
               let requirement
         else { throw UpdateError.signature }
-        let flags = SecCSFlags(rawValue: kSecCSCheckAllArchitectures | kSecCSCheckNestedCode | kSecCSStrictValidate)
+        let flags = SecCSFlags(rawValue: kSecCSCheckAllArchitectures | kSecCSCheckNestedCode | kSecCSStrictValidate).union(.enforceRevocationChecks)
         guard SecStaticCodeCheckValidity(code, flags, requirement) == errSecSuccess else { throw UpdateError.signature }
+    }
+
+    /// A genuine but older build isn't installed, whatever the feed says.
+    private nonisolated static func checkVersion(of app: URL) throws {
+        let key = "CFBundleShortVersionString"
+        guard let new = Bundle(url: app)?.object(forInfoDictionaryKey: key) as? String,
+              let current = Bundle.main.object(forInfoDictionaryKey: key) as? String,
+              UpdateLogic.isNewer(new, than: current)
+        else { throw UpdateError.notNewer }
     }
 
     #if DEBUG

@@ -10,6 +10,7 @@ enum NotchTab: String, CaseIterable, Identifiable {
     case translate
     case system
     case notes
+    case notifications
     case mirror
 
     var id: String { rawValue }
@@ -25,6 +26,7 @@ enum NotchTab: String, CaseIterable, Identifiable {
         case .translate: "character.bubble"
         case .system: "gauge.with.dots.needle.33percent"
         case .notes: "note.text"
+        case .notifications: "bell"
         case .mirror: "person.crop.square"
         }
     }
@@ -40,6 +42,7 @@ enum NotchTab: String, CaseIterable, Identifiable {
         case .translate: String(localized: "Translate")
         case .system: String(localized: "System")
         case .notes: String(localized: "Notes")
+        case .notifications: String(localized: "Notifications")
         case .mirror: String(localized: "Mirror")
         }
     }
@@ -63,7 +66,9 @@ final class NotchViewModel {
     /// Visible tabs in the user's order.
     private(set) var tabs: [NotchTab] = NotchTab.allCases
     /// The tabs in the tab bar (Search has its own button).
-    var barTabs: [NotchTab] { tabs.filter(\.inTabBar) }
+    var barTabs: [NotchTab] { tabs.filter { $0.inTabBar && ($0 != .notifications || showsNotifications) } }
+    /// The Notifications tab only shows while notifications come to the notch.
+    private(set) var showsNotifications = UserDefaults.standard.bool(forKey: SettingsKey.notificationsEnabled, default: SettingsDefault.notificationsEnabled)
     /// Opens Search ready to type; set by the window controller, which can give the panel
     /// the keyboard.
     @ObservationIgnored var openSearch: (() -> Void)?
@@ -152,6 +157,7 @@ final class NotchViewModel {
 
     /// Re-reads the settings that change layout. Cheap; called when defaults change.
     func applySettings(_ defaults: UserDefaults = .standard) {
+        showsNotifications = defaults.bool(forKey: SettingsKey.notificationsEnabled, default: SettingsDefault.notificationsEnabled)
         let tabs = AppearanceLogic.tabs(
             order: defaults.string(forKey: SettingsKey.tabOrder) ?? SettingsDefault.tabOrder,
             hidden: defaults.string(forKey: SettingsKey.hiddenTabs) ?? SettingsDefault.hiddenTabs

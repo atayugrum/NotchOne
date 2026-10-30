@@ -7,6 +7,8 @@ import SwiftUI
 @Observable
 final class LiveActivityStore {
     private(set) var items: [LiveActivity] = []
+    /// For the Notifications tab. In memory only.
+    private(set) var notifications: [NotificationRecord] = []
     @ObservationIgnored private var expiryTask: Task<Void, Never>?
 
     var top: LiveActivity? { LiveActivityLogic.top(items) }
@@ -16,6 +18,26 @@ final class LiveActivityStore {
             items = LiveActivityLogic.apply(command, to: items, now: Date(), fromLink: fromLink)
         }
         scheduleExpiry()
+    }
+
+    /// A macOS notification read by `NotificationMirror`.
+    func show(_ banner: NotificationBanner, appPID: Int32?, appBundleID: String?) {
+        withAnimation(Motion.peekIn) {
+            items = LiveActivityLogic.apply(banner, appPID: appPID, appBundleID: appBundleID, to: items, now: Date())
+        }
+        let record = NotificationRecord(id: banner.id, banner: banner, date: Date(), appPID: appPID, appBundleID: appBundleID)
+        notifications = NotificationBannerLogic.adding(record, to: notifications)
+        scheduleExpiry()
+    }
+
+    func clearNotifications() {
+        withAnimation(Motion.quick) { notifications.removeAll() }
+    }
+
+    func open(_ record: NotificationRecord) {
+        if let pid = record.appPID, let app = NSRunningApplication(processIdentifier: pid) {
+            app.activate()
+        }
     }
 
     /// For built-in sources that manage their own lifetime (meeting mode).
@@ -35,12 +57,11 @@ final class LiveActivityStore {
         scheduleExpiry()
     }
 
-    /// Brings the session's app forward (Claude Code) and clears a "needs you".
+    /// Brings the activity's app forward.
     func activate(_ activity: LiveActivity) {
         if let pid = activity.appPID, let app = NSRunningApplication(processIdentifier: pid) {
             app.activate()
         }
-        if activity.status == .needsYou { dismiss(activity.id) }
     }
 
     func removeAll() {

@@ -165,6 +165,16 @@
         }
       }
     },
+    "%lld notifications": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld bildirim"
+          }
+        }
+      }
+    },
     "%lld paths": {
       "localizations": {
         "en": {
@@ -678,12 +688,12 @@
         }
       }
     },
-    "Checks GitHub once a day. An update is installed only if it's signed by NotchOne's developer.": {
+    "Checks for a new version once a day. An update is installed only if it's signed by NotchOne's developer.": {
       "localizations": {
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Günde bir kez GitHub'a bakar. Güncelleme yalnızca NotchOne'ın geliştiricisi tarafından imzalanmışsa yüklenir."
+            "value": "Günde bir kez yeni sürüm olup olmadığına bakar. Güncelleme yalnızca NotchOne'ın geliştiricisi tarafından imzalanmışsa yüklenir."
           }
         }
       }
@@ -714,69 +724,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Klasik siyah"
-          }
-        }
-      }
-    },
-    "Claude Code": {
-      "shouldTranslate": false
-    },
-    "Claude Code notifications": {
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Claude Code bildirimleri"
-          }
-        }
-      }
-    },
-    "Claude Code tells the notch when it needs your approval and when it finishes, through its hooks. Click the notification to go to that session.": {
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Claude Code, onayınız gerektiğinde ve işini bitirdiğinde bunu kancaları aracılığıyla çentiğe bildirir. O oturuma gitmek için bildirime tıklayın."
-          }
-        }
-      }
-    },
-    "Claude finished": {
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Claude bitirdi"
-          }
-        }
-      }
-    },
-    "Claude is working": {
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Claude çalışıyor"
-          }
-        }
-      }
-    },
-    "Claude needs you": {
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Claude sizi bekliyor"
-          }
-        }
-      }
-    },
-    "Claude needs your input": {
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Claude sizi bekliyor"
           }
         }
       }
@@ -947,36 +894,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sıkıştırılıyor"
-          }
-        }
-      }
-    },
-    "Connect": {
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bağlan"
-          }
-        }
-      }
-    },
-    "Connected": {
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bağlı"
-          }
-        }
-      }
-    },
-    "Connect…": {
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bağlan…"
           }
         }
       }
@@ -1157,16 +1074,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Aygıtlar"
-          }
-        }
-      }
-    },
-    "Disconnect": {
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bağlantıyı kes"
           }
         }
       }
@@ -1517,6 +1424,16 @@
         }
       }
     },
+    "Hide the macOS banner": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "macOS balonunu gizle"
+          }
+        }
+      }
+    },
     "Home": {
       "localizations": {
         "tr": {
@@ -1547,12 +1464,12 @@
         }
       }
     },
-    "In memory only; password managers are skipped": {
+    "In memory only; known password managers are skipped": {
       "localizations": {
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Yalnızca bellekte; parola yöneticileri atlanır"
+            "value": "Yalnızca bellekte; bilinen parola yöneticileri atlanır"
           }
         }
       }
@@ -1660,12 +1577,12 @@
         }
       }
     },
-    "Kept in memory only and cleared when NotchOne quits. Passwords and copies from password managers are skipped.": {
+    "Kept in memory only and cleared when NotchOne quits. Copies marked private and copies from known password managers are skipped.": {
       "localizations": {
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Yalnızca bellekte tutulur ve NotchOne kapanınca silinir. Parolalar ve parola yöneticilerinden yapılan kopyalar alınmaz."
+            "value": "Yalnızca bellekte tutulur ve NotchOne kapanınca silinir. Gizli olarak işaretlenen kopyalar ve bilinen parola yöneticilerinden yapılanlar alınmaz."
           }
         }
       }
@@ -2010,6 +1927,16 @@
         }
       }
     },
+    "Needs Accessibility permission to see the banners": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Balonları görmek için Erişilebilirlik izni gerekir"
+          }
+        }
+      }
+    },
     "Needs Accessibility permission to see the keys": {
       "localizations": {
         "tr": {
@@ -2223,16 +2150,6 @@
         }
       }
     },
-    "NotchOne will add these hooks to %@ and keep a backup next to it (settings.json.notchone-backup). It also installs the `notch` command. Disconnect removes only these entries.": {
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "NotchOne bu kancaları %@ dosyasına ekler ve yanına bir yedek bırakır (settings.json.notchone-backup). Ayrıca `notch` komutunu yükler. Bağlantıyı kesmek yalnızca bu girdileri kaldırır."
-          }
-        }
-      }
-    },
     "Notes": {
       "localizations": {
         "tr": {
@@ -2279,6 +2196,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bildirimler"
+          }
+        }
+      }
+    },
+    "Notifications will collect here. They stay until NotchOne quits.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bildirimler burada toplanacak. NotchOne kapanana kadar kalır."
           }
         }
       }
@@ -2353,12 +2280,12 @@
         }
       }
     },
-    "Once a day to GitHub, with no identifiers; can be turned off in About": {
+    "Once a day to NotchOne's website, with no identifiers; can be turned off in About": {
       "localizations": {
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Günde bir kez GitHub'a, kimlik bilgisi olmadan; Hakkında'dan kapatılabilir"
+            "value": "Günde bir kez NotchOne'ın sitesine, kimlik bilgisi olmadan; Hakkında'dan kapatılabilir"
           }
         }
       }
@@ -2683,6 +2610,16 @@
         }
       }
     },
+    "Read from macOS's banners if you turn them on, and kept in memory until NotchOne quits": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Açarsan macOS balonlarından okunur ve NotchOne kapanana kadar bellekte tutulur"
+          }
+        }
+      }
+    },
     "Reading and controlling Music and Spotify": {
       "localizations": {
         "tr": {
@@ -2699,6 +2636,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Seçim okunuyor…"
+          }
+        }
+      }
+    },
+    "Reads notifications from their banners through Accessibility. They're shown for a few seconds, kept in the Notifications tab until NotchOne quits, and never written to disk. A notification that's hidden here may not stay in Notification Center.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bildirimler, balonlarından Erişilebilirlik ile okunur. Birkaç saniye gösterilir, NotchOne kapanana kadar Bildirimler sekmesinde kalır ve diske asla yazılmaz. Burada gizlenen bir bildirim Bildirim Merkezi'nde kalmayabilir."
           }
         }
       }
@@ -2923,16 +2870,6 @@
         }
       }
     },
-    "Sent by Claude Code's hooks on this Mac, only while connected": {
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bu Mac'teki Claude Code kancalarından, yalnızca bağlıyken"
-          }
-        }
-      }
-    },
     "Settings": {
       "localizations": {
         "tr": {
@@ -3039,6 +2976,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Finder'da göster"
+          }
+        }
+      }
+    },
+    "Show notifications in the notch": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bildirimleri notch'ta göster"
           }
         }
       }
@@ -3404,6 +3351,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bu mikrofon sessize alınamıyor"
+          }
+        }
+      }
+    },
+    "This update is older than the version you have, so it wasn't installed.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu güncelleme sendeki sürümden eski olduğu için yüklenmedi."
           }
         }
       }

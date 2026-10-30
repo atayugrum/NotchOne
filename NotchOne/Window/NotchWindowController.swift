@@ -125,9 +125,11 @@ final class NotchWindowController {
                     isOpen: state == .open,
                     panelFrame: self.panelFrame,
                     earWidth: self.model?.closedEarWidth ?? 0,
+                    earDrop: self.activity.earDrop,
                     openSize: self.model?.openSize ?? NotchLayout.openSize
                 )
             },
+            notchRect: { [weak self] in self?.metrics?.notchRect },
             onInsideChange: { [weak panel, weak model] inside in
                 // Let clicks through everywhere except the notch itself.
                 panel?.ignoresMouseEvents = !inside
@@ -201,6 +203,20 @@ final class NotchWindowController {
         // `-debugTab <name>` starts on that tab (with `-debugPinOpen YES`, for screenshots).
         if let name = UserDefaults.standard.string(forKey: "debugTab"), let tab = NotchTab(rawValue: name) {
             model.show(tab)
+        }
+        // `-debugNotifications YES` fills the Notifications tab with samples, for screenshots.
+        if UserDefaults.standard.bool(forKey: "debugNotifications") {
+            Task { @MainActor [weak self] in
+                try? await Task.sleep(for: .seconds(2))
+                let samples = [
+                    ("c", "Calendar", "Team sync", "Starts in 10 minutes"),
+                    ("b", "Reminders", "Call the dentist", "Today at 16:00"),
+                    ("a", "Mail", "Ada: Lunch tomorrow?", "There's a new place near the office. One o'clock works for me."),
+                ]
+                for (id, app, title, body) in samples {
+                    self?.activity.live.show(NotificationBanner(id: id, app: app, title: title, body: body), appPID: nil, appBundleID: nil)
+                }
+            }
         }
         // `-debugSettings <page>` opens Settings in the notch on that page.
         if let name = UserDefaults.standard.string(forKey: "debugSettings"), let page = SettingsPage(rawValue: name) {

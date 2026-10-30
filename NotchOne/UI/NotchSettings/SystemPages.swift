@@ -11,10 +11,36 @@ struct IntegrationsPage: View {
     @AppStorage(SettingsKey.meetingModeEnabled) private var meetingModeEnabled = SettingsDefault.meetingModeEnabled
     @AppStorage(SettingsKey.focusIndicatorEnabled)
     private var focusIndicatorEnabled = SettingsDefault.focusIndicatorEnabled
+    @AppStorage(SettingsKey.notificationsEnabled) private var notificationsEnabled = SettingsDefault.notificationsEnabled
+    @AppStorage(SettingsKey.notificationsHideBanners) private var notificationsHideBanners = SettingsDefault.notificationsHideBanners
     @State private var accessibilityTrusted = AXIsProcessTrusted()
 
     var body: some View {
         VStack(alignment: .leading, spacing: Space.l) {
+            SettingsGroup(
+                title: "Notifications",
+                footer: "Reads notifications from their banners through Accessibility. They're shown for a few seconds, kept in the Notifications tab until NotchOne quits, and never written to disk. A notification that's hidden here may not stay in Notification Center."
+            ) {
+                ToggleRow(
+                    title: "Show notifications in the notch",
+                    detail: notificationsEnabled && !accessibilityTrusted ? "Needs Accessibility permission to see the banners" : nil,
+                    isOn: $notificationsEnabled
+                )
+                if notificationsEnabled {
+                    RowDivider()
+                    if accessibilityTrusted {
+                        ToggleRow(title: "Hide the macOS banner", isOn: $notificationsHideBanners)
+                    } else {
+                        SettingsRow(title: "Accessibility") {
+                            PillButton(title: "Allow…") {
+                                SystemPromptWatcher.expectPrompt()
+                                let options = ["AXTrustedCheckOptionPrompt": true] as CFDictionary
+                                accessibilityTrusted = AXIsProcessTrustedWithOptions(options)
+                            }
+                        }
+                    }
+                }
+            }
             SettingsGroup(
                 title: "Calls and Focus",
                 footer: "Meeting mode needs no camera or microphone permission. The Focus moon asks for Focus Status access when turned on."
@@ -48,7 +74,6 @@ struct IntegrationsPage: View {
                 ToggleRow(title: "Bluetooth alerts", isOn: $bluetoothAlertsEnabled)
             }
             CommandLineGroup()
-            ClaudeCodeGroup()
         }
         .task {
             // Picks up Accessibility once it's granted in System Settings.
@@ -90,68 +115,6 @@ private struct CommandLineGroup: View {
     }
 }
 
-private struct ClaudeCodeGroup: View {
-    private let file = ClaudeHooksFile()
-    @State private var connected = ClaudeHooksFile().isInstalled
-    @State private var confirming = false
-    @State private var error: String?
-
-    var body: some View {
-        SettingsGroup(
-            title: "Claude Code",
-            footer: "Claude Code tells the notch when it needs your approval and when it finishes, through its hooks. Click the notification to go to that session."
-        ) {
-            SettingsRow(title: "Claude Code", detail: error.map(LocalizedStringKey.verbatim) ?? (connected ? "Connected" : nil)) {
-                if connected {
-                    PillButton(title: "Disconnect") { change { try file.disconnect() } }
-                } else if !confirming {
-                    PillButton(title: "Connect…") { withAnimation(Motion.quick) { confirming = true } }
-                }
-            }
-            if confirming && !connected {
-                RowDivider()
-                VStack(alignment: .leading, spacing: Space.s) {
-                    Text("NotchOne will add these hooks to \(file.url.path) and keep a backup next to it (settings.json.notchone-backup). It also installs the `notch` command. Disconnect removes only these entries.")
-                        .font(Typo.micro)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                    ScrollView {
-                        Text(ClaudeHooks.preview(cliPath: CommandLineTool.linkURL.path))
-                            .font(.system(size: 10, design: .monospaced))
-                            .textSelection(.enabled)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(Space.s)
-                    }
-                    .frame(height: 120)
-                    .background(.black.opacity(0.25), in: RoundedRectangle(cornerRadius: Radius.s, style: .continuous))
-                    HStack {
-                        Spacer()
-                        PillButton(title: "Cancel") { withAnimation(Motion.quick) { confirming = false } }
-                        PillButton(title: "Connect", symbol: "checkmark", tint: .green) {
-                            confirming = false
-                            change {
-                                try CommandLineTool.install()
-                                try file.connect(cliPath: CommandLineTool.linkURL.path)
-                            }
-                        }
-                    }
-                }
-                .padding(.vertical, Space.s)
-            }
-        }
-    }
-
-    private func change(_ action: () throws -> Void) {
-        do {
-            try action()
-            error = nil
-        } catch {
-            self.error = error.localizedDescription
-        }
-        connected = file.isInstalled
-    }
-}
-
 // MARK: - Privacy
 
 struct PrivacyPage: View {
@@ -176,10 +139,10 @@ struct PrivacyPage: View {
                 RowDivider()
                 DataRow(symbol: "music.note", title: "Spotify artwork", detail: "The cover image, fetched from Spotify's image server")
                 RowDivider()
-                DataRow(symbol: "arrow.down.circle", title: "Update check", detail: "Once a day to GitHub, with no identifiers; can be turned off in About")
+                DataRow(symbol: "arrow.down.circle", title: "Update check", detail: "Once a day to NotchOne's website, with no identifiers; can be turned off in About")
             }
             SettingsGroup(title: "Stays on your Mac") {
-                DataRow(symbol: "doc.on.clipboard", title: "Clipboard history", detail: "In memory only; password managers are skipped")
+                DataRow(symbol: "doc.on.clipboard", title: "Clipboard history", detail: "In memory only; known password managers are skipped")
                 RowDivider()
                 DataRow(symbol: "tray.full", title: "Shelf", detail: "Links to your files, not copies")
                 RowDivider()
@@ -191,7 +154,7 @@ struct PrivacyPage: View {
                 RowDivider()
                 DataRow(symbol: "gauge.with.dots.needle.33percent", title: "System and devices", detail: "CPU, memory, network and batteries, read from macOS only while shown")
                 RowDivider()
-                DataRow(symbol: "sparkle", title: "Claude Code notifications", detail: "Sent by Claude Code's hooks on this Mac, only while connected")
+                DataRow(symbol: "bell", title: "Notifications", detail: "Read from macOS's banners if you turn them on, and kept in memory until NotchOne quits")
             }
             SettingsGroup(title: "Permissions") {
                 SettingsRow(title: "Accessibility", detail: "Volume and brightness keys, translating the selection, and controlling players other than Music and Spotify") {
@@ -338,7 +301,7 @@ private struct UpdatesGroup: View {
     var body: some View {
         SettingsGroup(
             title: "Updates",
-            footer: "Checks GitHub once a day. An update is installed only if it's signed by NotchOne's developer."
+            footer: "Checks for a new version once a day. An update is installed only if it's signed by NotchOne's developer."
         ) {
             ToggleRow(title: "Check for updates automatically", isOn: $automatic)
             RowDivider()

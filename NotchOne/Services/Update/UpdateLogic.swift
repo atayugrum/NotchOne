@@ -46,7 +46,7 @@ enum UpdateLogic {
         return b.lexicographicallyPrecedes(a)
     }
 
-    /// Reads a GitHub "latest release" answer. Drafts and pre-releases are skipped, and
+    /// Reads the release feed, in the format of GitHub's "latest release" answer. Drafts and pre-releases are skipped, and
     /// only an HTTPS zip named like the app is taken.
     static func update(fromRelease data: Data, current: String) -> AvailableUpdate? {
         guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],

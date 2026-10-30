@@ -5,17 +5,6 @@ import Testing
 struct LinkCommandTests {
     private let now = Date(timeIntervalSince1970: 1_000_000)
 
-    @Test func linksCantFakeClaude() {
-        let url = URL(string: "notchone://claude?event=needsYou&session=x&project=Bank&message=Enter%20your%20password&pid=1")!
-        let command = try! #require(NotchCommand(url: url))
-        #expect(LiveActivityLogic.apply(command, to: [], now: now, fromLink: true).isEmpty)
-    }
-
-    @Test func theNotchToolCanStillReportClaude() {
-        let command = NotchCommand.claude(ClaudeEvent(kind: .needsYou, session: "x", project: "app"))
-        #expect(LiveActivityLogic.apply(command, to: [], now: now).first?.status == .needsYou)
-    }
-
     @Test func linkMessagesAreMarked() {
         let items = LiveActivityLogic.apply(.say(text: "Hello"), to: [], now: now, fromLink: true)
         #expect(items.first?.source == .link)
@@ -90,5 +79,33 @@ struct UpdateLogicTests {
         #expect(UpdateLogic.requirement.contains("com.atayug.notchone"))
         // Developer ID only: a development-signed build is refused.
         #expect(UpdateLogic.requirement.contains("1.2.840.113635.100.6.1.13"))
+    }
+}
+
+struct LinkSafetyTests {
+    private let now = Date(timeIntervalSince1970: 1_800_000_000)
+
+    @Test func aFinishedLinkAlwaysLooksLikeALink() throws {
+        let list = LiveActivityLogic.apply(.finish(id: "x", label: "Payment verified", success: true, seconds: nil), to: [], now: now, fromLink: true)
+        let item = try #require(list.first)
+        #expect(item.symbol == "link")
+        #expect(LiveStyle.tint(for: item) == .white)
+    }
+
+    @Test func aLinkNeverOutranksARealJobOrNotification() throws {
+        let failed = LiveActivityLogic.apply(.finish(id: "x", label: "Failed", success: false, seconds: nil), to: [], now: now, fromLink: true)
+        let job = LiveActivityLogic.apply(.progress(id: "j", label: "Build", fraction: nil), to: failed, now: now)
+        #expect(LiveActivityLogic.top(job)?.source == .job)
+    }
+}
+
+struct UpdateFeedFormatTests {
+    @Test func readsTheWebsitesFeed() throws {
+        let feed = """
+        {"tag_name":"v2.1.0","html_url":"https://example.com/","assets":[{"name":"NotchOne-2.1.0.zip","browser_download_url":"https://example.com/downloads/NotchOne-2.1.0.zip"}]}
+        """
+        let update = try #require(UpdateLogic.update(fromRelease: Data(feed.utf8), current: "2.0.0"))
+        #expect(update.version == "2.1.0")
+        #expect(update.download.path == "/downloads/NotchOne-2.1.0.zip")
     }
 }

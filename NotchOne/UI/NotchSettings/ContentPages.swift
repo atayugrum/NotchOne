@@ -221,7 +221,7 @@ struct ClipboardPage: View {
     @AppStorage(SettingsKey.clipboardEnabled) private var clipboardEnabled = SettingsDefault.clipboardEnabled
 
     var body: some View {
-        SettingsGroup(footer: "Kept in memory only and cleared when NotchOne quits. Passwords and copies from password managers are skipped.") {
+        SettingsGroup(footer: "Kept in memory only and cleared when NotchOne quits. Copies marked private and copies from known password managers are skipped.") {
             ToggleRow(title: "Keep clipboard history", isOn: $clipboardEnabled)
         }
     }

@@ -3,17 +3,14 @@ import SwiftUI
 
 /// Colours for live activities.
 enum LiveStyle {
-    /// Claude's coral.
-    static let claude = Color(red: 0.85, green: 0.47, blue: 0.34)
-
     static func tint(for item: LiveActivity) -> Color {
-        switch item.status {
+        if item.source == .link { return .white }
+        return switch item.status {
         case .meeting(_, _, let muted): muted ? .red : .white
-        case .needsYou: claude
         case .failed: .red
         case .succeeded: .green
         case .info: .white
-        case .running: item.source == .claude ? claude : .white
+        case .running: .white
         }
     }
 
@@ -30,10 +27,9 @@ enum LiveStyle {
             } else {
                 String(localized: "Microphone in use")
             }
-        case .running: item.source == .claude ? String(localized: "Claude is working") : (item.detail ?? String(localized: "Running"))
+        case .running: item.detail ?? String(localized: "Running")
         case .succeeded: item.detail ?? String(localized: "Finished")
         case .failed: item.detail ?? String(localized: "Failed")
-        case .needsYou: item.detail ?? String(localized: "Claude needs your input")
         case .info: item.detail ?? String(localized: "Message")
         }
     }
@@ -43,6 +39,31 @@ enum LiveStyle {
         if total < 60 { return "\(total)s" }
         if total < 3600 { return "\(total / 60)m \(total % 60)s" }
         return "\(total / 3600)h \(total % 3600 / 60)m"
+    }
+}
+
+/// A notification under the closed notch: the app's icon, then who it's from and what it says.
+struct NotificationText: View {
+    let item: LiveActivity
+
+    var body: some View {
+        HStack(alignment: .top, spacing: Space.s) {
+            LiveLeading(item: item)
+            VStack(alignment: .leading, spacing: 1) {
+                Text(item.title)
+                    .font(Typo.captionStrong)
+                    .lineLimit(1)
+                if let detail = item.detail, detail != item.appName {
+                    Text(detail)
+                        .font(Typo.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                }
+            }
+            Spacer(minLength: 0)
+        }
+        .frame(maxWidth: .infinity, maxHeight: EarLayout.notificationDrop, alignment: .topLeading)
+        .padding(.horizontal, Space.m)
     }
 }
 
@@ -66,8 +87,8 @@ struct LiveTrailing: View {
             Text(item.duration.map(LiveStyle.duration) ?? "")
                 .font(Typo.number(12))
                 .foregroundStyle(LiveStyle.tint(for: item))
-        case .needsYou, .info:
-            Text(item.title)
+        case .info:
+            Text(item.source == .notification ? (item.appName ?? "") : item.title)
                 .font(Typo.captionStrong)
                 .lineLimit(1)
                 .truncationMode(.tail)

@@ -61,6 +61,6 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>NotchOne shows the weather where you are. Only your area, rounded to about 1 km, is sent to the weather service.</string>
 	<key>NotchOneUpdateFeed</key>
-	<string></string>
+	<string>https://notchone.pages.dev/update.json</string>
 </dict>
 </plist>

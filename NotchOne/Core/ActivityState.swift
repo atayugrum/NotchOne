@@ -44,6 +44,42 @@ enum EarLayout {
         return limit >= minimumWidth ? limit : 0
     }
 
+    /// How far a notification reaches below the closed notch, to fit its text.
+    static let notificationDrop: CGFloat = 62
+    /// A notification opens downward, so it only widens the notch a little.
+    static let notificationWidth: CGFloat = 70
+
+    static func drop(for content: EarContent?) -> CGFloat {
+        if case .live(let item) = content, item.source == .notification { notificationDrop } else { 0 }
+    }
+
+    /// Ears that stay for a long time step aside for the menu bar. Short or urgent ones don't.
+    static func canTuck(_ content: EarContent?) -> Bool {
+        switch content {
+        case .nowPlaying: true
+        case .live(let item):
+            if case .meeting = item.status { true } else { item.source == .job }
+        default: false
+        }
+    }
+
+    /// Extra reach beside the ears that already counts as heading for the menu bar.
+    static let tuckReach: CGFloat = 40
+    /// The hover margin around the notch that still means the notch itself.
+    static let notchMargin: CGFloat = 12
+
+    /// True when the pointer is on the menu bar near the ears, not on the notch.
+    static func pointerNearEars(_ pointer: CGPoint, notchRect: CGRect, earWidth: CGFloat) -> Bool {
+        let notch = notchRect.insetBy(dx: -notchMargin, dy: -6)
+        let band = notchRect.insetBy(dx: -(earWidth + tuckReach), dy: -6)
+        return band.contains(pointer) && !notch.contains(pointer)
+    }
+
+    /// True while the pointer stays anywhere on the menu bar's row.
+    static func pointerOnMenuBar(_ pointer: CGPoint, notchRect: CGRect) -> Bool {
+        pointer.y >= notchRect.minY - 6
+    }
+
     /// How wide an ear can be without covering an indicator next to the notch, or nil when
     /// none is close. `corner` is the notch's flared top corner, outside each ear.
     static func limit(notchRect: CGRect, indicators: [CGRect], corner: CGFloat) -> CGFloat? {
@@ -65,7 +101,8 @@ enum EarLayout {
         case .peek(.volume), .peek(.brightness), .peek(.keyboardBacklight), .peek(.power(pluggedIn: true, _)): levelWidth
         case .peek(.newFile): liveTextWidth
         case .peek: peekWidth
-        case .live(let item): item.status == .needsYou || item.status == .info ? liveTextWidth : liveWidth
+        case .live(let item) where item.source == .notification: notificationWidth
+        case .live(let item): item.status == .info ? liveTextWidth : liveWidth
         }
     }
 }
@@ -146,7 +183,12 @@ final class ActivityState {
     /// the notch (see `StatusIndicatorWatcher`).
     var earLimit: CGFloat?
 
-    var earWidth: CGFloat { EarLayout.width(for: ears, limit: earLimit) }
+    /// The pointer is on the menu bar beside the notch, so ears that would stay there step aside.
+    var earsTucked = false
+
+    var earDrop: CGFloat { EarLayout.drop(for: ears) }
+
+    var earWidth: CGFloat { earsTucked && EarLayout.canTuck(ears) ? 0 : EarLayout.width(for: ears, limit: earLimit) }
 
     /// While a new file peeks, hovering doesn't open the notch, so the thumbnail can be dragged.
     var isShowingFilePeek: Bool {

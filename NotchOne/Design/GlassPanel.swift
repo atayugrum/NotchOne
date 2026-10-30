@@ -44,7 +44,7 @@ struct GlassPanel<S: Shape>: View {
         if let accent {
             shape.fill(
                 LinearGradient(
-                    colors: [accent.opacity(0.05), accent.opacity(0.16)],
+                    colors: [accent.opacity(0.18), accent.opacity(0.45)],
                     startPoint: .top,
                     endPoint: .bottom
                 )

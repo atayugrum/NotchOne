@@ -3,7 +3,7 @@
 <img src="website/images/icon.png" width="96" alt="NotchOne icon">
 
 A free notch app for macOS: the notch (or a drawn notch on displays without one) becomes
-a small glass panel for what's playing, the weather, files, the clipboard, translation, calls, Claude Code and
+a small glass panel for what's playing, the weather, files, the clipboard, translation, calls, notifications and
 more. Pure Swift and SwiftUI with no third-party packages; no accounts, no analytics, and it
 idles at 0% CPU. In English and Turkish.
 
@@ -34,6 +34,8 @@ On a display with a notch it grows out of the notch; on one without, it can be a
 | Translate | Drop a file |
 | <img src="website/images/screens/notch-notes.png" width="400" alt="Notes"> | <img src="website/images/screens/notch-compact.png" width="400" alt="Compact mode"> |
 | Notes | Compact mode |
+| <img src="website/images/screens/notch-notification.png" width="400" alt="A notification under the notch"> | <img src="website/images/screens/notch-notifications.png" width="400" alt="Notifications tab"> |
+| A notification | Notifications tab |
 | <img src="website/images/screens/notch-settings.png" width="400" alt="Settings in the notch"> | <img src="website/images/screens/notch-tour.png" width="400" alt="The tour"> |
 | Settings in the notch | The tour |
 
@@ -50,6 +52,8 @@ On a display with a notch it grows out of the notch; on one without, it can be a
 | Translate | Drop a file |
 | <img src="website/images/screens/pill-notes.png" width="400" alt="Notes"> | <img src="website/images/screens/pill-compact.png" width="400" alt="Compact mode"> |
 | Notes | Compact mode |
+| <img src="website/images/screens/pill-notification.png" width="400" alt="A notification under the notch"> | <img src="website/images/screens/pill-notifications.png" width="400" alt="Notifications tab"> |
+| A notification | Notifications tab |
 | <img src="website/images/screens/pill-settings.png" width="400" alt="Settings in the notch"> | <img src="website/images/screens/pill-tour.png" width="400" alt="The tour"> |
 | Settings in the notch | The tour |
 
@@ -70,7 +74,7 @@ swipe down on the closed notch to open it.
 - **Translate** (⌃⌥T translates the selection in any app): on-device with Apple's Translation, between any languages macOS supports.
 - **Now Playing:** Music, Spotify, and browsers or video apps through the system's Now Playing info.
 - **Shelf:** files kept handy. Drag them back out, AirDrop them, or open them.
-- **Clipboard:** recent copies (in memory only; passwords skipped). Colours, links, JSON and code get their own cards.
+- **Clipboard:** recent copies (in memory only; private copies and known password managers skipped). Colours, links, JSON and code get their own cards.
 - **System:** CPU, memory and network with a minute of history, free disk space, and the battery of AirPods (left, right, case), Magic Keyboard, Mouse and Trackpad. It measures only while it's on screen.
 - **Notes:** one quick scratchpad that saves as you type, in Application Support.
 - **Mirror** (optional): a camera preview before calls.
@@ -94,15 +98,14 @@ are saved next to the original and land on the shelf.
 **Lock screen (experimental):** a Now Playing and battery card under the notch while the Mac
 is locked. Off by default (Settings → General); uses a private macOS feature.
 
-## Claude Code
 
-- **Connect Claude Code** (Settings → Integrations) adds hooks to `~/.claude/settings.json`
-  (it shows the change first and keeps a backup). The notch then shows a notification when
-  Claude needs you and when it's done; click it to go to that session.
-- **`notch` command** (Settings → Integrations → Install, linked into `~/.local/bin`):
+## Command line
+
+The `notch` command (Settings → Integrations → Install, linked into `~/.local/bin`):
 
 ```bash
 notch run make test            # spinner while it runs, then ✓/✗ and the time
+notch run --label "Tests" make test  # the label to show; otherwise only the program name
 notch progress 0.4 "Uploading" # from a script; "-" for unknown progress
 notch done                     # or: notch fail
 notch say "Deploy finished"
@@ -113,10 +116,10 @@ from Shortcuts or a browser.
 
 ## Privacy
 
-No servers, accounts, analytics or third-party code. What leaves your Mac: your area for the
+The app has no accounts, analytics or third-party code. What leaves your Mac: your area for the
 weather (rounded to about 1 km, sent to [Open-Meteo](https://open-meteo.com/), at most every
 30 minutes and only while you use the notch), Spotify's cover image while it plays, and a
-once-a-day update check to GitHub (can be turned off). The full list is in Settings → Privacy
+once-a-day update check to NotchOne's website (can be turned off). The full list is in Settings → Privacy
 and in [website/privacy.html](website/privacy.html). Permissions are asked only when a feature
 needs them:
 
@@ -151,10 +154,15 @@ Requires macOS 26+, Xcode 27 and [XcodeGen](https://github.com/yonaskolb/XcodeGe
 | `NotchOne/Window` | Notch panel, window controller, geometry, swipes |
 | `NotchOne/Core` | View model, hover rules, settings, live activities, palette logic |
 | `NotchOne/Design` | Design tokens, glass panel, shared components |
-| `NotchOne/Services` | Now Playing, media keys, battery, Bluetooth and device batteries, system monitor, notes, clipboard, shelf, drops, catcher, meeting, focus, translate, weather, updates, hotkeys, Claude, lock screen |
+| `NotchOne/Services` | Now Playing, media keys, battery, Bluetooth and device batteries, system monitor, notes, clipboard, shelf, drops, catcher, meeting, focus, translate, weather, updates, hotkeys,  lock screen |
 | `NotchOne/UI` | Notch view, tab panels, overlays |
 | `NotchOne/UI/NotchSettings` | Settings inside the notch: pages and glass controls |
 | `NotchOne/AppIcon.icon` | App icon (open it in Icon Composer) |
 | `NotchCLI` | The `notch` command line tool (embedded in `Contents/Helpers`) |
 | `Shared` | Command format shared by the app and the CLI |
 | `NotchOneTests` | Swift Testing unit tests |
+
+## License
+
+Free to use, all rights reserved. See [LICENSE](LICENSE). NotchOne is provided as is, without warranty.
+Apple, Mac, MacBook, AirPods and Spotify are trademarks of their owners; NotchOne isn't affiliated with them.

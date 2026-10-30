@@ -3,18 +3,6 @@ import Testing
 @testable import NotchOne
 
 struct NotchCommandTests {
-    @Test func fieldsRoundTrip() {
-        let commands: [NotchCommand] = [
-            .progress(id: "build", label: "Building", fraction: 0.4),
-            .progress(id: "x", label: "", fraction: nil),
-            .finish(id: "build", label: "Built", success: false, seconds: 12),
-            .say(text: "Deploy finished"),
-            .claude(ClaudeEvent(kind: .needsYou, session: "abc", project: "NotchOne", message: "Allow Bash?", appPID: 42)),
-        ]
-        for command in commands {
-            #expect(NotchCommand(fields: command.fields) == command)
-        }
-    }
 
     @Test func unknownOrIncompleteInputIsIgnored() {
         #expect(NotchCommand(fields: ["cmd": "rm -rf"]) == nil)
@@ -72,39 +60,6 @@ struct LiveActivityLogicTests {
         #expect(list[0].duration == 5)
     }
 
-    @Test func claudeSessionMovesThroughStates() {
-        func event(_ kind: ClaudeEventKind) -> NotchCommand {
-            .claude(ClaudeEvent(kind: kind, session: "s1", project: "NotchOne", message: "Allow?", appPID: 9))
-        }
-        // Working shows nothing.
-        var list = LiveActivityLogic.apply(event(.started), to: [], now: t0)
-        #expect(list.isEmpty)
-
-        list = LiveActivityLogic.apply(event(.needsYou), to: list, now: t0 + 10)
-        #expect(list[0].status == .needsYou)
-        #expect(list[0].title == "Claude needs you")
-        #expect(list[0].detail == "NotchOne: Allow?")
-        #expect(list[0].priority > ActivityState.nowPlayingPriority)
-
-        // Answering it (Claude starts again) clears it.
-        #expect(LiveActivityLogic.apply(event(.started), to: list, now: t0 + 20).isEmpty)
-
-        list = LiveActivityLogic.apply(event(.finished), to: list, now: t0 + 30)
-        #expect(list.count == 1)
-        #expect(list[0].status == .succeeded)
-        #expect(list[0].title == "Claude finished")
-        #expect(list[0].detail == "NotchOne")
-        #expect(list[0].appPID == 9)
-    }
-
-    @Test func topPicksHighestPriorityThenNewest() {
-        var list = LiveActivityLogic.apply(.progress(id: "a", label: "a", fraction: nil), to: [], now: t0)
-        list = LiveActivityLogic.apply(.progress(id: "b", label: "b", fraction: nil), to: list, now: t0 + 1)
-        #expect(LiveActivityLogic.top(list)?.id == "job:b")
-        list = LiveActivityLogic.apply(.claude(ClaudeEvent(kind: .needsYou, session: "s", project: "p")), to: list, now: t0 + 2)
-        #expect(LiveActivityLogic.top(list)?.id == "claude:s")
-    }
-
     @Test func listIsCapped() {
         var list: [LiveActivity] = []
         for index in 0..<20 {
@@ -116,36 +71,7 @@ struct LiveActivityLogicTests {
     }
 }
 
-struct ClaudeIntegrationTests {
-    let cli = "/Users/me/.local/bin/notch"
-
-    @Test func installAddsHooksAndKeepsEverythingElse() {
-        let existing: [String: Any] = [
-            "model": "opus",
-            "hooks": ["Stop": [["hooks": [["type": "command", "command": "say done"]]]]],
-        ]
-        let installed = ClaudeHooks.install(into: existing, cliPath: cli)
-        #expect(installed["model"] as? String == "opus")
-        #expect(ClaudeHooks.isInstalled(in: installed))
-        let stop = (installed["hooks"] as? [String: Any])?["Stop"] as? [[String: Any]]
-        #expect(stop?.count == 2)
-
-        // Installing twice doesn't duplicate.
-        let twice = ClaudeHooks.install(into: installed, cliPath: cli)
-        #expect(((twice["hooks"] as? [String: Any])?["Stop"] as? [[String: Any]])?.count == 2)
-    }
-
-    @Test func removeTakesOnlyOurs() {
-        let existing: [String: Any] = ["hooks": ["Stop": [["hooks": [["type": "command", "command": "say done"]]]]]]
-        let removed = ClaudeHooks.remove(from: ClaudeHooks.install(into: existing, cliPath: cli))
-        let hooks = removed["hooks"] as? [String: Any]
-        #expect(hooks?.keys.sorted() == ["Stop"])
-        #expect(!ClaudeHooks.isInstalled(in: removed))
-
-        let clean = ClaudeHooks.remove(from: ClaudeHooks.install(into: [:], cliPath: cli))
-        #expect(clean["hooks"] == nil)
-    }
-
+struct LiveStyleTests {
     @Test func durationFormatting() {
         #expect(LiveStyle.duration(5) == "5s")
         #expect(LiveStyle.duration(64) == "1m 4s")
@@ -164,5 +90,101 @@ struct CommandLineToolTests {
     @Test func onlyTheNotchOneSchemeIsAccepted() throws {
         #expect(NotchCommand(url: try #require(URL(string: "notchone://say?text=hi"))) == .say(text: "hi"))
         #expect(NotchCommand(url: try #require(URL(string: "notchy://say?text=hi"))) == nil)
+    }
+}
+
+struct NotificationBannerTests {
+    private let now = Date(timeIntervalSince1970: 1_800_000_000)
+
+    @Test func readsTheAppFromTheDescription() {
+        let banner = NotificationBannerLogic.banner(id: "A", description: "Mail, Ada, Lunch?, See you at one", title: "Ada", subtitle: "Lunch?", body: "See you at one")
+        #expect(banner == NotificationBanner(id: "A", app: "Mail", title: "Ada: Lunch?", body: "See you at one"))
+    }
+
+    @Test func keepsANotificationWithOnlyABody() {
+        let banner = NotificationBannerLogic.banner(id: "B", description: "Reminders, Call back", title: nil, subtitle: nil, body: "Call back")
+        #expect(banner?.title == "Reminders")
+        #expect(NotificationBannerLogic.banner(id: "C", description: "Mail", title: "", subtitle: nil, body: nil) == nil)
+        #expect(NotificationBannerLogic.banner(id: "", description: "Mail", title: "Hi", subtitle: nil, body: nil) == nil)
+    }
+
+    @Test func closeIsTheLastNamedAction() {
+        let actions = ["AXPress", "Name:Show Details\nTarget:0x0", "Name:Show\nTarget:0x0", "Name:Close\nTarget:0x0"]
+        #expect(NotificationBannerLogic.closeAction(in: actions) == actions[3])
+        #expect(NotificationBannerLogic.closeAction(in: ["AXPress"]) == nil)
+    }
+
+    @Test func showsBrieflyAndOpensItsApp() throws {
+        let banner = NotificationBanner(id: "A", app: "Mail", title: "Ada", body: "")
+        let list = LiveActivityLogic.apply(banner, appPID: 42, appBundleID: "com.apple.mail", to: [], now: now)
+        let item = try #require(list.first)
+        #expect(item.source == .notification)
+        #expect(item.detail == "Mail")
+        #expect(item.appPID == 42)
+        #expect(item.expiresAt == now + NotificationBannerLogic.lifetime)
+        #expect(item.priority > ActivityState.nowPlayingPriority)
+    }
+}
+
+struct EarTuckTests {
+    private let notch = CGRect(x: 645, y: 924, width: 180, height: 32)
+
+    @Test func theMenuBarBesideTheEarsTucksThem() {
+        #expect(EarLayout.pointerNearEars(CGPoint(x: 850, y: 940), notchRect: notch, earWidth: 34))
+        #expect(EarLayout.pointerNearEars(CGPoint(x: 610, y: 940), notchRect: notch, earWidth: 34))
+    }
+
+    @Test func theNotchAndTheRestOfTheScreenDoNot() {
+        #expect(!EarLayout.pointerNearEars(CGPoint(x: 735, y: 940), notchRect: notch, earWidth: 34))
+        #expect(!EarLayout.pointerNearEars(CGPoint(x: 830, y: 940), notchRect: notch, earWidth: 34))
+        #expect(!EarLayout.pointerNearEars(CGPoint(x: 850, y: 800), notchRect: notch, earWidth: 34))
+        #expect(!EarLayout.pointerNearEars(CGPoint(x: 1200, y: 940), notchRect: notch, earWidth: 34))
+    }
+
+    @Test func staysTuckedAlongTheMenuBar() {
+        #expect(EarLayout.pointerOnMenuBar(CGPoint(x: 1200, y: 940), notchRect: notch))
+        #expect(!EarLayout.pointerOnMenuBar(CGPoint(x: 850, y: 800), notchRect: notch))
+    }
+
+    @Test func onlyLongLastingEarsTuck() {
+        #expect(EarLayout.canTuck(.nowPlaying))
+        #expect(!EarLayout.canTuck(.peek(.focus(on: true))))
+        #expect(!EarLayout.canTuck(nil))
+        let note = LiveActivity(id: "n", source: .notification, title: "t", status: .info, startedAt: .now)
+        #expect(!EarLayout.canTuck(.live(note)))
+    }
+}
+
+struct NotificationHistoryTests {
+    private func record(_ id: String) -> NotificationRecord {
+        NotificationRecord(id: id, banner: NotificationBanner(id: id, app: "Mail", title: "T", body: ""), date: .now, appPID: nil, appBundleID: nil)
+    }
+
+    @Test func newestComesFirstAndRepeatsDont() {
+        let history = NotificationBannerLogic.adding(record("b"), to: [record("a")])
+        #expect(history.map(\.id) == ["b", "a"])
+        #expect(NotificationBannerLogic.adding(record("a"), to: history).map(\.id) == ["a", "b"])
+    }
+
+    @Test func keepsALimit() {
+        let full = (0..<NotificationBannerLogic.historyLimit).map { record("\($0)") }
+        let history = NotificationBannerLogic.adding(record("new"), to: full)
+        #expect(history.count == NotificationBannerLogic.historyLimit)
+        #expect(history.first?.id == "new")
+    }
+
+    @Test func aNotificationReachesBelowTheNotchAndOthersDont() {
+        let note = LiveActivity(id: "n", source: .notification, title: "t", status: .info, startedAt: .now)
+        #expect(EarLayout.drop(for: .live(note)) == EarLayout.notificationDrop)
+        #expect(EarLayout.drop(for: .nowPlaying) == 0)
+        #expect(ScreenGeometry.hoverRect(notchRect: .init(x: 0, y: 100, width: 100, height: 32), isOpen: false, panelFrame: .zero, earDrop: 60).minY == 34)
+    }
+}
+
+struct BannerHidingTests {
+    @Test func onlyAFreshClickOnTheMenuBarKeepsTheBanner() {
+        #expect(NotificationBannerLogic.openedNotificationCenter(secondsSinceClick: 0.3, pointerBelowTop: 10))
+        #expect(!NotificationBannerLogic.openedNotificationCenter(secondsSinceClick: 0.3, pointerBelowTop: 300))
+        #expect(!NotificationBannerLogic.openedNotificationCenter(secondsSinceClick: 5, pointerBelowTop: 10))
     }
 }

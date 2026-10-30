@@ -44,20 +44,6 @@ struct MeetingTests {
         #expect(MeetingLogic.activity(mic: false, camera: false, muted: true, appBundleID: nil, appName: nil, since: now) == nil)
     }
 
-    @Test func meetingWinsTheEarsAndNamesTheApp() throws {
-        let item = try #require(MeetingLogic.activity(
-            mic: true, camera: true, muted: false, appBundleID: "us.zoom.xos", appName: "zoom.us", since: now
-        ))
-        #expect(item.title == "zoom.us")
-        #expect(item.appBundleID == "us.zoom.xos")
-        #expect(item.status == .meeting(mic: true, camera: true, muted: false))
-        let claude = LiveActivityLogic.apply(
-            .claude(ClaudeEvent(kind: .needsYou, session: "s", project: "p")), to: [item], now: now
-        )
-        #expect(LiveActivityLogic.top(claude)?.id == MeetingLogic.activityID)
-        #expect(item.expiresAt == nil)
-    }
-
     @Test func mutedMicShowsSlashedSymbol() throws {
         let item = try #require(MeetingLogic.activity(
             mic: true, camera: false, muted: true, appBundleID: nil, appName: nil, since: now

@@ -1,4 +1,5 @@
 import AppKit
+import SwiftUI
 
 /// Watches the mouse and opens/closes the notch with small delays.
 ///
@@ -10,18 +11,23 @@ final class HoverController {
     private let model: NotchViewModel
     private let hoverRect: @MainActor (NotchState) -> CGRect
     private let onInsideChange: @MainActor (Bool) -> Void
+    private let notchRect: @MainActor () -> CGRect?
 
     private var monitors: [Any] = []
     private var pending: HoverDecision?
     private var pendingTask: Task<Void, Never>?
     private var pollTimer: Timer?
     private var lastInside: Bool?
+    private var untuckTask: Task<Void, Never>?
+    private static let untuckDelay: Duration = .milliseconds(1500)
 
     init(
         model: NotchViewModel,
         hoverRect: @escaping @MainActor (NotchState) -> CGRect,
+        notchRect: @escaping @MainActor () -> CGRect?,
         onInsideChange: @escaping @MainActor (Bool) -> Void
     ) {
+        self.notchRect = notchRect
         self.model = model
         self.hoverRect = hoverRect
         self.onInsideChange = onInsideChange
@@ -63,6 +69,7 @@ final class HoverController {
         #endif
         // The notch can also be opened from outside (a file drag), so sync polling here.
         setPolling(model.isOpen)
+        updateTuck()
         let inside = hoverRect(model.state).contains(NSEvent.mouseLocation)
         if inside != lastInside {
             lastInside = inside
@@ -103,6 +110,32 @@ final class HoverController {
         case .none:
             break
         }
+    }
+
+    /// Ears move out of the way when the pointer heads for the menu bar beside them, and come
+    /// back a moment after it leaves, so a menu that's open stays readable.
+    private func updateTuck() {
+        guard let notchRect = notchRect(), !model.isOpen else { return setTucked(false) }
+        let pointer = NSEvent.mouseLocation
+        let activity = model.activity
+        let near = EarLayout.pointerNearEars(pointer, notchRect: notchRect, earWidth: EarLayout.width(for: activity.ears, limit: activity.earLimit))
+        if near || (activity.earsTucked && EarLayout.pointerOnMenuBar(pointer, notchRect: notchRect)) {
+            untuckTask?.cancel()
+            untuckTask = nil
+            setTucked(true)
+        } else if activity.earsTucked, untuckTask == nil {
+            untuckTask = Task { [weak self] in
+                try? await Task.sleep(for: Self.untuckDelay)
+                guard !Task.isCancelled else { return }
+                self?.untuckTask = nil
+                self?.setTucked(false)
+            }
+        }
+    }
+
+    private func setTucked(_ tucked: Bool) {
+        guard model.activity.earsTucked != tucked else { return }
+        withAnimation(Motion.quick) { model.activity.earsTucked = tucked }
     }
 
     private func schedule(

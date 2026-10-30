@@ -65,6 +65,7 @@ struct OpenNotchContent: View {
                         case .translate: TranslatePanel(store: activity.translate, model: model)
                         case .system: SystemPanel(system: activity.system, devices: activity.devices)
                         case .notes: NotesPanel(notes: activity.notes, model: model)
+                        case .notifications: NotificationsPanel(live: activity.live)
                         case .mirror: MirrorPanel(activity: activity)
                         }
                     }

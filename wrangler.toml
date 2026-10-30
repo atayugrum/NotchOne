@@ -1,0 +1,7 @@
+name = "notchone"
+pages_build_output_dir = "website"
+compatibility_date = "2026-10-01"
+
+[[kv_namespaces]]
+binding = "COUNTS"
+id = "7da7740185b845fdb58ba09ba981e7ea"

@@ -2,22 +2,25 @@ import AppKit
 import SwiftUI
 
 /// Experimental lock screen widget: while the Mac is locked, a small Now Playing and
-/// battery card sits under the notch. Off by default (Settings → General). Nothing exists
-/// while the Mac is unlocked; the window and its private space are made on lock and
-/// destroyed on unlock, so a problem can't outlive one lock.
+/// battery card sits under the notch. Off by default (Settings → General). The private space
+/// is made once, because macOS may not accept a new one after the screen has locked; the
+/// window only exists while the Mac is locked.
 @MainActor
 final class LockScreenController {
     private let activity: ActivityState
     private var observers: [NSObjectProtocol] = []
     private var panel: NSPanel?
     private var space: SkyLightSpace?
+    /// How far down the screen the card starts.
+    private static let topFraction: CGFloat = 0.34
 
     init(activity: ActivityState) {
         self.activity = activity
     }
 
     func start() {
-        guard observers.isEmpty, SkyLightSpace.isAvailable else { return }
+        guard observers.isEmpty, let space = SkyLightSpace.make() else { return }
+        self.space = space
         let center = DistributedNotificationCenter.default()
         observers.append(center.addObserver(forName: Notification.Name("com.apple.screenIsLocked"), object: nil, queue: .main) { [weak self] _ in
             MainActor.assumeIsolated { self?.locked() }
@@ -31,15 +34,20 @@ final class LockScreenController {
         observers.forEach(DistributedNotificationCenter.default().removeObserver)
         observers.removeAll()
         unlocked()
+        space?.destroy()
+        space = nil
     }
 
     private func locked() {
-        guard panel == nil, let screen = NSScreen.screens.first else { return }
+        guard panel == nil, let space,
+              let screen = NSScreen.screens.first(where: \.hasHardwareNotch) ?? NSScreen.main
+        else { return }
         let size = CGSize(width: 360, height: 92)
         let notch = screen.notchMetrics.notchRect
         let frame = CGRect(
             x: notch.midX - size.width / 2,
-            y: screen.frame.maxY - notch.height - size.height - 60,
+            // Below the big clock, which fills the top of the lock screen.
+            y: screen.frame.maxY - screen.frame.height * Self.topFraction - size.height,
             width: size.width,
             height: size.height
         )
@@ -54,22 +62,14 @@ final class LockScreenController {
         hosting.frame = CGRect(origin: .zero, size: size)
         panel.contentView = hosting
         panel.orderFrontRegardless()
-
-        guard let space = SkyLightSpace.make() else {
-            panel.close()
-            return
-        }
         space.add(panel)
         self.panel = panel
-        self.space = space
     }
 
     private func unlocked() {
         panel?.orderOut(nil)
         panel?.close()
         panel = nil
-        space?.destroy()
-        space = nil
     }
 }
 

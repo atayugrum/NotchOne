@@ -46,8 +46,8 @@ final class SkyLightSpace {
 
     static var isAvailable: Bool { symbols != nil }
 
-    /// Level that sits above the lock screen.
-    private static let lockScreenLevel: Int32 = 100
+    /// The level macOS keeps for what shows over the lock screen.
+    private static let lockScreenLevel: Int32 = 400
 
     private let symbols: Symbols
     private let connection: Int32

@@ -87,21 +87,6 @@ struct HoverAndEarsTests {
         #expect(!HoverLogic.holdsOpen(state: .open, mouseButtonsDown: false))
         #expect(!HoverLogic.holdsOpen(state: .closed, mouseButtonsDown: true))
     }
-
-    @Test @MainActor func claudeNeedingYouBeatsNowPlayingInEars() {
-        let activity = ActivityState()
-        activity.nowPlaying = NowPlayingInfo(
-            source: .spotify, title: "T", artist: "", album: "",
-            duration: nil, position: 0, isPlaying: true, updatedAt: now
-        )
-        #expect(activity.ears == .nowPlaying)
-        activity.live.handle(.claude(ClaudeEvent(kind: .needsYou, session: "s", project: "p")))
-        defer { activity.live.removeAll() }
-        guard case .live = activity.ears else {
-            Issue.record("expected the Claude item, got \(String(describing: activity.ears))")
-            return
-        }
-    }
 }
 
 struct StatusIndicatorTests {

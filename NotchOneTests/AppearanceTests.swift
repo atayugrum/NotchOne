@@ -16,11 +16,11 @@ struct AppearanceTests {
 
     @Test func tabOrderIsKeptAndMissingTabsAreAppended() {
         let tabs = AppearanceLogic.tabs(order: "notes,bogus,shelf,notes", hidden: "")
-        #expect(tabs == [.home, .notes, .shelf, .nowPlaying, .weather, .clipboard, .search, .translate, .system, .mirror])
+        #expect(tabs == [.home, .notes, .shelf, .nowPlaying, .weather, .clipboard, .search, .translate, .system, .notifications, .mirror])
     }
 
     @Test func hiddenTabsAreRemovedButOneAlwaysStays() {
-        #expect(AppearanceLogic.tabs(order: "", hidden: "clipboard") == [.home, .nowPlaying, .weather, .shelf, .search, .translate, .system, .notes, .mirror])
+        #expect(AppearanceLogic.tabs(order: "", hidden: "clipboard") == [.home, .nowPlaying, .weather, .shelf, .search, .translate, .system, .notes, .notifications, .mirror])
         let all = AppearanceLogic.encode(NotchTab.allCases)
         // Hiding everything keeps one tab in the bar, and Search (a button) always stays.
         #expect(AppearanceLogic.tabs(order: "shelf", hidden: all) == [.shelf, .search])
@@ -52,6 +52,24 @@ struct AppearanceTests {
         let tint = AccentColor.tint(fromAverage: AccentColor(red: 0.3, green: 0.05, blue: 0.05))
         #expect(tint.red > tint.green && tint.red > tint.blue)
         #expect(max(tint.red, tint.green, tint.blue) >= 0.59)
+    }
+
+    @Test func theCoversVividColourWinsOverItsDarkBackground() throws {
+        let black = AccentColor(red: 0.04, green: 0.04, blue: 0.05)
+        let red = AccentColor(red: 0.9, green: 0.1, blue: 0.15)
+        let cover = Array(repeating: black, count: 80) + Array(repeating: red, count: 20)
+        let colour = try #require(DominantColor.dominant(in: cover))
+        #expect(colour.red > 0.8 && colour.green < 0.2)
+    }
+
+    @Test func theLargestHueWinsAndGreyCoversHaveNone() throws {
+        let blue = AccentColor(red: 0.1, green: 0.2, blue: 0.9)
+        let yellow = AccentColor(red: 0.9, green: 0.8, blue: 0.1)
+        let cover = Array(repeating: blue, count: 60) + Array(repeating: yellow, count: 10)
+        let colour = try #require(DominantColor.dominant(in: cover))
+        #expect(colour.blue > colour.red)
+        #expect(DominantColor.dominant(in: Array(repeating: AccentColor(red: 0.5, green: 0.5, blue: 0.5), count: 50)) == nil)
+        #expect(DominantColor.dominant(in: []) == nil)
     }
 
     @Test func clickModeNeverOpensOnHover() {
