@@ -65,6 +65,11 @@ final class ClipboardStore {
         showCopied(item.id)
     }
 
+    /// Puts the result of a clipboard action on the clipboard, as a new item at the top.
+    func copy(text: String, from sourceBundleID: String?) {
+        copy(ClipboardItem(content: .text(text), sourceBundleID: sourceBundleID, copiedAt: Date()))
+    }
+
     /// Ignore clipboard changes for a moment (a simulated ⌘C to read a selection).
     func pause(for duration: Duration) {
         pausedUntil = .now + duration
@@ -121,7 +126,8 @@ final class ClipboardStore {
         return bitmap.representation(using: .png, properties: [:])
     }
 
-    private func showCopied(_ id: UUID) {
+    /// Shows the checkmark on an item for a moment.
+    func showCopied(_ id: UUID) {
         lastCopiedID = id
         feedbackTask?.cancel()
         feedbackTask = Task { [weak self] in

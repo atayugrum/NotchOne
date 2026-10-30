@@ -60,7 +60,7 @@ struct OpenNotchContent: View {
                         case .nowPlaying: NowPlayingPanel(activity: activity, glow: accent)
                         case .weather: WeatherPanel(weather: activity.weather)
                         case .shelf: ShelfView(shelf: activity.shelf, isDropTargeted: model.isDropTargeted)
-                        case .clipboard: ClipboardPanel(clipboard: activity.clipboard)
+                        case .clipboard: ClipboardPanel(clipboard: activity.clipboard, notes: activity.notes, translate: activity.translate, model: model)
                         case .search: SearchPanel(model: model)
                         case .translate: TranslatePanel(store: activity.translate, model: model)
                         case .system: SystemPanel(system: activity.system, devices: activity.devices)

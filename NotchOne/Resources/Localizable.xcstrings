@@ -362,6 +362,16 @@
         }
       }
     },
+    "Add to Notes": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notlara ekle"
+          }
+        }
+      }
+    },
     "AirDrop": {
       "shouldTranslate": false
     },
@@ -577,6 +587,46 @@
     },
     "CC BY 4.0": {
       "shouldTranslate": false
+    },
+    "Clean link and copy": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bağlantıyı temizleyip kopyala"
+          }
+        }
+      }
+    },
+    "Copy as HEX": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "HEX olarak kopyala"
+          }
+        }
+      }
+    },
+    "Copy as HSL": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "HSL olarak kopyala"
+          }
+        }
+      }
+    },
+    "Copy as RGB": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "RGB olarak kopyala"
+          }
+        }
+      }
     },
     "CPU": {
       "localizations": {
@@ -1288,6 +1338,16 @@
         }
       }
     },
+    "Format and copy": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Biçimlendirip kopyala"
+          }
+        }
+      }
+    },
     "Free to use. A coffee helps keep it going.": {
       "localizations": {
         "tr": {
@@ -1833,6 +1893,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mikrofon tüm uygulamalar için sessizde"
+          }
+        }
+      }
+    },
+    "Minify and copy": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Küçültüp kopyala"
           }
         }
       }

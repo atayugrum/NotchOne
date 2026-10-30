@@ -24,7 +24,7 @@ enum SmartText: Equatable, Sendable {
 
     // MARK: - Colors
 
-    /// `#RGB`, `#RRGGBB`, `#RRGGBBAA`, `rgb(…)` / `rgba(…)`.
+    /// `#RGB`, `#RRGGBB`, `#RRGGBBAA`, `rgb(…)` / `rgba(…)`, `hsl(…)` / `hsla(…)`.
     static func color(_ text: String) -> SmartText? {
         let lower = text.lowercased()
         if lower.hasPrefix("#") {
@@ -44,15 +44,47 @@ enum SmartText: Equatable, Sendable {
             guard parts.count == 3 || parts.count == 4 else { return nil }
             let rgb = parts.prefix(3).compactMap(Double.init)
             guard rgb.count == 3, rgb.allSatisfy({ (0...255).contains($0) }) else { return nil }
-            var alpha = 1.0
-            if parts.count == 4 {
-                guard let value = Double(parts[3].replacingOccurrences(of: "%", with: "")) else { return nil }
-                alpha = parts[3].hasSuffix("%") ? value / 100 : value
-                guard (0...1).contains(alpha) else { return nil }
-            }
+            guard let alpha = alpha(parts) else { return nil }
             return .color(red: rgb[0] / 255, green: rgb[1] / 255, blue: rgb[2] / 255, alpha: alpha)
         }
+        for prefix in ["hsla(", "hsl("] where lower.hasPrefix(prefix) && lower.hasSuffix(")") {
+            let inner = lower.dropFirst(prefix.count).dropLast()
+            let parts = inner.split(whereSeparator: { $0 == "," || $0 == " " || $0 == "/" }).map(String.init)
+            guard parts.count == 3 || parts.count == 4,
+                  let hue = Double(parts[0]), (0...360).contains(hue),
+                  parts[1].hasSuffix("%"), parts[2].hasSuffix("%"),
+                  let saturation = Double(parts[1].dropLast()), (0...100).contains(saturation),
+                  let lightness = Double(parts[2].dropLast()), (0...100).contains(lightness),
+                  let alpha = alpha(parts)
+            else { return nil }
+            let (red, green, blue) = rgb(hue: hue, saturation: saturation / 100, lightness: lightness / 100)
+            return .color(red: red, green: green, blue: blue, alpha: alpha)
+        }
         return nil
+    }
+
+    /// The fourth part of `rgba(…)` or `hsla(…)`, 1 if there isn't one, nil if it's invalid.
+    private static func alpha(_ parts: [String]) -> Double? {
+        guard parts.count == 4 else { return 1 }
+        guard let value = Double(parts[3].replacingOccurrences(of: "%", with: "")) else { return nil }
+        let alpha = parts[3].hasSuffix("%") ? value / 100 : value
+        return (0...1).contains(alpha) ? alpha : nil
+    }
+
+    private static func rgb(hue: Double, saturation: Double, lightness: Double) -> (Double, Double, Double) {
+        let chroma = (1 - abs(2 * lightness - 1)) * saturation
+        let sector = hue.truncatingRemainder(dividingBy: 360) / 60
+        let second = chroma * (1 - abs(sector.truncatingRemainder(dividingBy: 2) - 1))
+        let match = lightness - chroma / 2
+        let (red, green, blue): (Double, Double, Double) = switch sector {
+        case ..<1: (chroma, second, 0)
+        case ..<2: (second, chroma, 0)
+        case ..<3: (0, chroma, second)
+        case ..<4: (0, second, chroma)
+        case ..<5: (second, 0, chroma)
+        default: (chroma, 0, second)
+        }
+        return (red + match, green + match, blue + match)
     }
 
     // MARK: - Links

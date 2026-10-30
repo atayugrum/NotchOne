@@ -74,7 +74,7 @@ swipe down on the closed notch to open it.
 - **Translate** (⌃⌥T translates the selection in any app): on-device with Apple's Translation, between any languages macOS supports.
 - **Now Playing:** Music, Spotify, and browsers or video apps through the system's Now Playing info.
 - **Shelf:** files kept handy. Drag them back out, AirDrop them, or open them.
-- **Clipboard:** recent copies (in memory only; private copies and known password managers skipped). Colours, links, JSON and code get their own cards.
+- **Clipboard:** recent copies (in memory only; private copies and known password managers skipped). Colours, links, JSON and code get their own cards, with actions on hover: strip trackers from a link, format or minify JSON, convert a colour between HEX, RGB and HSL, translate text, add to Notes.
 - **System:** CPU, memory and network with a minute of history, free disk space, and the battery of AirPods (left, right, case), Magic Keyboard, Mouse and Trackpad. It measures only while it's on screen.
 - **Notes:** one quick scratchpad that saves as you type, in Application Support.
 - **Mirror** (optional): a camera preview before calls.

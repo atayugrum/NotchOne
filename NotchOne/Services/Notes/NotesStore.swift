@@ -32,6 +32,14 @@ final class NotesStore {
             .first { !$0.isEmpty }
     }
 
+    /// Adds `addition` after what's already there, with a blank line between.
+    func append(_ addition: String) {
+        let trimmed = addition.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        let existing = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        text = existing.isEmpty ? trimmed : existing + "\n\n" + trimmed
+    }
+
     func clear() {
         text = ""
     }

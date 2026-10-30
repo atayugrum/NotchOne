@@ -2,6 +2,9 @@ import SwiftUI
 
 struct ClipboardPanel: View {
     let clipboard: ClipboardStore
+    let notes: NotesStore
+    let translate: TranslateStore
+    let model: NotchViewModel
 
     var body: some View {
         if !clipboard.isRunning {
@@ -17,7 +20,7 @@ struct ClipboardPanel: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 6) {
                         ForEach(clipboard.items) { item in
-                            ClipboardCard(item: item, clipboard: clipboard)
+                            ClipboardCard(item: item, clipboard: clipboard, notes: notes, translate: translate, model: model)
                         }
                     }
                 }
@@ -30,7 +33,31 @@ struct ClipboardPanel: View {
 private struct ClipboardCard: View {
     let item: ClipboardItem
     let clipboard: ClipboardStore
+    let notes: NotesStore
+    let translate: TranslateStore
+    let model: NotchViewModel
     @State private var isHovering = false
+
+    /// The card's text and what can be done with it. Translate needs its tab to show the result.
+    private var actions: (text: String, list: [ClipboardAction])? {
+        guard case .text(let text) = item.content, let smart = item.smart else { return nil }
+        let list = ClipboardActions.available(for: text, smart: smart)
+        return (text, list.filter { $0 != .translate || model.tabs.contains(.translate) })
+    }
+
+    private func perform(_ action: ClipboardAction, on text: String) {
+        switch action {
+        case .translate:
+            translate.translate(text)
+            model.show(.translate)
+        case .addToNotes:
+            notes.append(text)
+            clipboard.showCopied(item.id)
+        default:
+            guard let result = ClipboardActions.apply(action, to: text) else { return }
+            withAnimation(.easeOut(duration: 0.15)) { clipboard.copy(text: result, from: item.sourceBundleID) }
+        }
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
@@ -42,10 +69,16 @@ private struct ClipboardCard: View {
                         .resizable()
                         .frame(width: 12, height: 12)
                 }
-                Text(item.copiedAt, format: .relative(presentation: .numeric, unitsStyle: .narrow))
-                    .font(.system(size: 9))
-                    .foregroundStyle(.secondary)
-                    .lineLimit(1)
+                if isHovering, let actions, !actions.list.isEmpty {
+                    ForEach(actions.list, id: \.self) { action in
+                        ClipboardActionButton(action: action) { perform(action, on: actions.text) }
+                    }
+                } else {
+                    Text(item.copiedAt, format: .relative(presentation: .numeric, unitsStyle: .narrow))
+                        .font(.system(size: 9))
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                }
                 Spacer(minLength: 0)
                 if clipboard.lastCopiedID == item.id {
                     Image(systemName: "checkmark.circle.fill")
@@ -93,6 +126,63 @@ private struct ClipboardCard: View {
                     .font(.system(size: 11))
                     .lineLimit(3)
             }
+        }
+    }
+}
+
+/// A small button in a card's footer: the format's name for colours, a symbol otherwise.
+private struct ClipboardActionButton: View {
+    let action: ClipboardAction
+    let perform: () -> Void
+
+    var body: some View {
+        Button(action: perform) {
+            Group {
+                if let format {
+                    Text(verbatim: format).font(.system(size: 8, weight: .semibold))
+                } else {
+                    Image(systemName: symbol).font(.system(size: 10))
+                }
+            }
+            .frame(minWidth: 18, minHeight: 16)
+            .padding(.horizontal, format == nil ? 0 : 2)
+            .background(.white.opacity(0.12), in: RoundedRectangle(cornerRadius: 4, style: .continuous))
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .help(title)
+        .accessibilityLabel(title)
+    }
+
+    private var format: String? {
+        switch action {
+        case .colorHex: "HEX"
+        case .colorRGB: "RGB"
+        case .colorHSL: "HSL"
+        default: nil
+        }
+    }
+
+    private var symbol: String {
+        switch action {
+        case .cleanLink: "wand.and.stars"
+        case .formatJSON: "text.alignleft"
+        case .minifyJSON: "arrow.down.right.and.arrow.up.left"
+        case .translate: "character.bubble"
+        default: "note.text"
+        }
+    }
+
+    private var title: LocalizedStringKey {
+        switch action {
+        case .cleanLink: "Clean link and copy"
+        case .formatJSON: "Format and copy"
+        case .minifyJSON: "Minify and copy"
+        case .colorHex: "Copy as HEX"
+        case .colorRGB: "Copy as RGB"
+        case .colorHSL: "Copy as HSL"
+        case .translate: "Translate"
+        case .addToNotes: "Add to Notes"
         }
     }
 }
