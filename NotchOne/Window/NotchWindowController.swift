@@ -266,6 +266,10 @@ final class NotchWindowController {
             model.show(.translate)
             activity.translate.translate(text)
         }
+        // `-debugConvert <file>` asks for a format as if that file was dropped on Convert.
+        if let path = UserDefaults.standard.string(forKey: "debugConvert") {
+            model.convertURLs = [URL(fileURLWithPath: path)]
+        }
         if let path = UserDefaults.standard.string(forKey: "debugDragPreview") {
             model.dragChanged(path.split(separator: ",").map { URL(fileURLWithPath: String($0)) })
         }

@@ -45,8 +45,12 @@ struct DropZonesView: View {
                 targeted = nil
             }
         } onDrop: { dropped in
-            model.activity.drops.perform(action, on: dropped)
-            model.show(.shelf)
+            if action == .convert {
+                model.convertURLs = dropped.filter(\.isFileURL)
+            } else {
+                model.activity.drops.perform(action, on: dropped)
+                model.show(.shelf)
+            }
             model.dragChanged([])
         }
     }
@@ -123,6 +127,62 @@ private struct DropZone: View {
             }
             .padding(.horizontal, Space.xs)
         }
+    }
+}
+
+/// After dropping on Convert: what the files can become.
+struct ConvertPicker: View {
+    let model: NotchViewModel
+
+    var body: some View {
+        let urls = model.convertURLs
+        VStack(spacing: Space.s) {
+            HStack(spacing: Space.s) {
+                Text(DropKind.summary(urls))
+                    .font(Typo.body)
+                    .lineLimit(1)
+                    .truncationMode(.middle)
+                Image(systemName: "arrow.right").font(Typo.icon(10)).foregroundStyle(.secondary)
+                Text("Choose a format").font(Typo.caption).foregroundStyle(.secondary)
+                Spacer(minLength: 0)
+                PillButton(title: "Cancel", symbol: "xmark") { model.convertURLs = [] }
+            }
+            HStack(spacing: Space.s) {
+                ForEach(ConvertFormat.options(for: urls)) { format in
+                    FormatTile(format: format) {
+                        model.activity.drops.convert(urls, to: format)
+                        model.convertURLs = []
+                        model.show(.shelf)
+                    }
+                }
+            }
+        }
+    }
+}
+
+private struct FormatTile: View {
+    let format: ConvertFormat
+    let action: () -> Void
+    @State private var isHovering = false
+
+    var body: some View {
+        Button(action: action) {
+            VStack(spacing: 3) {
+                Text(format.title).font(Typo.number(15))
+                Text(format.note)
+                    .font(.system(size: 9))
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2)
+            }
+            .padding(.horizontal, Space.xs)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .glassCard(highlighted: isHovering)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .onHover { isHovering = $0 }
+        .accessibilityLabel("\(format.title): \(format.note)")
     }
 }
 

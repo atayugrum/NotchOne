@@ -101,6 +101,8 @@ final class NotchViewModel {
     /// Where finishing the tour is recorded (tests use their own).
     @ObservationIgnored var tourDefaults: UserDefaults = .standard
     var tourStep: OnboardingStep? { tourSteps.indices.contains(tourIndex) ? tourSteps[tourIndex] : nil }
+    /// Files dropped on Convert, waiting for a format.
+    var convertURLs: [URL] = []
     /// Home is being rearranged.
     var isEditingHome = false
     /// A pop-up menu (a picker, More tabs) is open; it may reach past the notch's edge.
@@ -111,7 +113,7 @@ final class NotchViewModel {
     private(set) var isExpanded = false
     /// The compact row shows instead of the tabs. File drags always get the full notch.
     var showsCompact: Bool {
-        mode == .compact && !isExpanded && !isDropTargeted && settingsPage == nil && tourStep == nil
+        mode == .compact && !isExpanded && !isDropTargeted && convertURLs.isEmpty && settingsPage == nil && tourStep == nil
     }
     /// The panel has keyboard focus (typing in a tab).
     var isKeyFocused = false
@@ -312,6 +314,7 @@ final class NotchViewModel {
             state = .closed
             isExpanded = false
             settingsPage = nil
+            convertURLs = []
         }
     }
 }

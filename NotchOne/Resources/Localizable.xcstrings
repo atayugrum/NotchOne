@@ -272,6 +272,16 @@
         }
       }
     },
+    "A document": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Belge"
+          }
+        }
+      }
+    },
     "A Focus is on": {
       "localizations": {
         "tr": {
@@ -607,6 +617,16 @@
     },
     "CC BY 4.0": {
       "shouldTranslate": false
+    },
+    "Choose a format": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Biçim seç"
+          }
+        }
+      }
     },
     "Choose them on Home itself.": {
       "localizations": {
@@ -2950,6 +2970,16 @@
         }
       }
     },
+    "Photos, small files": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fotoğraf, küçük dosya"
+          }
+        }
+      }
+    },
     "Pill": {
       "localizations": {
         "tr": {
@@ -3046,6 +3076,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Önceki parça"
+          }
+        }
+      }
+    },
+    "Print, no quality loss": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Baskı, kayıpsız"
           }
         }
       }
@@ -3400,6 +3440,16 @@
         }
       }
     },
+    "Sharp, keeps transparency": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keskin, saydamlığı korur"
+          }
+        }
+      }
+    },
     "Shelf": {
       "localizations": {
         "tr": {
@@ -3570,6 +3620,16 @@
         }
       }
     },
+    "Simple graphics": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Basit grafikler"
+          }
+        }
+      }
+    },
     "Six boxes": {
       "localizations": {
         "tr": {
@@ -3616,6 +3676,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Daha küçük PDF"
+          }
+        }
+      }
+    },
+    "Smallest, Apple devices": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En küçük, Apple aygıtları"
           }
         }
       }
@@ -3965,26 +4035,6 @@
         }
       }
     },
-    "To JPEG": {
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "JPEG'e"
-          }
-        }
-      }
-    },
-    "To PNG": {
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "PNG'ye"
-          }
-        }
-      }
-    },
     "To clipboard": {
       "localizations": {
         "tr": {
@@ -4181,6 +4231,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Metin yazın ya da yapıştırın. %@ her uygulamadaki seçimi çevirir."
+          }
+        }
+      }
+    },
+    "Uncompressed": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sıkıştırılmamış"
           }
         }
       }

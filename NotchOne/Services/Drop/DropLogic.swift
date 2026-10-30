@@ -26,6 +26,44 @@ enum DropKind: Equatable, Sendable {
     }
 }
 
+/// A format files can be converted to.
+enum ConvertFormat: String, CaseIterable, Identifiable, Sendable {
+    case png, jpeg, heic, tiff, gif, bmp, pdf
+
+    var id: String { rawValue }
+    var title: String { rawValue.uppercased() }
+    var fileExtension: String { self == .jpeg ? "jpg" : rawValue }
+
+    /// What it's good for, under its name.
+    var note: String {
+        switch self {
+        case .png: String(localized: "Sharp, keeps transparency")
+        case .jpeg: String(localized: "Photos, small files")
+        case .heic: String(localized: "Smallest, Apple devices")
+        case .tiff: String(localized: "Print, no quality loss")
+        case .gif: String(localized: "Simple graphics")
+        case .bmp: String(localized: "Uncompressed")
+        case .pdf: String(localized: "A document")
+        }
+    }
+
+    /// Formats these files can become; a format they're all in already isn't offered.
+    static func options(for urls: [URL]) -> [ConvertFormat] {
+        switch DropKind.classify(urls) {
+        case .pdf:
+            return [.png, .jpeg, .tiff]
+        case .image:
+            let current = Set(urls.map { $0.pathExtension.lowercased() })
+            return allCases.filter { format in
+                let names: Set<String> = format == .jpeg ? ["jpg", "jpeg"] : format == .tiff ? ["tif", "tiff"] : [format.rawValue]
+                return !names.isSuperset(of: current)
+            }
+        case .other:
+            return []
+        }
+    }
+}
+
 /// One drop zone.
 enum DropAction: String, CaseIterable, Identifiable, Sendable {
     case shelf
@@ -69,7 +107,7 @@ enum DropAction: String, CaseIterable, Identifiable, Sendable {
         case .airDrop: String(localized: "Send nearby")
         case .removeBackground: String(localized: "Transparent PNG")
         case .compress: kind == .pdf ? String(localized: "Smaller PDF") : String(localized: "Smaller JPEG")
-        case .convert: urls.allSatisfy { OutputNaming.convertExtension(for: $0) == "jpg" } ? String(localized: "To JPEG") : String(localized: "To PNG")
+        case .convert: String(localized: "Choose a format")
         case .merge: String(localized: "Into one PDF")
         case .copyPath: urls.count == 1 ? String(localized: "To clipboard") : String(localized: "\(urls.count) paths")
         }
@@ -82,7 +120,7 @@ enum DropAction: String, CaseIterable, Identifiable, Sendable {
     static func actions(for kind: DropKind, count: Int) -> [DropAction] {
         switch kind {
         case .image: [.shelf, .airDrop, .removeBackground, .compress, .convert]
-        case .pdf: count > 1 ? [.shelf, .airDrop, .compress, .merge] : [.shelf, .airDrop, .compress]
+        case .pdf: count > 1 ? [.shelf, .airDrop, .compress, .convert, .merge] : [.shelf, .airDrop, .compress, .convert]
         case .other: [.shelf, .airDrop, .copyPath]
         }
     }
@@ -109,11 +147,6 @@ enum OutputNaming {
             number += 1
         }
         return candidate
-    }
-
-    /// Convert target: PNG for anything that isn't PNG, JPEG for PNGs.
-    static func convertExtension(for source: URL) -> String {
-        source.pathExtension.lowercased() == "png" ? "jpg" : "png"
     }
 
     static func sizeText(_ bytes: Int64) -> String {

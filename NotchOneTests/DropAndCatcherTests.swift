@@ -39,8 +39,6 @@ struct DropLogicTests {
             isWritable: { _ in false }, exists: { _ in false }
         )
         #expect(fallback.path == "/Users/me/Downloads/cat-small.jpg")
-        #expect(OutputNaming.convertExtension(for: source) == "png")
-        #expect(OutputNaming.convertExtension(for: URL(fileURLWithPath: "/a/b.PNG")) == "jpg")
     }
 }
 
@@ -185,5 +183,62 @@ struct SmartTextTests {
         let item = ClipboardItem(content: .text("#000"), sourceBundleID: nil, copiedAt: Date())
         #expect(item.smart == .color(red: 0, green: 0, blue: 0, alpha: 1))
         #expect(ClipboardItem(content: .files([]), sourceBundleID: nil, copiedAt: Date()).smart == nil)
+    }
+}
+
+struct ConvertFormatTests {
+    private func url(_ name: String) -> URL { URL(fileURLWithPath: "/tmp/\(name)") }
+
+    @Test func anImageIsNotOfferedItsOwnFormat() {
+        let options = ConvertFormat.options(for: [url("a.jpeg")])
+        #expect(!options.contains(.jpeg))
+        #expect(options.contains(.png))
+        #expect(options.contains(.heic))
+        #expect(options.contains(.pdf))
+    }
+
+    @Test func mixedImagesCanBecomeEitherFormat() {
+        let options = ConvertFormat.options(for: [url("a.png"), url("b.jpg")])
+        #expect(options.contains(.png))
+        #expect(options.contains(.jpeg))
+    }
+
+    @Test func aPDFBecomesImages() {
+        #expect(ConvertFormat.options(for: [url("a.pdf")]) == [.png, .jpeg, .tiff])
+        #expect(DropAction.actions(for: .pdf, count: 1).contains(.convert))
+    }
+
+    @Test func otherFilesHaveNoFormats() {
+        #expect(ConvertFormat.options(for: [url("a.zip")]).isEmpty)
+    }
+
+    @Test func everyImageFormatIsWritten() throws {
+        let dir = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
+        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: dir) }
+        let source = dir.appending(path: "source.png")
+        let image = NSImage(size: NSSize(width: 8, height: 8), flipped: false) { rect in
+            NSColor.red.setFill()
+            rect.fill()
+            return true
+        }
+        let tiff = try #require(image.tiffRepresentation)
+        let png = try #require(NSBitmapImageRep(data: tiff)?.representation(using: .png, properties: [:]))
+        try png.write(to: source)
+        for format in ConvertFormat.allCases {
+            let target = dir.appending(path: "out").appendingPathExtension(format.fileExtension)
+            try ImageTools.convert(source, to: target)
+            #expect(FileManager.default.fileExists(atPath: target.path), "\(format.title)")
+        }
+    }
+
+    @Test func aPDFPageBecomesAnImage() throws {
+        let dir = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
+        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: dir) }
+        let page = try #require(PDFPage(image: NSImage(size: NSSize(width: 20, height: 20), flipped: false) { _ in true }))
+        let target = dir.appending(path: "page.png")
+        try PDFTools.render(page, to: target)
+        #expect(FileManager.default.fileExists(atPath: target.path))
     }
 }

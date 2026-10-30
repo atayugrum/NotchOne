@@ -50,6 +50,9 @@ struct OpenNotchContent: View {
                 if model.isDropTargeted {
                     DropZonesView(model: model)
                         .transition(.blurReplace)
+                } else if !model.convertURLs.isEmpty {
+                    ConvertPicker(model: model)
+                        .transition(.blurReplace)
                 } else if let step = model.tourStep {
                     OnboardingCard(model: model, step: step)
                         .transition(.blurReplace)

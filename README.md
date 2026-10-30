@@ -85,7 +85,7 @@ downloads (drag the thumbnail into any app), meeting mode with which app has the
 microphone, and a moon while a Focus is on (opt-in).
 
 **Drop files on the notch** and it splits into zones for the file type: Shelf, AirDrop,
-Remove background, Compress, Convert (images), Compress, Merge (PDFs) or Copy path. Results
+Remove background, Compress, Convert (choose PNG, JPEG, HEIC, TIFF, GIF, BMP or PDF), Merge (PDFs; these also convert to images) or Copy path. Results
 are saved next to the original and land on the shelf.
 
 **Shortcuts**

@@ -1,4 +1,5 @@
 import AppKit
+import PDFKit
 
 /// Runs a drop zone's action. File work happens off the main thread; progress and the
 /// result show as a live activity, and new files land on the shelf.
@@ -46,16 +47,31 @@ final class DropActionRunner {
                 return target
             }
         case .convert:
-            run(String(localized: "Converting"), done: String(localized: "Converted"), urls: urls) { source, fallback in
-                let ext = OutputNaming.convertExtension(for: source)
-                let target = OutputNaming.url(for: source, suffix: "", ext: ext, fallbackFolder: fallback)
-                try ImageTools.convert(source, to: target)
-                return target
-            }
+            break   // The format is chosen first; see `convert(_:to:)`.
         case .merge:
             runOnce(String(localized: "Merging PDFs"), done: String(localized: "PDFs merged"), urls: urls) { sources, fallback in
                 let target = OutputNaming.url(for: sources[0], suffix: "merged", ext: "pdf", fallbackFolder: fallback)
                 try PDFTools.merge(sources, to: target)
+                return [target]
+            }
+        }
+    }
+
+    func convert(_ urls: [URL], to format: ConvertFormat) {
+        let label = String(localized: "Converting")
+        runMany(label, done: String(localized: "Converted"), urls: urls) { source, fallback in
+            let ext = format.fileExtension
+            guard source.pathExtension.lowercased() == "pdf", ext != "pdf" else {
+                let target = OutputNaming.url(for: source, suffix: "", ext: ext, fallbackFolder: fallback)
+                try ImageTools.convert(source, to: target)
+                return [target]
+            }
+            guard let document = PDFDocument(url: source) else { throw FileToolError.unreadable }
+            return try (0..<document.pageCount).compactMap { index in
+                guard let page = document.page(at: index) else { return nil }
+                let suffix = document.pageCount > 1 ? "\(index + 1)" : ""
+                let target = OutputNaming.url(for: source, suffix: suffix, ext: ext, fallbackFolder: fallback)
+                try PDFTools.render(page, to: target)
                 return target
             }
         }
@@ -68,17 +84,29 @@ final class DropActionRunner {
         urls: [URL],
         work: @escaping @Sendable (URL, URL) throws -> URL
     ) {
-        runOnce(label, done: done, urls: urls, work: { sources, fallback in
+        runMany(label, done: done, urls: urls) { source, fallback in
+            [try work(source, fallback)]
+        }
+    }
+
+    /// Like `run`, for work that can make several files from one.
+    private func runMany(
+        _ label: String,
+        done: String,
+        urls: [URL],
+        work: @escaping @Sendable (URL, URL) throws -> [URL]
+    ) {
+        runOnce(label, done: done, urls: urls, collectAll: true) { sources, fallback in
             try work(sources[0], fallback)
-        }, collectAll: true)
+        }
     }
 
     private func runOnce(
         _ label: String,
         done: String,
         urls: [URL],
-        work: @escaping @Sendable ([URL], URL) throws -> URL,
-        collectAll: Bool = false
+        collectAll: Bool = false,
+        work: @escaping @Sendable ([URL], URL) throws -> [URL]
     ) {
         let id = "drop-\(UUID().uuidString.prefix(8))"
         let fallback = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask)[0]
@@ -94,12 +122,12 @@ final class DropActionRunner {
                         var outputs: [URL] = []
                         var lastError: Error?
                         for source in urls {
-                            do { outputs.append(try work([source], fallback)) } catch { lastError = error }
+                            do { outputs += try work([source], fallback) } catch { lastError = error }
                         }
                         if outputs.isEmpty, let lastError { throw lastError }
                         return .success(outputs)
                     }
-                    return .success([try work(urls, fallback)])
+                    return .success(try work(urls, fallback))
                 } catch {
                     return .failure(error)
                 }

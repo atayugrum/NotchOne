@@ -1,3 +1,4 @@
+import AppKit
 import CoreImage
 import Foundation
 import ImageIO
@@ -47,9 +48,18 @@ enum ImageTools {
         try write(source, to: destination, type: .jpeg, maxPixels: 2560, quality: 0.7)
     }
 
-    /// Same pixels, different format (PNG ⟷ JPEG).
+    /// Same pixels, in the format of `destination`'s extension.
     static func convert(_ source: URL, to destination: URL) throws {
-        let type: UTType = destination.pathExtension.lowercased() == "png" ? .png : .jpeg
+        if destination.pathExtension.lowercased() == "pdf" {
+            guard let image = NSImage(contentsOf: source), let page = PDFPage(image: image) else {
+                throw FileToolError.unreadable
+            }
+            let document = PDFDocument()
+            document.insert(page, at: 0)
+            guard document.write(to: destination) else { throw FileToolError.writeFailed }
+            return
+        }
+        guard let type = UTType(filenameExtension: destination.pathExtension) else { throw FileToolError.writeFailed }
         try write(source, to: destination, type: type, maxPixels: nil, quality: 0.9)
     }
 
@@ -76,6 +86,28 @@ enum ImageTools {
 }
 
 enum PDFTools {
+    /// Pixels per PDF point: about 200 dpi.
+    private static let renderScale: CGFloat = 200.0 / 72.0
+
+    /// Saves one page as an image, in the format of `destination`'s extension.
+    static func render(_ page: PDFPage, to destination: URL) throws {
+        let bounds = page.bounds(for: .mediaBox)
+        let width = Int(bounds.width * renderScale), height = Int(bounds.height * renderScale)
+        guard let space = CGColorSpace(name: CGColorSpace.sRGB),
+              let context = CGContext(data: nil, width: width, height: height, bitsPerComponent: 8, bytesPerRow: 0,
+                                      space: space, bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue),
+              let type = UTType(filenameExtension: destination.pathExtension),
+              let output = CGImageDestinationCreateWithURL(destination as CFURL, type.identifier as CFString, 1, nil)
+        else { throw FileToolError.writeFailed }
+        context.setFillColor(.white)
+        context.fill(CGRect(x: 0, y: 0, width: width, height: height))
+        context.scaleBy(x: renderScale, y: renderScale)
+        page.draw(with: .mediaBox, to: context)
+        guard let image = context.makeImage() else { throw FileToolError.writeFailed }
+        CGImageDestinationAddImage(output, image, [kCGImageDestinationLossyCompressionQuality: 0.9] as CFDictionary)
+        guard CGImageDestinationFinalize(output) else { throw FileToolError.writeFailed }
+    }
+
     /// Re-saves with images as screen-resolution JPEGs.
     static func compress(_ source: URL, to destination: URL) throws {
         guard let document = PDFDocument(url: source) else { throw FileToolError.unreadable }
