@@ -14,6 +14,7 @@ enum OnboardingStep: String, CaseIterable, Identifiable, Sendable {
     case drop
     case shortcuts
     case permissions
+    case features
     case done
 
     var id: String { rawValue }
@@ -25,6 +26,8 @@ enum OnboardingStep: String, CaseIterable, Identifiable, Sendable {
         case .welcome, .tabs, .drop, .shortcuts, .done: 1
         // Version 2: every permission is asked from its own button.
         case .permissions: 2
+        // Version 3: things that start off, so nobody has to find them in Settings.
+        case .features: 3
         }
     }
 
@@ -33,7 +36,7 @@ enum OnboardingStep: String, CaseIterable, Identifiable, Sendable {
         case .welcome: .status
         case .tabs: .tabBar
         case .done: .actions
-        case .drop, .shortcuts, .permissions: nil
+        case .drop, .shortcuts, .permissions, .features: nil
         }
     }
 
@@ -44,6 +47,7 @@ enum OnboardingStep: String, CaseIterable, Identifiable, Sendable {
         case .drop: "tray.and.arrow.down"
         case .shortcuts: "command"
         case .permissions: "hand.raised"
+        case .features: "switch.2"
         case .done: "checkmark"
         }
     }
@@ -55,6 +59,7 @@ enum OnboardingStep: String, CaseIterable, Identifiable, Sendable {
         case .drop: String(localized: "Drop files on the notch")
         case .shortcuts: String(localized: "Keyboard shortcuts")
         case .permissions: String(localized: "Optional permissions")
+        case .features: String(localized: "Turn on what you want")
         case .done: String(localized: "You're all set")
         }
     }
@@ -64,13 +69,15 @@ enum OnboardingStep: String, CaseIterable, Identifiable, Sendable {
         case .welcome:
             String(localized: "Your notch now shows what's playing, the weather, your devices and running jobs. The weather and the battery stay on the right.")
         case .tabs:
-            String(localized: "Home sums everything up. Reorder or hide tabs in Settings → Appearance, or switch to a smaller compact notch.")
+            String(localized: "Home sums everything up. Reorder or hide tabs in Settings → Layout, or switch to a smaller compact notch.")
         case .drop:
             String(localized: "Drag files onto the notch to keep them on the Shelf, send them with AirDrop, or convert and compress images and PDFs.")
         case .shortcuts:
             String(localized: "These work from any app, even while the notch is closed.")
         case .permissions:
             String(localized: "NotchOne asks for nothing until you press a button here. Each one is only for the feature next to it; skip any, and turn them on later in Settings → Privacy.")
+        case .features:
+            String(localized: "These start off. You can change them any time in Settings.")
         case .done:
             String(localized: "Settings are behind the gear, and the tour is in Settings → About if you want to see it again.")
         }
@@ -79,7 +86,7 @@ enum OnboardingStep: String, CaseIterable, Identifiable, Sendable {
 
 enum OnboardingLogic {
     /// Bump when steps are added; give the new steps this `since`.
-    static let currentVersion = 2
+    static let currentVersion = 3
 
     static func steps(seenVersion: Int) -> [OnboardingStep] {
         OnboardingStep.allCases.filter { $0.since > seenVersion }

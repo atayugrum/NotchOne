@@ -1,4 +1,5 @@
 import AppKit
+import ApplicationServices
 import CoreGraphics
 import os
 
@@ -44,6 +45,11 @@ final class SystemPromptWatcher {
     static func stepsAside(promptLevel: Int?, settingsInFront: Bool, inPermissionFlow: Bool, notchOpen: Bool) -> Bool {
         let ordinaryPrompt = promptLevel.map { $0 <= NSWindow.Level.normal.rawValue } ?? false
         return notchOpen && inPermissionFlow && (ordinaryPrompt || settingsInFront)
+    }
+
+    /// The Allow button's work is done once the permission is on, even with Settings still open.
+    nonisolated static func flowFinished(trustedAtStart: Bool, trustedNow: Bool, promptLevel: Int?) -> Bool {
+        !trustedAtStart && trustedNow && promptLevel == nil
     }
 
     private let windows: () -> [NSWindow]
@@ -123,11 +129,15 @@ final class SystemPromptWatcher {
         task = Task { [weak self] in
             let start = Date()
             let end = start.addingTimeInterval(Self.watchFor)
+            let trustedAtStart = AXIsProcessTrusted()
             var promptLevel: Int?
             // A prompt stays until it's answered, however long that takes.
             while !Task.isCancelled, Date() < end || promptLevel != nil || self?.settingsOpenInFlow() == true {
                 let waiting = expected && Date().timeIntervalSince(start) < Self.promptDelay
                 promptLevel = Self.currentPromptLevel()
+                if Self.flowFinished(trustedAtStart: trustedAtStart, trustedNow: AXIsProcessTrusted(), promptLevel: promptLevel) {
+                    self?.inPermissionFlow = false
+                }
                 self?.update(waiting: waiting, promptLevel: promptLevel)
                 try? await Task.sleep(for: .milliseconds(waiting ? 50 : 250))
             }

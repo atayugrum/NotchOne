@@ -31,6 +31,7 @@ struct OnboardingCard: View {
                 case .tabs: TourModeChoice()
                 case .shortcuts: TourShortcuts()
                 case .permissions: TourPermissions(weather: model.activity.weather)
+                case .features: TourFeatures()
                 case .welcome: TourOpeningChoice()
                 case .drop, .done: EmptyView()
                 }
@@ -125,6 +126,49 @@ private struct TourShortcuts: View {
                 .background(Palette.control, in: RoundedRectangle(cornerRadius: 6, style: .continuous))
             Text(title).font(Typo.captionStrong)
         }
+    }
+}
+
+/// Everything that starts off. Macs ask for a permission only if its switch needs one.
+private struct TourFeatures: View {
+    @AppStorage(SettingsKey.notificationsEnabled) private var notifications = SettingsDefault.notificationsEnabled
+    @AppStorage(SettingsKey.focusIndicatorEnabled) private var focus = SettingsDefault.focusIndicatorEnabled
+    @AppStorage(SettingsKey.lockScreenWidget) private var lockScreen = SettingsDefault.lockScreenWidget
+    @AppStorage(SettingsKey.wheelVolume) private var wheelVolume = SettingsDefault.wheelVolume
+    @AppStorage(SettingsKey.hideFromCapture) private var hideFromCapture = SettingsDefault.hideFromCapture
+    @State private var launchAtLogin = LaunchAtLogin.isEnabled
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            row("arrow.up.right.square", "Open at login", isOn: $launchAtLogin)
+                .onChange(of: launchAtLogin) { _, enabled in
+                    try? LaunchAtLogin.set(enabled)
+                    launchAtLogin = LaunchAtLogin.isEnabled
+                }
+            row("bell", "Show notifications in the notch", isOn: $notifications)
+                .onChange(of: notifications) { _, enabled in
+                    guard enabled, !AXIsProcessTrusted() else { return }
+                    SystemPromptWatcher.expectPrompt()
+                    let options = ["AXTrustedCheckOptionPrompt": true] as CFDictionary
+                    _ = AXIsProcessTrustedWithOptions(options)
+                }
+            row("moon", "Show when a Focus is on", isOn: $focus)
+            row("lock.rectangle", "Music and battery on the lock screen", isOn: $lockScreen)
+            row("computermouse", "Mouse wheel changes the volume", isOn: $wheelVolume)
+            row("eye.slash", "Hide from screen sharing", isOn: $hideFromCapture)
+        }
+    }
+
+    private func row(_ symbol: String, _ title: LocalizedStringKey, isOn: Binding<Bool>) -> some View {
+        HStack(spacing: Space.s) {
+            Image(systemName: symbol).font(Typo.icon(11)).frame(width: 16).foregroundStyle(.secondary)
+            Text(title).font(Typo.captionStrong).lineLimit(1)
+            Spacer(minLength: Space.s)
+            Toggle(title, isOn: isOn)
+                .toggleStyle(GlassSwitchStyle())
+                .labelsHidden()
+        }
+        .frame(minHeight: 26)
     }
 }
 

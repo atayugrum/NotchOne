@@ -1754,12 +1754,12 @@
         }
       }
     },
-    "Home sums everything up. Reorder or hide tabs in Settings → Appearance, or switch to a smaller compact notch.": {
+    "Home sums everything up. Reorder or hide tabs in Settings → Layout, or switch to a smaller compact notch.": {
       "localizations": {
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ana Sayfa her şeyi özetler. Sekmeleri Ayarlar → Görünüm'den sıralayın veya gizleyin ya da daha küçük kompakt çentiğe geçin."
+            "value": "Home her şeyi özetler. Sekmeleri Ayarlar → Düzen'den sırala veya gizle; istersen daha küçük kompakt notch'a geç."
           }
         }
       }
@@ -2317,6 +2317,16 @@
         }
       }
     },
+    "Music and battery on the lock screen": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kilit ekranında müzik ve pil"
+          }
+        }
+      }
+    },
     "Music and Spotify are read directly. Other apps are read from the system's Now Playing info.": {
       "localizations": {
         "tr": {
@@ -2776,6 +2786,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "%@ aç"
+          }
+        }
+      }
+    },
+    "Open at login": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Girişte aç"
           }
         }
       }
@@ -3975,6 +3995,16 @@
         }
       }
     },
+    "These start off. You can change them any time in Settings.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bunlar kapalı başlar. Ayarlar'dan istediğin zaman değiştirebilirsin."
+          }
+        }
+      }
+    },
     "These work from any app, even while the notch is closed.": {
       "localizations": {
         "tr": {
@@ -4221,6 +4251,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Aç"
+          }
+        }
+      }
+    },
+    "Turn on what you want": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İstediklerini aç"
           }
         }
       }

@@ -126,8 +126,16 @@ struct PermissionGateTests {
         #expect(PermissionGate.allows(.folders, defaults))
     }
 
-    @Test func earlierUsersSeeOnlyTheNewPermissionsStep() {
-        #expect(OnboardingLogic.steps(seenVersion: 1) == [.permissions])
+    @Test func earlierUsersSeeOnlyTheStepsAddedSince() {
+        #expect(OnboardingLogic.steps(seenVersion: 1) == [.permissions, .features])
+        #expect(OnboardingLogic.steps(seenVersion: 2) == [.features])
+    }
+
+    @Test func grantingAccessibilityEndsTheFlowWithSettingsStillOpen() {
+        #expect(SystemPromptWatcher.flowFinished(trustedAtStart: false, trustedNow: true, promptLevel: nil))
+        #expect(!SystemPromptWatcher.flowFinished(trustedAtStart: false, trustedNow: false, promptLevel: nil))
+        #expect(!SystemPromptWatcher.flowFinished(trustedAtStart: true, trustedNow: true, promptLevel: nil))
+        #expect(!SystemPromptWatcher.flowFinished(trustedAtStart: false, trustedNow: true, promptLevel: 0))
     }
 }
 
