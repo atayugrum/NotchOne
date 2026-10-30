@@ -3,8 +3,9 @@ import AppKit
 /// Clipboard history. macOS has no "clipboard changed" notification, so the
 /// pasteboard's change counter is checked twice a second (a single integer read).
 ///
-/// History lives in memory only and is gone when the app quits. Copies that apps mark
-/// as private, and anything copied from a password manager, are never recorded.
+/// History lives in memory only and is gone when the app quits; only text you pin is saved,
+/// in Application Support. Copies that apps mark as private, and anything copied from a
+/// password manager, are never recorded.
 @MainActor
 @Observable
 final class ClipboardStore {
@@ -18,6 +19,18 @@ final class ClipboardStore {
     @ObservationIgnored private var timer: Timer?
     @ObservationIgnored private var feedbackTask: Task<Void, Never>?
     @ObservationIgnored private var pausedUntil: ContinuousClock.Instant?
+    @ObservationIgnored private let pinsURL: URL
+
+    init(pinsURL: URL = ClipboardStore.defaultPinsURL) {
+        self.pinsURL = pinsURL
+        let saved = (try? Data(contentsOf: pinsURL)).flatMap { try? JSONDecoder().decode([String].self, from: $0) } ?? []
+        items = saved.map { ClipboardItem(content: .text($0), sourceBundleID: nil, copiedAt: Date(), isPinned: true) }
+    }
+
+    nonisolated static var defaultPinsURL: URL {
+        FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+            .appending(path: "NotchOne/ClipboardPins.json")
+    }
 
     func start() {
         guard !isRunning else { return }
@@ -36,7 +49,7 @@ final class ClipboardStore {
         isRunning = false
         timer?.invalidate()
         timer = nil
-        items.removeAll()
+        items = ClipboardLogic.cleared(items)
     }
 
     /// Puts an item back on the clipboard (it also moves to the top of the list).
@@ -58,7 +71,8 @@ final class ClipboardStore {
                 content: item.content,
                 sourceBundleID: item.sourceBundleID,
                 copiedAt: Date(),
-                smart: item.smart
+                smart: item.smart,
+                isPinned: item.isPinned
             ),
             into: items
         )
@@ -77,10 +91,26 @@ final class ClipboardStore {
 
     func remove(_ item: ClipboardItem) {
         items.removeAll { $0.id == item.id }
+        if item.isPinned { savePins() }
     }
 
     func clear() {
-        items.removeAll()
+        items = ClipboardLogic.cleared(items)
+    }
+
+    func togglePin(_ item: ClipboardItem) {
+        items = ClipboardLogic.pinsFirst(items.map { current in
+            var current = current
+            if current.id == item.id { current.isPinned.toggle() }
+            return current
+        })
+        savePins()
+    }
+
+    private func savePins() {
+        guard let data = try? JSONEncoder().encode(ClipboardLogic.savedPins(items)) else { return }
+        try? FileManager.default.createDirectory(at: pinsURL.deletingLastPathComponent(), withIntermediateDirectories: true)
+        try? data.write(to: pinsURL, options: .atomic)
     }
 
     // MARK: - Private

@@ -25,6 +25,7 @@ enum SettingsKey {
     static let meetingModeEnabled = "meetingModeEnabled"
     static let gesturesEnabled = "gesturesEnabled"
     static let earPreview = "earPreview"
+    static let hideFromCapture = "hideFromCapture"
     static let wheelVolume = "wheelVolume"
     static let leftEarClick = "leftEarClick"
     static let rightEarClick = "rightEarClick"
@@ -83,6 +84,7 @@ enum SettingsDefault {
     static let meetingModeEnabled = true
     static let gesturesEnabled = true
     static let earPreview = true
+    static let hideFromCapture = false
     static let wheelVolume = false
     static let leftEarClick = EarClick.openPlayer
     static let rightEarClick = EarClick.playPause

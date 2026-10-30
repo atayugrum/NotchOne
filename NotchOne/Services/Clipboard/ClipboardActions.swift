@@ -8,6 +8,7 @@ enum ClipboardAction: Equatable, Sendable {
     case colorHex
     case colorRGB
     case colorHSL
+    case composeEmail
     case translate
     case addToNotes
 }
@@ -27,6 +28,7 @@ enum ClipboardActions {
         let candidates: [ClipboardAction]
         switch smart {
         case .link: candidates = [.cleanLink]
+        case .email: return [.composeEmail, .addToNotes]
         case .json: candidates = [.formatJSON, .minifyJSON]
         case .color: candidates = [.colorHex, .colorRGB, .colorHSL]
         case .code: candidates = []
@@ -46,8 +48,16 @@ enum ClipboardActions {
         case .colorHex: return convertColor(trimmed, unlessPrefix: "#", hex)
         case .colorRGB: return convertColor(trimmed, unlessPrefix: "rgb", rgb)
         case .colorHSL: return convertColor(trimmed, unlessPrefix: "hsl", hsl)
-        case .translate, .addToNotes: return nil
+        case .composeEmail, .translate, .addToNotes: return nil
         }
+    }
+
+    /// A new message to `address`.
+    static func mailto(_ address: String) -> URL? {
+        var components = URLComponents()
+        components.scheme = "mailto"
+        components.path = address.trimmingCharacters(in: .whitespacesAndNewlines)
+        return components.url
     }
 
     private static func changed(_ result: String?, from text: String) -> String? {

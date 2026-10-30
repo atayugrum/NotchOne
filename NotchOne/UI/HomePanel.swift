@@ -153,6 +153,7 @@ private struct HomeCardView: View {
         case .notes: !activity.notes.isEmpty
         case .clipboard: !activity.clipboard.items.isEmpty
         case .shelf: !activity.shelf.items.isEmpty
+        case .keepAwake: true
         }
     }
 
@@ -174,12 +175,14 @@ private struct HomeCardView: View {
             .padding(.horizontal, Space.m)
             .padding(.vertical, Space.s)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-            .glassCard(highlighted: isHovering && (card.tab != nil || card == .activity))
+            .glassCard(highlighted: isHovering && (card.tab != nil || card == .activity || card == .keepAwake))
             .contentShape(Rectangle())
             .onHover { isHovering = $0 }
             .onTapGesture {
                 if let tab = card.tab {
                     withAnimation(Motion.tab) { model.show(tab) }
+                } else if card == .keepAwake {
+                    activity.toggleKeepAwake()
                 } else if card == .activity, let top = activity.live.top, top.source != .meeting {
                     // A notification: go to its app. Anything else: clear it.
                     if top.appPID != nil {
@@ -272,6 +275,13 @@ private struct HomeCardView: View {
                     Image(systemName: "doc.on.clipboard").font(.system(size: 16)).foregroundStyle(.secondary)
                     lines(Self.preview(item), item.copiedAt.formatted(.relative(presentation: .named)))
                 }
+            }
+        case .keepAwake:
+            HStack(spacing: Space.s) {
+                Image(systemName: activity.keepAwake.isOn ? "cup.and.saucer.fill" : "cup.and.saucer")
+                    .font(.system(size: 16))
+                    .foregroundStyle(activity.keepAwake.isOn ? .green : .secondary)
+                lines(String(localized: "Keep Awake"), activity.keepAwake.isOn ? String(localized: "On") : String(localized: "Off"))
             }
         case .shelf:
             if let first = activity.shelf.items.first {

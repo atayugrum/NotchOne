@@ -18,7 +18,7 @@ struct EarsView: View {
                 EarIslandView(island: island)
             } else if case .nowPlaying = content, activity.earPreview, let info = activity.nowPlaying {
                 sides
-                TrackPreview(info: info)
+                TrackPreview(info: info, activity: activity)
             } else {
                 sides
             }
@@ -26,11 +26,34 @@ struct EarsView: View {
         .foregroundStyle(.white)
     }
 
+    /// A second activity, small, beside the main one.
+    @ViewBuilder
+    private var extra: some View {
+        switch activity.earExtra {
+        case .music:
+            ArtworkView(image: activity.artwork, size: 14, cornerRadius: 3)
+        case .live(let item):
+            Image(systemName: item.symbol)
+                .font(Typo.icon(10))
+                .foregroundStyle(LiveStyle.tint(for: item))
+        case .keepAwake:
+            Image(systemName: "cup.and.saucer.fill")
+                .font(Typo.icon(10))
+                .foregroundStyle(.secondary)
+        case nil:
+            EmptyView()
+        }
+    }
+
     private var sides: some View {
         HStack(spacing: 0) {
             left.frame(width: earWidth, height: notchSize.height)
             Color.clear.frame(width: notchSize.width)
-            right.frame(width: earWidth, height: notchSize.height)
+            HStack(spacing: Space.xs) {
+                right
+                extra
+            }
+            .frame(width: earWidth, height: notchSize.height)
         }
     }
 
@@ -44,6 +67,10 @@ struct EarsView: View {
             FileThumbnail(url: url, image: activity.peekThumbnail)
         case .live(let item):
             LiveLeading(item: item)
+        case .keepAwake:
+            Image(systemName: "cup.and.saucer.fill")
+                .font(Typo.icon(11))
+                .foregroundStyle(.secondary)
         case .peek(.volume(let level, let muted)):
             Image(systemName: LevelSymbols.volume(level: level, muted: muted))
                 .font(Typo.icon(13))
@@ -94,19 +121,33 @@ struct EarsView: View {
     }
 }
 
-/// The track's name below the closed notch while an ear is hovered.
+/// A mini player below the closed notch while an ear is hovered.
 private struct TrackPreview: View {
     let info: NowPlayingInfo
+    let activity: ActivityState
 
     var body: some View {
-        VStack(spacing: 1) {
-            Text(info.title).font(Typo.captionStrong)
-            if !info.artist.isEmpty {
-                Text(info.artist).font(Typo.micro).foregroundStyle(.secondary)
+        HStack(spacing: Space.xs) {
+            VStack(alignment: .leading, spacing: 1) {
+                Text(info.title).font(Typo.captionStrong)
+                if !info.artist.isEmpty {
+                    Text(info.artist).font(Typo.micro).foregroundStyle(.secondary)
+                }
+            }
+            .lineLimit(1)
+            Spacer(minLength: Space.xs)
+            IconButton(symbol: "backward.fill", size: 10, frame: 24, label: "Previous") {
+                activity.player?.perform(.previous)
+            }
+            IconButton(symbol: info.isPlaying ? "pause.fill" : "play.fill", size: 12, frame: 24,
+                       label: info.isPlaying ? "Pause" : "Play") {
+                activity.player?.perform(.playPause)
+            }
+            IconButton(symbol: "forward.fill", size: 10, frame: 24, label: "Next") {
+                activity.player?.perform(.next)
             }
         }
-        .lineLimit(1)
-        .frame(maxWidth: .infinity, maxHeight: EarLayout.previewDrop, alignment: .top)
+        .frame(maxWidth: .infinity, maxHeight: EarLayout.previewDrop)
         .padding(.horizontal, Space.m)
     }
 }

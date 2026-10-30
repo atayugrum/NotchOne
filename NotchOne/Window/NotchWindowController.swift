@@ -67,8 +67,15 @@ final class NotchWindowController {
         )
     }
 
+    /// Screenshots and screen sharing leave the notch out, for apps that honour this.
+    private func applyCaptureVisibility() {
+        let hidden = UserDefaults.standard.bool(forKey: SettingsKey.hideFromCapture, default: SettingsDefault.hideFromCapture)
+        panel?.sharingType = hidden ? .none : .readOnly
+    }
+
     private func settingsChanged() {
         model?.applySettings()
+        applyCaptureVisibility()
         let value = Self.showWithoutNotch
         guard value != lastShowWithoutNotch else { return }
         lastShowWithoutNotch = value
@@ -159,6 +166,7 @@ final class NotchWindowController {
 
         self.model = model
         self.panel = panel
+        applyCaptureVisibility()
         self.hover = hover
         self.dropCatcher = catcher
         hover.start()

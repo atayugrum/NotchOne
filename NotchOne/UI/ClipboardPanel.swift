@@ -24,7 +24,12 @@ struct ClipboardPanel: View {
                         }
                     }
                 }
-                PillButton(title: "Clear", symbol: "trash") { clipboard.clear() }
+                VStack(spacing: Space.xs) {
+                    PillButton(title: "Clear", symbol: "trash") { clipboard.clear() }
+                    PillButton(title: "Search", symbol: "magnifyingglass") {
+                        if let openSearch = model.openSearch { openSearch() } else { model.show(.search) }
+                    }
+                }
             }
         }
     }
@@ -50,6 +55,8 @@ private struct ClipboardCard: View {
         case .translate:
             translate.translate(text)
             model.show(.translate)
+        case .composeEmail:
+            if let url = ClipboardActions.mailto(text) { NSWorkspace.shared.open(url) }
         case .addToNotes:
             notes.append(text)
             clipboard.showCopied(item.id)
@@ -96,6 +103,11 @@ private struct ClipboardCard: View {
                 RemoveBadge(label: "Remove from history") { clipboard.remove(item) }
             }
         }
+        .overlay(alignment: .topLeading) {
+            if case .text = item.content, isHovering || item.isPinned {
+                PinBadge(isPinned: item.isPinned) { clipboard.togglePin(item) }
+            }
+        }
         .contentShape(Rectangle())
         .onHover { isHovering = $0 }
         .onTapGesture { withAnimation(.easeOut(duration: 0.15)) { clipboard.copy(item) } }
@@ -127,6 +139,25 @@ private struct ClipboardCard: View {
                     .lineLimit(3)
             }
         }
+    }
+}
+
+/// Keeps a card through Clear and restarts.
+private struct PinBadge: View {
+    let isPinned: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: isPinned ? "pin.fill" : "pin")
+                .font(.system(size: 10, weight: .semibold))
+                .rotationEffect(.degrees(35))
+                .foregroundStyle(isPinned ? .yellow : .white)
+                .padding(4)
+        }
+        .buttonStyle(.plain)
+        .help(isPinned ? "Unpin" : "Pin")
+        .accessibilityLabel(isPinned ? "Unpin" : "Pin")
     }
 }
 
@@ -166,6 +197,7 @@ private struct ClipboardActionButton: View {
     private var symbol: String {
         switch action {
         case .cleanLink: "wand.and.stars"
+        case .composeEmail: "envelope"
         case .formatJSON: "text.alignleft"
         case .minifyJSON: "arrow.down.right.and.arrow.up.left"
         case .translate: "character.bubble"
@@ -176,6 +208,7 @@ private struct ClipboardActionButton: View {
     private var title: LocalizedStringKey {
         switch action {
         case .cleanLink: "Clean link and copy"
+        case .composeEmail: "New email"
         case .formatJSON: "Format and copy"
         case .minifyJSON: "Minify and copy"
         case .colorHex: "Copy as HEX"
@@ -205,6 +238,11 @@ private struct SmartTextPreview: View {
                 Text(text.trimmingCharacters(in: .whitespacesAndNewlines))
                     .font(.system(size: 10, weight: .medium, design: .monospaced))
                     .lineLimit(1)
+            }
+        case .email(let address):
+            VStack(alignment: .leading, spacing: 2) {
+                Label("Email", systemImage: "envelope").font(Typo.micro).foregroundStyle(.secondary)
+                Text(address).font(Typo.captionStrong).lineLimit(2).truncationMode(.middle)
             }
         case .link(let host, let path):
             VStack(alignment: .leading, spacing: 2) {

@@ -42,6 +42,8 @@ struct EarIsland: Equatable, Sendable {
         case .peek(.keepAwake(let on)):
             return EarIsland(symbol: on ? "cup.and.saucer.fill" : "cup.and.saucer", tint: on ? .green : .neutral,
                              title: on ? String(localized: "Keeping your Mac awake") : String(localized: "Your Mac can sleep"))
+        case .peek(.output(let name)):
+            return EarIsland(symbol: "hifispeaker.fill", tint: .neutral, title: name, detail: String(localized: "Sound output"))
         case .live(let item):
             return live(item)
         default:

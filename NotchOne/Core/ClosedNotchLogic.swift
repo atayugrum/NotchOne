@@ -7,6 +7,7 @@ enum EarClick: String, CaseIterable, Identifiable, Sendable {
     case openPlayer
     case playPause
     case nextTrack
+    case keepAwake
 
     var id: String { rawValue }
 
@@ -16,6 +17,7 @@ enum EarClick: String, CaseIterable, Identifiable, Sendable {
         case .openPlayer: String(localized: "Open the player")
         case .playPause: String(localized: "Play or pause")
         case .nextTrack: String(localized: "Next track")
+        case .keepAwake: String(localized: "Keep Awake")
         }
     }
 }
@@ -44,6 +46,7 @@ enum ClosedNotchLogic {
         if case .live(let item) = ears, item.source == .notification, item.appPID != nil {
             return .activateNotification(item)
         }
+        if ears == .keepAwake, side != .center { return .ear(.keepAwake) }
         guard case .nowPlaying = ears else { return .open }
         switch side {
         case .left: return .ear(left)

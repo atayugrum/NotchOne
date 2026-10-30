@@ -139,6 +139,16 @@ private struct HeaderStatus: View {
                     .help("A Focus is on")
                     .accessibilityLabel("Focus is on")
             }
+            if activity.keepAwake.isOn, shows(.keepAwake) {
+                Button { activity.toggleKeepAwake() } label: {
+                    Image(systemName: "cup.and.saucer.fill")
+                        .font(Typo.icon(12))
+                        .foregroundStyle(.green)
+                }
+                .buttonStyle(.plain)
+                .help("Keep Awake is on. Click to turn it off.")
+                .accessibilityLabel("Turn off Keep Awake")
+            }
             if shows(.weather), model.selectedTab != .weather, model.tabs.contains(.weather),
                let snapshot = activity.weather.badgeSnapshot() {
                 WeatherBadge(snapshot: snapshot) {

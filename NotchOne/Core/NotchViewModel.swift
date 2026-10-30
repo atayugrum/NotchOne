@@ -274,6 +274,7 @@ final class NotchViewModel {
         case .ear(.openPlayer): activity.openPlayingApp()
         case .ear(.playPause): activity.player?.perform(.playPause)
         case .ear(.nextTrack): activity.player?.perform(.next)
+        case .ear(.keepAwake): activity.toggleKeepAwake()
         }
     }
 

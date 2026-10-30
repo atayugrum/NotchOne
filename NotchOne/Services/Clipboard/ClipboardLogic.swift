@@ -13,9 +13,12 @@ struct ClipboardItem: Identifiable, Equatable, Sendable {
     let copiedAt: Date
     /// Text kind (colour, link, JSON…), worked out once when copied.
     let smart: SmartText?
+    /// Kept through Clear, the history limit and restarts.
+    var isPinned: Bool
 
-    init(id: UUID = UUID(), content: ClipboardContent, sourceBundleID: String?, copiedAt: Date, smart: SmartText? = nil) {
+    init(id: UUID = UUID(), content: ClipboardContent, sourceBundleID: String?, copiedAt: Date, smart: SmartText? = nil, isPinned: Bool = false) {
         self.id = id
+        self.isPinned = isPinned
         self.content = content
         self.sourceBundleID = sourceBundleID
         self.copiedAt = copiedAt
@@ -68,11 +71,31 @@ enum ClipboardLogic {
         return text.count > maxTextLength ? String(text.prefix(maxTextLength)) : text
     }
 
-    /// Puts the new item first. Copying the same content again moves it to the top
-    /// instead of adding a duplicate.
+    /// Puts the new item first, after any pins. Copying the same content again moves it to
+    /// the top instead of adding a duplicate, and a pinned item stays pinned. Pins don't
+    /// count toward the limit.
     static func insert(_ item: ClipboardItem, into items: [ClipboardItem]) -> [ClipboardItem] {
-        let rest = items.filter { $0.content != item.content }
-        return Array(([item] + rest).prefix(maxItems))
+        var item = item
+        item.isPinned = item.isPinned || items.contains { $0.content == item.content && $0.isPinned }
+        return pinsFirst([item] + items.filter { $0.content != item.content })
+    }
+
+    /// Pins, then the history up to its limit.
+    static func pinsFirst(_ items: [ClipboardItem]) -> [ClipboardItem] {
+        items.filter(\.isPinned) + items.filter { !$0.isPinned }.prefix(maxItems)
+    }
+
+    /// What Clear leaves behind.
+    static func cleared(_ items: [ClipboardItem]) -> [ClipboardItem] {
+        items.filter(\.isPinned)
+    }
+
+    /// Pinned text, in the form it's saved.
+    static func savedPins(_ items: [ClipboardItem]) -> [String] {
+        items.compactMap { item in
+            guard item.isPinned, case .text(let text) = item.content else { return nil }
+            return text
+        }
     }
 
     /// One-line preview for a text item.

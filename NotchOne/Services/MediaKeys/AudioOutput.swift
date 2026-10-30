@@ -17,6 +17,67 @@ enum AudioOutput {
         return status == noErr && deviceID != kAudioObjectUnknown ? deviceID : nil
     }
 
+    // MARK: Devices
+
+    struct Device: Identifiable, Equatable, Sendable {
+        let id: AudioDeviceID
+        let name: String
+    }
+
+    /// Everything that can play sound. macOS's own hidden aggregate devices are left out.
+    static func devices() -> [Device] {
+        var address = AudioObjectPropertyAddress(
+            mSelector: kAudioHardwarePropertyDevices,
+            mScope: kAudioObjectPropertyScopeGlobal,
+            mElement: kAudioObjectPropertyElementMain
+        )
+        let system = AudioObjectID(kAudioObjectSystemObject)
+        var size = UInt32(0)
+        guard AudioObjectGetPropertyDataSize(system, &address, 0, nil, &size) == noErr else { return [] }
+        var ids = [AudioDeviceID](repeating: 0, count: Int(size) / MemoryLayout<AudioDeviceID>.size)
+        guard AudioObjectGetPropertyData(system, &address, 0, nil, &size, &ids) == noErr else { return [] }
+        return ids.compactMap { id in
+            guard hasOutput(id), let name = name(of: id), !name.hasPrefix("CADefaultDeviceAggregate") else { return nil }
+            return Device(id: id, name: name)
+        }
+    }
+
+    @discardableResult
+    static func setDefault(_ device: AudioDeviceID) -> Bool {
+        var address = AudioObjectPropertyAddress(
+            mSelector: kAudioHardwarePropertyDefaultOutputDevice,
+            mScope: kAudioObjectPropertyScopeGlobal,
+            mElement: kAudioObjectPropertyElementMain
+        )
+        var value = device
+        return AudioObjectSetPropertyData(
+            AudioObjectID(kAudioObjectSystemObject), &address, 0, nil,
+            UInt32(MemoryLayout<AudioDeviceID>.size), &value
+        ) == noErr
+    }
+
+    private static func hasOutput(_ device: AudioDeviceID) -> Bool {
+        var address = AudioObjectPropertyAddress(
+            mSelector: kAudioDevicePropertyStreams,
+            mScope: kAudioDevicePropertyScopeOutput,
+            mElement: kAudioObjectPropertyElementMain
+        )
+        var size = UInt32(0)
+        return AudioObjectGetPropertyDataSize(device, &address, 0, nil, &size) == noErr && size > 0
+    }
+
+    private static func name(of device: AudioDeviceID) -> String? {
+        var address = AudioObjectPropertyAddress(
+            mSelector: kAudioObjectPropertyName,
+            mScope: kAudioObjectPropertyScopeGlobal,
+            mElement: kAudioObjectPropertyElementMain
+        )
+        var name: Unmanaged<CFString>?
+        var size = UInt32(MemoryLayout<Unmanaged<CFString>?>.size)
+        guard AudioObjectGetPropertyData(device, &address, 0, nil, &size, &name) == noErr else { return nil }
+        return name?.takeRetainedValue() as String?
+    }
+
     // MARK: Volume
 
     static func canSetVolume(_ device: AudioDeviceID) -> Bool {

@@ -5,6 +5,7 @@ enum SmartText: Equatable, Sendable {
     /// Components 0…1.
     case color(red: Double, green: Double, blue: Double, alpha: Double)
     case link(host: String, path: String)
+    case email(String)
     /// Pretty-printed preview.
     case json(String)
     case code
@@ -16,6 +17,7 @@ enum SmartText: Equatable, Sendable {
     static func classify(_ text: String) -> SmartText {
         let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
         if trimmed.count <= 40, let color = color(trimmed) { return color }
+        if trimmed.count <= 254, isEmail(trimmed) { return .email(trimmed) }
         if trimmed.count <= 2048, let link = link(trimmed) { return link }
         if trimmed.count <= maxParsedLength, let json = json(trimmed) { return .json(json) }
         if trimmed.count <= maxParsedLength, looksLikeCode(trimmed) { return .code }
@@ -98,6 +100,12 @@ enum SmartText: Equatable, Sendable {
         let display = host.hasPrefix("www.") ? String(host.dropFirst(4)) : host
         let path = url.path() == "/" ? "" : url.path()
         return .link(host: display, path: path)
+    }
+
+    // MARK: - Email
+
+    static func isEmail(_ text: String) -> Bool {
+        text.wholeMatch(of: /[^\s@]+@[^\s@.]+(\.[^\s@.]+)*\.[^\s@.]{2,}/) != nil
     }
 
     // MARK: - JSON

@@ -11,6 +11,7 @@ struct GeneralPage: View {
     @AppStorage(SettingsKey.gesturesEnabled) private var gesturesEnabled = SettingsDefault.gesturesEnabled
     @AppStorage(SettingsKey.earPreview) private var earPreview = SettingsDefault.earPreview
     @AppStorage(SettingsKey.wheelVolume) private var wheelVolume = SettingsDefault.wheelVolume
+    @AppStorage(SettingsKey.hideFromCapture) private var hideFromCapture = SettingsDefault.hideFromCapture
     @AppStorage(SettingsKey.lockScreenWidget) private var lockScreenWidget = SettingsDefault.lockScreenWidget
 
     @State private var launchAtLogin = LaunchAtLogin.isEnabled
@@ -44,6 +45,12 @@ struct GeneralPage: View {
                 }
                 RowDivider()
                 ToggleRow(title: "Show a notch on displays without one", isOn: $showOnDisplaysWithoutNotch)
+                RowDivider()
+                ToggleRow(
+                    title: "Hide from screen sharing",
+                    detail: "Asks screenshots and screen sharing to leave the notch out. Some apps may still capture it.",
+                    isOn: $hideFromCapture
+                )
             }
 
             SettingsGroup(title: "Opening") {

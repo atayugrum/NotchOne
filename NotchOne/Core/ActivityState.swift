@@ -13,6 +13,8 @@ enum Peek: Equatable, Sendable {
     case focus(on: Bool)
     /// Keep Awake was turned on or off.
     case keepAwake(on: Bool)
+    /// Sound moved to another output.
+    case output(name: String)
     /// A new screenshot or download; drag the thumbnail out of the notch.
     case newFile(URL, isScreenshot: Bool)
 }
@@ -22,10 +24,23 @@ enum EarContent: Equatable {
     case nowPlaying
     case peek(Peek)
     case live(LiveActivity)
+    /// Nothing else to show while Keep Awake is on.
+    case keepAwake
+}
+
+/// A second thing going on, shown small beside the main ear.
+enum EarExtra: Equatable {
+    case music
+    case live(LiveActivity)
+    case keepAwake
 }
 
 enum EarLayout {
     static let nowPlayingWidth: CGFloat = 34
+    /// The mini player needs room for the song and its buttons.
+    static let previewWidth: CGFloat = 76
+    /// Room for an `EarExtra` beside the main ear.
+    static let extraWidth: CGFloat = 22
     static let peekWidth: CGFloat = 62
     /// Room for a level bar (volume, brightness).
     static let levelWidth: CGFloat = 76
@@ -41,7 +56,10 @@ enum EarLayout {
 
     /// The ear width, kept within `limit` (room left before macOS's mic or camera indicator).
     static func width(for content: EarContent?, limit: CGFloat?) -> CGFloat {
-        let width = width(for: content)
+        width(for: width(for: content), limit: limit)
+    }
+
+    static func width(for width: CGFloat, limit: CGFloat?) -> CGFloat {
         guard let limit, limit < width else { return width }
         return limit >= minimumWidth ? limit : 0
     }
@@ -52,7 +70,7 @@ enum EarLayout {
     static let notificationWidth: CGFloat = 70
 
     /// How far the track's name reaches below the closed notch while an ear is hovered.
-    static let previewDrop: CGFloat = 38
+    static let previewDrop: CGFloat = 40
 
     /// A short event opens downward as a card under the notch.
     static let islandDrop: CGFloat = 50
@@ -68,7 +86,7 @@ enum EarLayout {
     /// Ears that stay for a long time step aside for the menu bar. Short or urgent ones don't.
     static func canTuck(_ content: EarContent?) -> Bool {
         switch content {
-        case .nowPlaying: true
+        case .nowPlaying, .keepAwake: true
         case .live(let item):
             if case .meeting = item.status { true } else { item.source == .job }
         default: false
@@ -123,7 +141,7 @@ enum EarLayout {
         if EarIsland.make(for: content, devices: []) != nil { return islandWidth }
         return switch content {
         case nil: 0
-        case .nowPlaying: nowPlayingWidth
+        case .nowPlaying, .keepAwake: nowPlayingWidth
         case .peek(.volume), .peek(.brightness), .peek(.keyboardBacklight): levelWidth
         case .peek(.newFile): liveTextWidth
         case .peek: peekWidth
@@ -197,6 +215,7 @@ final class ActivityState {
     let devices = DeviceBatteryStore()
     let system = SystemMonitorStore()
     let notes = NotesStore()
+    let keepAwake = KeepAwakeStore()
     let drops: DropActionRunner
     /// Set by meeting mode while it runs.
     @ObservationIgnored var onToggleMicMute: (() -> Void)?
@@ -230,7 +249,26 @@ final class ActivityState {
         if let top, top.priority > Self.nowPlayingPriority, !hasMusic || priority.beatsMusic(top.priority) { return .live(top) }
         if nowPlaying?.isPlaying == true || isLingering { return .nowPlaying }
         if let top { return .live(top) }
-        return nil
+        return keepAwake.isOn ? .keepAwake : nil
+    }
+
+    /// What's going on besides the main ear, most important first.
+    var earExtra: EarExtra? {
+        switch ears {
+        case .nowPlaying:
+            if let top = live.top, top.source != .notification { return .live(top) }
+            return keepAwake.isOn ? .keepAwake : nil
+        case .live(let item) where item.source != .notification:
+            if nowPlaying?.isPlaying == true { return .music }
+            return keepAwake.isOn ? .keepAwake : nil
+        default:
+            return nil
+        }
+    }
+
+    func toggleKeepAwake() {
+        keepAwake.toggle()
+        showPeek(.keepAwake(on: keepAwake.isOn))
     }
 
     nonisolated static let nowPlayingPriority = 10
@@ -253,7 +291,10 @@ final class ActivityState {
     var earWidth: CGFloat {
         guard EarLayout.canTuck(ears) else { return EarLayout.width(for: ears, limit: earLimit) }
         if earsTucked { return 0 }
-        return EarLayout.width(for: ears, limit: [earLimit, menuEarLimit].compactMap { $0 }.min())
+        let limit = [earLimit, menuEarLimit].compactMap { $0 }.min()
+        if earPreview, ears == .nowPlaying { return EarLayout.width(for: EarLayout.previewWidth, limit: earLimit) }
+        let width = EarLayout.width(for: ears) + (earExtra == nil ? 0 : EarLayout.extraWidth)
+        return EarLayout.width(for: width, limit: limit)
     }
 
     /// While a new file peeks, hovering doesn't open the notch, so the thumbnail can be dragged.

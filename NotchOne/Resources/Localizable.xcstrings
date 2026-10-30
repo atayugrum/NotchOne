@@ -475,6 +475,16 @@
         }
       }
     },
+    "Asks screenshots and screen sharing to leave the notch out. Some apps may still capture it.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ekran görüntüsü ve paylaşımlardan notch'u çıkarmasını ister. Bazı uygulamalar yine de yakalayabilir."
+          }
+        }
+      }
+    },
     "Automation": {
       "localizations": {
         "tr": {
@@ -618,6 +628,16 @@
         }
       }
     },
+    "Clear clipboard history": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pano geçmişini temizle"
+          }
+        }
+      }
+    },
     "Click a box to choose what goes in it": {
       "localizations": {
         "tr": {
@@ -654,6 +674,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kapalı notch"
+          }
+        }
+      }
+    },
+    "Command": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Komut"
           }
         }
       }
@@ -1358,6 +1388,16 @@
         }
       }
     },
+    "Email": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "E-posta"
+          }
+        }
+      }
+    },
     "Empty": {
       "localizations": {
         "tr": {
@@ -1664,6 +1704,16 @@
         }
       }
     },
+    "Hide from screen sharing": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ekran paylaşımında gizle"
+          }
+        }
+      }
+    },
     "Hide the macOS banner": {
       "localizations": {
         "tr": {
@@ -1700,6 +1750,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Görsel"
+          }
+        }
+      }
+    },
+    "In memory only, except text you pin; known password managers are skipped": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yalnızca bellekte, sabitlediğin metinler hariç; bilinen parola yöneticileri atlanır"
           }
         }
       }
@@ -1797,6 +1857,26 @@
         }
       }
     },
+    "Keep Awake": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uyanık tut"
+          }
+        }
+      }
+    },
+    "Keep Awake is on. Click to turn it off.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uyanık tutma açık. Kapatmak için tıkla."
+          }
+        }
+      }
+    },
     "Keep clipboard history": {
       "localizations": {
         "tr": {
@@ -1813,6 +1893,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Elinizin altında tutun"
+          }
+        }
+      }
+    },
+    "Keep your Mac awake": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mac'i uyanık tut"
+          }
+        }
+      }
+    },
+    "Keeping your Mac awake": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mac uyanık tutuluyor"
           }
         }
       }
@@ -2263,6 +2363,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ağ"
+          }
+        }
+      }
+    },
+    "New email": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yeni e-posta"
           }
         }
       }
@@ -2846,6 +2956,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hap"
+          }
+        }
+      }
+    },
+    "Pin": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sabitle"
           }
         }
       }
@@ -3530,6 +3650,16 @@
         }
       }
     },
+    "Sound output": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ses çıkışı"
+          }
+        }
+      }
+    },
     "Spotify": {
       "shouldTranslate": false
     },
@@ -4015,6 +4145,16 @@
         }
       }
     },
+    "Turn off Keep Awake": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uyanık tutmayı kapat"
+          }
+        }
+      }
+    },
     "Turn On Camera": {
       "localizations": {
         "tr": {
@@ -4051,6 +4191,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sesi aç"
+          }
+        }
+      }
+    },
+    "Unpin": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sabitlemeyi kaldır"
           }
         }
       }
@@ -4267,6 +4417,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bölgeniz, yaklaşık 1 km'ye yuvarlanarak Open-Meteo'ya"
+          }
+        }
+      }
+    },
+    "Your Mac can sleep": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mac uyuyabilir"
           }
         }
       }

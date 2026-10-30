@@ -14,7 +14,8 @@ struct SearchPanel: View {
             query: query,
             clipboard: activity.clipboard.items,
             shelf: activity.shelf.items,
-            tabs: model.tabs
+            tabs: model.tabs,
+            keepAwakeIsOn: activity.keepAwake.isOn
         )
         VStack(alignment: .leading, spacing: Space.s) {
             HStack(spacing: Space.s) {
@@ -24,6 +25,13 @@ struct SearchPanel: View {
                     .font(.system(size: 14, weight: .medium))
                     .focused($focused)
                     .onSubmit { run(results) }
+                    .onKeyPress(characters: .decimalDigits, phases: .down) { press in
+                        guard press.modifiers == .command,
+                              let tab = press.characters.first.flatMap({ PaletteLogic.tab(forDigit: $0, in: model.barTabs) })
+                        else { return .ignored }
+                        withAnimation(Motion.tab) { model.show(tab) }
+                        return .handled
+                    }
                     .onKeyPress(.downArrow) { move(1, count: results.count) }
                     .onKeyPress(.upArrow) { move(-1, count: results.count) }
                     .onKeyPress(.escape) {
@@ -59,6 +67,20 @@ struct SearchPanel: View {
         .onAppear { focused = true }
         .onChange(of: model.focusRequest) { focused = true }
         .onChange(of: query) { selection = 0 }
+    }
+
+    private func perform(_ command: PaletteCommand) {
+        let activity = model.activity
+        switch command {
+        case .keepAwake: activity.toggleKeepAwake()
+        case .playPause: activity.player?.perform(.playPause)
+        case .nextTrack: activity.player?.perform(.next)
+        case .clearClipboard: activity.clipboard.clear()
+        case .editHome:
+            model.show(.home)
+            model.isEditingHome = true
+        case .settings: model.openSettings(.general)
+        }
     }
 
     private func row(_ result: PaletteResult, isSelected: Bool) -> some View {
@@ -98,6 +120,8 @@ struct SearchPanel: View {
                 model.close()
             case .tab(let tab):
                 model.show(tab)
+            case .command(let command):
+                perform(command)
             case .translateClipboard:
                 if let text = NSPasteboard.general.string(forType: .string), !text.isEmpty {
                     activity.translate.translate(text)

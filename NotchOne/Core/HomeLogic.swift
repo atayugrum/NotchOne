@@ -14,7 +14,7 @@ enum NotchMode: String, CaseIterable, Identifiable, Sendable {
 
 /// A card on the Home tab. Each one leads to its tab.
 enum HomeCard: String, CaseIterable, Identifiable, Sendable {
-    case nowPlaying, weather, battery, activity, devices, system, notes, clipboard, shelf
+    case nowPlaying, weather, battery, activity, devices, system, notes, clipboard, shelf, keepAwake
 
     var id: String { rawValue }
 
@@ -29,6 +29,7 @@ enum HomeCard: String, CaseIterable, Identifiable, Sendable {
         case .notes: String(localized: "Notes")
         case .clipboard: String(localized: "Clipboard")
         case .shelf: String(localized: "Shelf")
+        case .keepAwake: String(localized: "Keep Awake")
         }
     }
 
@@ -43,6 +44,7 @@ enum HomeCard: String, CaseIterable, Identifiable, Sendable {
         case .notes: "note.text"
         case .clipboard: "doc.on.clipboard"
         case .shelf: "tray.full"
+        case .keepAwake: "cup.and.saucer"
         }
     }
 
@@ -58,6 +60,7 @@ enum HomeCard: String, CaseIterable, Identifiable, Sendable {
         case .notes: .notes
         case .clipboard: .clipboard
         case .shelf: .shelf
+        case .keepAwake: nil
         }
     }
 }

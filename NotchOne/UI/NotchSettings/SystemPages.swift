@@ -142,7 +142,7 @@ struct PrivacyPage: View {
                 DataRow(symbol: "arrow.down.circle", title: "Update check", detail: "Once a day to NotchOne's website, with no identifiers; can be turned off in About")
             }
             SettingsGroup(title: "Stays on your Mac") {
-                DataRow(symbol: "doc.on.clipboard", title: "Clipboard history", detail: "In memory only; known password managers are skipped")
+                DataRow(symbol: "doc.on.clipboard", title: "Clipboard history", detail: "In memory only, except text you pin; known password managers are skipped")
                 RowDivider()
                 DataRow(symbol: "tray.full", title: "Shelf", detail: "Links to your files, not copies")
                 RowDivider()

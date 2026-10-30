@@ -1,5 +1,32 @@
 import Foundation
 
+/// Something the palette can do.
+enum PaletteCommand: String, CaseIterable, Sendable {
+    case keepAwake, playPause, nextTrack, clearClipboard, editHome, settings
+
+    func title(keepAwakeIsOn: Bool) -> String {
+        switch self {
+        case .keepAwake: keepAwakeIsOn ? String(localized: "Turn off Keep Awake") : String(localized: "Keep your Mac awake")
+        case .playPause: String(localized: "Play or pause")
+        case .nextTrack: String(localized: "Next track")
+        case .clearClipboard: String(localized: "Clear clipboard history")
+        case .editHome: String(localized: "Edit Home")
+        case .settings: String(localized: "Settings")
+        }
+    }
+
+    var symbol: String {
+        switch self {
+        case .keepAwake: "cup.and.saucer"
+        case .playPause: "playpause"
+        case .nextTrack: "forward"
+        case .clearClipboard: "trash"
+        case .editHome: "slider.horizontal.3"
+        case .settings: "gearshape"
+        }
+    }
+}
+
 /// One row in the search palette.
 struct PaletteResult: Identifiable, Equatable, Sendable {
     enum Kind: Equatable, Sendable {
@@ -7,6 +34,7 @@ struct PaletteResult: Identifiable, Equatable, Sendable {
         case shelf(URL)
         case tab(NotchTab)
         case translateClipboard
+        case command(PaletteCommand)
     }
 
     let kind: Kind
@@ -20,6 +48,7 @@ struct PaletteResult: Identifiable, Equatable, Sendable {
         case .shelf(let url): "shelf:\(url.path)"
         case .tab(let tab): "tab:\(tab.rawValue)"
         case .translateClipboard: "translate"
+        case .command(let command): "command:\(command.rawValue)"
         }
     }
 }
@@ -41,7 +70,8 @@ enum PaletteLogic {
         query: String,
         clipboard: [ClipboardItem],
         shelf: [URL],
-        tabs: [NotchTab]
+        tabs: [NotchTab],
+        keepAwakeIsOn: Bool = false
     ) -> [PaletteResult] {
         let query = query.trimmingCharacters(in: .whitespaces)
         var results: [(score: Int, order: Int, result: PaletteResult)] = []
@@ -78,6 +108,12 @@ enum PaletteLogic {
                 kind: .tab(tab), title: String(localized: "Show \(tab.title)"), subtitle: String(localized: "Tab"), symbol: tab.symbol
             ))
         }
+        for command in PaletteCommand.allCases {
+            let title = command.title(keepAwakeIsOn: keepAwakeIsOn)
+            add(score(title, query: query), PaletteResult(
+                kind: .command(command), title: title, subtitle: String(localized: "Command"), symbol: command.symbol
+            ))
+        }
         let translateTitle = String(localized: "Translate clipboard")
         add(score(translateTitle, query: query), PaletteResult(
             kind: .translateClipboard, title: translateTitle, subtitle: String(localized: "Translate tab"), symbol: "character.bubble"
@@ -87,6 +123,12 @@ enum PaletteLogic {
             .sorted { $0.score != $1.score ? $0.score > $1.score : $0.order < $1.order }
             .prefix(maxResults)
             .map(\.result)
+    }
+
+    /// The tab for ⌘1…⌘9: the digit's place in the tab bar.
+    static func tab(forDigit digit: Character, in tabs: [NotchTab]) -> NotchTab? {
+        guard let number = digit.wholeNumberValue, number >= 1, number <= tabs.count else { return nil }
+        return tabs[number - 1]
     }
 
     private static func searchableText(_ item: ClipboardItem) -> String? {

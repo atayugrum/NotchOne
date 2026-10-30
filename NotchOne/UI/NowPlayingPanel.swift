@@ -1,3 +1,4 @@
+import CoreAudio
 import SwiftUI
 
 struct NowPlayingPanel: View {
@@ -6,6 +7,11 @@ struct NowPlayingPanel: View {
     var glow: Color?
 
     var body: some View {
+        content
+            .overlay(alignment: .topTrailing) { OutputPicker(activity: activity) }
+    }
+
+    private var content: some View {
         VStack(alignment: .leading, spacing: 6) {
             if let info = activity.nowPlaying {
                 HStack(spacing: Space.l) {
@@ -157,5 +163,49 @@ extension View {
             .onTapGesture { activity.openPlayingApp() }
             .help(Text("Open \(AppInfo.name(for: activity.nowPlaying?.playerBundleID) ?? String(localized: "the player"))"))
             .accessibilityAddTraits(.isButton)
+    }
+}
+
+/// Picks where sound plays.
+struct OutputPicker: View {
+    let activity: ActivityState
+    @State private var devices: [AudioOutput.Device] = []
+    @State private var current: AudioDeviceID?
+
+    var body: some View {
+        Menu {
+            ForEach(devices) { device in
+                Button {
+                    AudioOutput.setDefault(device.id)
+                    current = device.id
+                    activity.showPeek(.output(name: device.name))
+                } label: {
+                    if device.id == current {
+                        Label(device.name, systemImage: "checkmark")
+                    } else {
+                        Text(device.name)
+                    }
+                }
+            }
+        } label: {
+            Image(systemName: "hifispeaker")
+                .font(Typo.icon(12))
+                .foregroundStyle(.secondary)
+                .frame(width: 26, height: 26)
+                .contentShape(Rectangle())
+        }
+        .menuStyle(.button)
+        .buttonStyle(.plain)
+        .menuIndicator(.hidden)
+        .fixedSize()
+        .help("Sound output")
+        .accessibilityLabel("Sound output")
+        .onAppear(perform: refresh)
+        .onHover { if $0 { refresh() } }
+    }
+
+    private func refresh() {
+        devices = AudioOutput.devices()
+        current = AudioOutput.defaultDevice()
     }
 }
