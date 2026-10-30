@@ -22,7 +22,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.1</string>
+	<string>1.0.2</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -35,7 +35,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>2</string>
+	<string>3</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.utilities</string>
 	<key>LSUIElement</key>
@@ -61,6 +61,6 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>NotchOne shows the weather where you are. Only your area, rounded to about 1 km, is sent to the weather service.</string>
 	<key>NotchOneUpdateFeed</key>
-	<string>https://atayugrum.github.io/NotchOne/update.json</string>
+	<string>https://notchone.one/update.json</string>
 </dict>
 </plist>

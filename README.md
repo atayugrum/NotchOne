@@ -12,7 +12,7 @@ idles at 0% CPU. In English and Turkish.
 
 ## Install
 
-**[Download NotchOne](https://atayugrum.github.io/NotchOne/download/)** or visit [atayugrum.github.io/NotchOne](https://atayugrum.github.io/NotchOne). Unzip it and move NotchOne to Applications. It's signed and
+**[Download NotchOne](https://notchone.one/download)** or visit [notchone.one](https://notchone.one). Unzip it and move NotchOne to Applications. It's signed and
 notarized by Apple. A short tour opens in the notch on the first launch; the `?` next to the
 tabs shows it again. NotchOne checks for updates once a day (Settings → About) and installs
 one only if it's signed by the same developer.
